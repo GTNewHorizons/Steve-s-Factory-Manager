@@ -22,7 +22,7 @@ group= "vswe.stevesfactory" // http://maven.apache.org/guides/mini/guide-naming-
 archivesBaseName = "StevesFactoryManager"
 
 minecraft {
-    version = "1.7.10-10.13.0.1188"
+    version = "1.7.10-10.13.4.1614"
     assetDir = "eclipse/assets"
 }
 

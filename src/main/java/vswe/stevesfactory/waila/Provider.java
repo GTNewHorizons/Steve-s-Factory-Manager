@@ -6,8 +6,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.*;
@@ -86,6 +89,13 @@ public class Provider implements IWailaDataProvider {
     @Override
     public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         return currenttip;
+    }
+
+    @Override
+    public NBTTagCompound getNBTData(EntityPlayerMP entityPlayerMP, TileEntity tileEntity, NBTTagCompound nbtTagCompound, World world, int i, int i1, int i2) {
+        if (tileEntity != null)
+            tileEntity.writeToNBT(nbtTagCompound);
+        return nbtTagCompound;
     }
 
     public static void callbackRegister(IWailaRegistrar registrar){

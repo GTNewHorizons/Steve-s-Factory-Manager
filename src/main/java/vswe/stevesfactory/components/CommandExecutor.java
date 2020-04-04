@@ -591,7 +591,7 @@ public class CommandExecutor {
         ComponentMenuStuff menuItem = (ComponentMenuStuff)componentMenu;
 
         if (fluidStack != null)  {
-            int fluidId = fluidStack.fluidID;
+            int fluidId = fluidStack.getFluidID();
             for (Setting setting : menuItem.getSettings()) {
                 if (setting.isValid() && ((LiquidSetting)setting).getLiquidId() == fluidId) {
                     return setting;

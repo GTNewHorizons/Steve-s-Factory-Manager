@@ -40,7 +40,7 @@ public class OutputLiquidCounter {
             for (int side : slotSideTarget.getSides()) {
                 FluidStack temp = tankHolder.getTank().drain(ForgeDirection.VALID_DIRECTIONS[side], CommandExecutor.MAX_FLUID_TRANSFER, false);
 
-                if (temp != null && temp.fluidID == ((LiquidSetting)setting).getLiquidId()) {
+                if (temp != null && temp.getFluidID() == ((LiquidSetting)setting).getLiquidId()) {
                     max = Math.max(max, temp.amount);
                 }
             }

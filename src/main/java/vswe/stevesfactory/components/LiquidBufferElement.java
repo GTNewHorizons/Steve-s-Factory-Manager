@@ -97,7 +97,7 @@ public class LiquidBufferElement {
 
         for (StackTankHolder holder : getHolders()) {
             FluidStack fluidStack = holder.getFluidStack();
-            if (fluidStack != null && fluidStack.fluidID == ((LiquidSetting)outputSetting).getLiquidId()) {
+            if (fluidStack != null && fluidStack.getFluidID() == ((LiquidSetting)outputSetting).getLiquidId()) {
                 bufferSize += fluidStack.amount;
             }
         }

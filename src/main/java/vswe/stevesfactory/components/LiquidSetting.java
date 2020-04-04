@@ -99,7 +99,7 @@ public class LiquidSetting extends Setting {
 
     @Override
     public void save(NBTTagCompound settingTag) {
-        settingTag.setString(NBT_FLUID_ID_STR, FluidRegistry.getFluidName(fluid.getID()));
+        settingTag.setString(NBT_FLUID_ID_STR, FluidRegistry.getFluidName(fluid));
 
         // Warning: This ID is known to shuffle if you add/remove mods.  Leaving it in NBT as a fallback, or in case someone decides to roll back a version
         settingTag.setShort(NBT_FLUID_ID, (short)fluid.getID());

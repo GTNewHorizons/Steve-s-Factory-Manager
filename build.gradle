@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "A94-GTNH"
+version = "A95-GTNH"
 group= "vswe.stevesfactory" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StevesFactoryManager"
 

@@ -21,8 +21,8 @@ version = "A95-GTNH"
 group= "vswe.stevesfactory" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StevesFactoryManager"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"

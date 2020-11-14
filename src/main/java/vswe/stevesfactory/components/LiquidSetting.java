@@ -65,12 +65,21 @@ public class LiquidSetting extends Setting {
 
     @Override
     public void writeData(DataWriter dw) {
-       dw.writeData(fluid.getID(), DataBitHelper.MENU_FLUID_ID);
+       dw.writeData(0, DataBitHelper.MENU_FLUID_ID_OLD);
+       dw.writeData(fluid.getID(), DataBitHelper.MENU_FLUID_ID_LARGE);
+       System.out.println("SAVE LARGE FLUID WITH ID " + fluid.getID());
     }
 
     @Override
     public void readData(DataReader dr) {
-        fluid = FluidRegistry.getFluid(dr.readData(DataBitHelper.MENU_FLUID_ID));
+    	int small = dr.readData(DataBitHelper.MENU_FLUID_ID_OLD);
+    	if(small == 0) {
+            fluid = FluidRegistry.getFluid(dr.readData(DataBitHelper.MENU_FLUID_ID_LARGE));
+    		System.out.println("READ LARGE FLUID WITH ID " + fluid.getID());
+    	}
+    	else {
+            fluid = FluidRegistry.getFluid(small);
+    	}
     }
 
     @Override

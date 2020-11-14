@@ -104,20 +104,10 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
 
         switch (header) {
             case SET_ITEM:
-            	int small = dr.readData(DataBitHelper.MENU_FLUID_ID_OLD);
-            	if(small == 0) {
-            		liquidSetting.setLiquidFromId(dr.readData(DataBitHelper.MENU_FLUID_ID_LARGE));
-            		System.out.println("READ LARGE FLUID WITH ID " + liquidSetting.getLiquidId());
-            	}
-            	else {
-                    liquidSetting.setLiquidFromId(small);
-            	}
-
+            	liquidSetting.setLiquidFromId(dr.readData(DataBitHelper.MENU_FLUID_ID));
                 if (isEditing()) {
                     updateTextBoxes();
                 }
-
-
         }
     }
 
@@ -126,9 +116,7 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
         LiquidSetting liquidSetting = (LiquidSetting)setting;
         switch (header) {
             case SET_ITEM:
-                dw.writeData(0, DataBitHelper.MENU_FLUID_ID_OLD);
-                dw.writeData(liquidSetting.getLiquidId(), DataBitHelper.MENU_FLUID_ID_LARGE);
-        		System.out.println("SAVE LARGE FLUID WITH ID " + liquidSetting.getLiquidId());
+                dw.writeData(liquidSetting.getLiquidId(), DataBitHelper.MENU_FLUID_ID);
         }
     }
 

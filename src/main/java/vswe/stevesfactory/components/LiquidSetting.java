@@ -1,6 +1,5 @@
 package vswe.stevesfactory.components;
 
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -34,7 +33,7 @@ public class LiquidSetting extends Setting {
 
         if (fluid == null) {
             ret.add(Localization.NO_LIQUID_SELECTED.toString());
-        }else{
+        } else {
             ret.add(ComponentMenuLiquid.getDisplayName(fluid));
         }
 
@@ -62,10 +61,9 @@ public class LiquidSetting extends Setting {
         return fluid != null;
     }
 
-
     @Override
     public void writeData(DataWriter dw) {
-       dw.writeData(fluid.getID(), DataBitHelper.MENU_FLUID_ID);
+        dw.writeData(fluid.getID(), DataBitHelper.MENU_FLUID_ID);
     }
 
     @Override
@@ -75,7 +73,7 @@ public class LiquidSetting extends Setting {
 
     @Override
     public void copyFrom(Setting setting) {
-        fluid = ((LiquidSetting)setting).fluid;
+        fluid = ((LiquidSetting) setting).fluid;
     }
 
     @Override
@@ -86,6 +84,7 @@ public class LiquidSetting extends Setting {
     private static final String NBT_FLUID_ID = "FluidId";
     private static final String NBT_FLUID_ID_STR = "FluidStr";
     private static final String NBT_FLUID_AMOUNT = "Amount";
+
     @Override
     public void load(NBTTagCompound settingTag) {
         if (settingTag.hasKey(NBT_FLUID_ID_STR)) {
@@ -101,19 +100,20 @@ public class LiquidSetting extends Setting {
     public void save(NBTTagCompound settingTag) {
         settingTag.setString(NBT_FLUID_ID_STR, FluidRegistry.getFluidName(fluid));
 
-        // Warning: This ID is known to shuffle if you add/remove mods.  Leaving it in NBT as a fallback, or in case someone decides to roll back a version
-        settingTag.setShort(NBT_FLUID_ID, (short)fluid.getID());
+        // Warning: This ID is known to shuffle if you add/remove mods. Leaving it in
+        // NBT as a fallback, or in case someone decides to roll back a version
+        settingTag.setShort(NBT_FLUID_ID, (short) fluid.getID());
         settingTag.setInteger(NBT_FLUID_AMOUNT, amount);
     }
 
     @Override
     public boolean isContentEqual(Setting otherSetting) {
-        return fluid.getID() == ((LiquidSetting)otherSetting).fluid.getID();
+        return fluid.getID() == ((LiquidSetting) otherSetting).fluid.getID();
     }
 
     @Override
     public void setContent(Object obj) {
-        fluid = (Fluid)obj;
+        fluid = (Fluid) obj;
         setDefaultAmount();
     }
 

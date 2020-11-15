@@ -104,13 +104,10 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
 
         switch (header) {
             case SET_ITEM:
-                liquidSetting.setLiquidFromId(dr.readData(DataBitHelper.MENU_FLUID_ID));
-
+            	liquidSetting.setLiquidFromId(dr.readData(DataBitHelper.MENU_FLUID_ID));
                 if (isEditing()) {
                     updateTextBoxes();
                 }
-
-
         }
     }
 

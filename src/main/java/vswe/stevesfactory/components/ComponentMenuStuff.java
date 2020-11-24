@@ -81,9 +81,9 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
         scrollControllerSearch = new ScrollController(true) {
             @Override
             protected List updateSearch(String search, boolean all) {
-                if (search.equals("")) {
-                    return new ArrayList();
-                }
+//                if (search.equals("")) {
+//                    return new ArrayList();
+//                }
 
                 return self.updateSearch(search, all);
             }

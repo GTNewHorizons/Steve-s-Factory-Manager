@@ -231,6 +231,10 @@ public class ComponentMenuItem extends ComponentMenuStuff {
     protected List updateSearch(String search, boolean showAll) {
         List ret = new ArrayList();
 
+        if (search.isEmpty()) {
+            search = ".inv";
+        }
+
         if (search.equals(".inv")) {
             IInventory inventory = Minecraft.getMinecraft().thePlayer.inventory;
             int itemLength = inventory.getSizeInventory();

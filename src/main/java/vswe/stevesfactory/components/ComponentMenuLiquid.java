@@ -155,8 +155,8 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
     public static String getDisplayName(Fluid fluid) {
         //different mods store the name in different ways apparently
         String name = fluid.getLocalizedName();
-        if (name.indexOf(".") != -1) {
-            name = FluidRegistry.getFluidName(fluid.getID());
+        if (name.contains(".")) {
+            name = FluidRegistry.getFluidName(fluid);
         }
 
         return name;

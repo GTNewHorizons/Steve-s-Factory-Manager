@@ -16,8 +16,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import vswe.stevesfactory.GeneratedInfo;
 import vswe.stevesfactory.StevesFactoryManager;
+
+import static vswe.stevesfactory.StevesFactoryManager.isDevelopmentEnvironment;
 
 public class BlockManager extends BlockContainer {
     public BlockManager() {
@@ -104,7 +105,7 @@ public class BlockManager extends BlockContainer {
 
    @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-       if (GeneratedInfo.inDev) {
+       if (isDevelopmentEnvironment()) {
             System.out.println("Picked" + world.isRemote);
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityManager) {
@@ -141,7 +142,7 @@ public class BlockManager extends BlockContainer {
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-        if (GeneratedInfo.inDev) {
+        if (isDevelopmentEnvironment()) {
             System.out.println("Placed" + world.isRemote);
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityManager) {

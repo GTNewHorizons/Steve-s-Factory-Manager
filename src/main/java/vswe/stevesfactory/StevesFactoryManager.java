@@ -8,13 +8,14 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraft.launchwrapper.Launch;
 import vswe.stevesfactory.blocks.ModBlocks;
 import vswe.stevesfactory.components.ModItemHelper;
 import vswe.stevesfactory.network.FileHelper;
 import vswe.stevesfactory.network.PacketEventHandler;
 import vswe.stevesfactory.proxy.CommonProxy;
 
-@Mod(modid = "StevesFactoryManager", name = "Steve's Factory Manager", version = GeneratedInfo.version)
+@Mod(modid = "StevesFactoryManager", name = "Steve's Factory Manager", version = "GRADLETOKEN_VERSION")
 public class StevesFactoryManager {
 
 
@@ -29,6 +30,15 @@ public class StevesFactoryManager {
 
     @Mod.Instance("StevesFactoryManager")
     public static StevesFactoryManager instance;
+
+    private static Boolean inDev = null;
+
+    public static boolean isDevelopmentEnvironment() {
+        if(inDev == null) {
+            inDev = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+        }
+        return inDev;
+    }
 
 
     @Mod.EventHandler

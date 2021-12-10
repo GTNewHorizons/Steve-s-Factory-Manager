@@ -1,10 +1,10 @@
 [
 {
-  "modid": "StevesFactoryManager",
-  "name": "Steve's Factory Manager",
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "Steve's Factory Manager is a mod which allows you to set up systems that moves and manages items between inventories and machines",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "",
   "updateUrl": "",
   "authors": ["Vswe"],

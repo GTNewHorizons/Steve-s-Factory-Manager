@@ -181,7 +181,7 @@ public class CraftingBufferElement implements IItemBufferElement, IItemBufferSub
     private List<IInventory> inventories = new ArrayList<IInventory>();
 
     private boolean useAdvancedDetection() {
-        return craftingMenu.getResultItem().getFuzzyMode() != FuzzyMode.PRECISE;
+        return false; //craftingMenu.getResultItem().getFuzzyMode() != FuzzyMode.PRECISE;
     }
 
     private boolean findItems(boolean remove) {
@@ -227,7 +227,7 @@ public class CraftingBufferElement implements IItemBufferElement, IItemBufferSub
 
 
         if (foundItems.size() == 9) {
-            result = craftingMenu.getDummy().getResult(foundItems);
+            result = craftingMenu.getDummy().getResult(foundItems, recipe);
             result = result != null ? result.copy() : null;
             return true;
         }else{

@@ -65,6 +65,13 @@ public class CraftingDummy extends InventoryCrafting
         return;
     }
 
+    public ItemStack getResult(Map<Integer, ItemStack> overrideMap, IRecipe recipe){
+        this.overrideMap = overrideMap;
+        ItemStack result = recipe.getCraftingResult(this);
+        this.overrideMap = null;
+        return result;
+    }
+
     public ItemStack getResult(Map<Integer, ItemStack> overrideMap) {
         this.overrideMap = overrideMap;
         try {
@@ -93,6 +100,7 @@ public class CraftingDummy extends InventoryCrafting
 
     private Map<Integer, ItemStack> overrideMap;
     public boolean isItemValidForRecipe(IRecipe recipe, ItemSetting result, Map<Integer, ItemStack> overrideMap, boolean advanced) {
+        advanced = false;
         this.overrideMap = overrideMap;
         if ((advanced && getRecipe() == null) || (!advanced && !recipe.matches(this, crafting.getParent().getManager().getWorldObj()))) {
             return false;

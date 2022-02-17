@@ -99,14 +99,13 @@ public class CraftingDummy extends InventoryCrafting
     }
 
     private Map<Integer, ItemStack> overrideMap;
-    public boolean isItemValidForRecipe(IRecipe recipe, ItemSetting result, Map<Integer, ItemStack> overrideMap, boolean advanced) {
-        advanced = false;
+    public boolean isItemValidForRecipe(IRecipe recipe, ItemSetting result, Map<Integer, ItemStack> overrideMap) {
         this.overrideMap = overrideMap;
-        if ((advanced && getRecipe() == null) || (!advanced && !recipe.matches(this, crafting.getParent().getManager().getWorldObj()))) {
+        if (!recipe.matches(this, crafting.getParent().getManager().getWorldObj()))
             return false;
-        }
         ItemStack itemStack = recipe.getCraftingResult(this);
         this.overrideMap = null;
+        result.setFuzzyMode(FuzzyMode.PRECISE); // Fix old components, in case they are set to something else.
         return result.isEqualForCommandExecutor(itemStack);
     }
 }

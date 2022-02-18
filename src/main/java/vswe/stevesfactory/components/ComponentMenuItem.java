@@ -335,6 +335,8 @@ public class ComponentMenuItem extends ComponentMenuStuff {
         super.onClick(mX, mY, button);
 
         if (isEditing()) {
+            if(this instanceof ComponentMenuCrafting && ((ComponentMenuCrafting) this).isEditingResult())
+                return;
             for (int i = -1; i <= 1; i+=2) {
                 int x = i == 1 ? ARROW_X_RIGHT : ARROW_X_LEFT;
                 int y = ARROW_Y;

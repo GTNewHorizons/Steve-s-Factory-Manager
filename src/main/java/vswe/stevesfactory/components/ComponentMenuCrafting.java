@@ -11,6 +11,7 @@ import vswe.stevesfactory.interfaces.GuiManager;
 public class ComponentMenuCrafting extends ComponentMenuItem {
     private CraftingSetting resultItem;
     private CraftingDummy dummy;
+    private boolean editingResult = false;
 
     public ComponentMenuCrafting(FlowComponent parent) {
         super(parent, CraftingSetting.class);
@@ -70,14 +71,19 @@ public class ComponentMenuCrafting extends ComponentMenuItem {
     @Override
     public void onClick(int mX, int mY, int button) {
         super.onClick(mX, mY, button);
+        if (!isEditing())
+            editingResult = false;
         if (!isEditing() && !isSearching() && resultItem.getItem() != null) {
             if (button == 1 && CollisionHelper.inBounds(getResultX(), getResultY(), ITEM_SIZE, ITEM_SIZE, mX, mY)) {
+                editingResult = true;
                 scrollControllerSelected.onClick(resultItem, mX, mY, 1);
             }
         }
     }
 
-
+    public Boolean isEditingResult(){
+        return editingResult;
+    }
 
     private int getResultX() {
         return ITEM_X + ITEM_SIZE_WITH_MARGIN * 3;

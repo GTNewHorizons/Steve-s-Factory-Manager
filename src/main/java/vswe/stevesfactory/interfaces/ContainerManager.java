@@ -34,7 +34,7 @@ public class ContainerManager extends ContainerBase {
     @Override
     public void detectAndSendChanges() {
         try {
-            detectAndSendChanges0();
+            detectAndSendChangesImpl();
         } catch (Exception e) {
             SFMLogging.reportIncident(e, "ContainerManager#detectAndSendChanges", Iterables.filter(getCrafters(), EntityPlayerMP.class));
             for (ICrafting crafter : getCrafters()) {
@@ -45,7 +45,7 @@ public class ContainerManager extends ContainerBase {
         }
     }
 
-    private void detectAndSendChanges0() {
+    private void detectAndSendChangesImpl() {
         super.detectAndSendChanges();
 
         if (oldComponents != null) {

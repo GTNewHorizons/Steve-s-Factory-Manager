@@ -405,3 +405,5 @@ gui.sfm.PermissionDenied=No access
 # ======================================
 
 itemGroup.sfm=Steve's Factory Manager
+
+chat.sfm.ContainerInternalServerError=Unknown Internal Server Error occurred. We have closed the container for your safety. More info in server logs. Incident ID "%s".

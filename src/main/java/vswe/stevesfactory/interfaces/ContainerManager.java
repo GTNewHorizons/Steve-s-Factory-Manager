@@ -1,9 +1,12 @@
 package vswe.stevesfactory.interfaces;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.tileentity.TileEntity;
+import vswe.stevesfactory.SFMLogging;
 import vswe.stevesfactory.blocks.ConnectionBlock;
 import vswe.stevesfactory.blocks.TileEntityManager;
 import vswe.stevesfactory.blocks.WorldCoordinate;
@@ -30,6 +33,19 @@ public class ContainerManager extends ContainerBase {
 
     @Override
     public void detectAndSendChanges() {
+        try {
+            detectAndSendChanges0();
+        } catch (Exception e) {
+            SFMLogging.reportIncident(e, "ContainerManager#detectAndSendChanges", Iterables.filter(getCrafters(), EntityPlayerMP.class));
+            for (ICrafting crafter : getCrafters()) {
+                if (crafter instanceof EntityPlayerMP) {
+                    ((EntityPlayerMP) crafter).closeScreen();
+                }
+            }
+        }
+    }
+
+    private void detectAndSendChanges0() {
         super.detectAndSendChanges();
 
         if (oldComponents != null) {

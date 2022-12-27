@@ -9,4 +9,5 @@ Fork and run `gradlew` as normal. See [GTNH Dev](https://gtnh.miraheze.org/wiki/
 
 ### License
 
-https://twitter.com/Steves_Carts/status/795197105849729024
+![](https://user-images.githubusercontent.com/35727266/209692580-355729f0-5c1f-4699-828b-cb9f109675f4.png)
+<br>https://twitter.com/Steves_Carts/status/795197105849729024

@@ -1,13 +1,11 @@
 package vswe.stevesfactory.components;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import vswe.stevesfactory.CollisionHelper;
-import vswe.stevesfactory.interfaces.GuiManager;
-
 import java.util.ArrayList;
 import java.util.List;
+import vswe.stevesfactory.CollisionHelper;
+import vswe.stevesfactory.interfaces.GuiManager;
 
 public class TextBoxNumberList {
     private static final int TEXT_BOX_SIZE_H = 12;
@@ -20,6 +18,7 @@ public class TextBoxNumberList {
     public TextBoxNumberList() {
         textBoxes = new ArrayList<TextBoxNumber>();
     }
+
     @SideOnly(Side.CLIENT)
     public void draw(GuiManager gui, int mX, int mY) {
         for (TextBoxNumber textBox : textBoxes) {
@@ -27,24 +26,38 @@ public class TextBoxNumberList {
                 int srcTextBoxX = textBox.equals(selectedTextBox) ? 1 : 0;
                 int srcTextBoxY = textBox.isWide() ? 1 : 0;
 
-                gui.drawTexture(textBox.getX(), textBox.getY(), TEXT_BOX_SRC_X + srcTextBoxX * textBox.getWidth(), TEXT_BOX_SRC_Y + srcTextBoxY * TEXT_BOX_SIZE_H, textBox.getWidth(), TEXT_BOX_SIZE_H);
+                gui.drawTexture(
+                        textBox.getX(),
+                        textBox.getY(),
+                        TEXT_BOX_SRC_X + srcTextBoxX * textBox.getWidth(),
+                        TEXT_BOX_SRC_Y + srcTextBoxY * TEXT_BOX_SIZE_H,
+                        textBox.getWidth(),
+                        TEXT_BOX_SIZE_H);
                 String str = String.valueOf(textBox.getNumber());
-                gui.drawCenteredString(str, textBox.getX(), textBox.getY() + textBox.getTextY(), textBox.getTextSize(), textBox.getWidth(), 0xFFFFFF);
+                gui.drawCenteredString(
+                        str,
+                        textBox.getX(),
+                        textBox.getY() + textBox.getTextY(),
+                        textBox.getTextSize(),
+                        textBox.getWidth(),
+                        0xFFFFFF);
             }
         }
     }
 
     public void onClick(int mX, int mY, int button) {
         for (TextBoxNumber textBox : textBoxes) {
-            if (textBox.isVisible() && CollisionHelper.inBounds(textBox.getX(), textBox.getY(), textBox.getWidth(), TEXT_BOX_SIZE_H, mX, mY)) {
+            if (textBox.isVisible()
+                    && CollisionHelper.inBounds(
+                            textBox.getX(), textBox.getY(), textBox.getWidth(), TEXT_BOX_SIZE_H, mX, mY)) {
                 if (textBox.equals(selectedTextBox)) {
                     if (button == 0) {
                         selectedTextBox = null;
-                    }else{
+                    } else {
                         textBox.setNumber(0);
                         selectedTextBox.onNumberChanged();
                     }
-                }else{
+                } else {
                     selectedTextBox = textBox;
                 }
 
@@ -52,25 +65,27 @@ public class TextBoxNumberList {
             }
         }
     }
+
     @SideOnly(Side.CLIENT)
     public boolean onKeyStroke(GuiManager gui, char c, int k) {
         if (selectedTextBox != null && selectedTextBox.isVisible()) {
 
             if (Character.isDigit(c)) {
                 int number = Integer.parseInt(String.valueOf(c));
-                if (Math.abs(selectedTextBox.getNumber()) < Math.pow(10, selectedTextBox.getLength() - 1)){
-                   selectedTextBox.setNumber((Math.abs(selectedTextBox.getNumber()) * 10 + number) * (selectedTextBox.getNumber() < 0 ? -1 : 1));
-                   selectedTextBox.onNumberChanged();
+                if (Math.abs(selectedTextBox.getNumber()) < Math.pow(10, selectedTextBox.getLength() - 1)) {
+                    selectedTextBox.setNumber((Math.abs(selectedTextBox.getNumber()) * 10 + number)
+                            * (selectedTextBox.getNumber() < 0 ? -1 : 1));
+                    selectedTextBox.onNumberChanged();
                 }
                 return true;
-            }else if(c == '-' && selectedTextBox.allowNegative()) {
+            } else if (c == '-' && selectedTextBox.allowNegative()) {
                 selectedTextBox.setNumber(selectedTextBox.getNumber() * -1);
                 selectedTextBox.onNumberChanged();
-            }else if(k == 14){
+            } else if (k == 14) {
                 selectedTextBox.setNumber(selectedTextBox.getNumber() / 10);
                 selectedTextBox.onNumberChanged();
                 return true;
-            }else if(k == 15){
+            } else if (k == 15) {
                 for (int i = 0; i < textBoxes.size(); i++) {
                     TextBoxNumber textBox = textBoxes.get(i);
 
@@ -94,5 +109,4 @@ public class TextBoxNumberList {
     public TextBoxNumber getTextBox(int id) {
         return textBoxes.get(id);
     }
-
 }

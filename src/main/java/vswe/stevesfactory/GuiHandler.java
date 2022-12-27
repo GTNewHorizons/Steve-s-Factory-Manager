@@ -6,19 +6,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import vswe.stevesfactory.blocks.ITileEntityInterface;
 
-
 public class GuiHandler implements IGuiHandler {
-    public GuiHandler() {
-
-    }
+    public GuiHandler() {}
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
 
         if (te != null && te instanceof ITileEntityInterface) {
-            return ((ITileEntityInterface)te).getContainer(te, player.inventory);
-        }else{
+            return ((ITileEntityInterface) te).getContainer(te, player.inventory);
+        } else {
             return null;
         }
     }
@@ -28,10 +25,9 @@ public class GuiHandler implements IGuiHandler {
         TileEntity te = world.getTileEntity(x, y, z);
 
         if (te != null && te instanceof ITileEntityInterface) {
-            return ((ITileEntityInterface)te).getGui(te, player.inventory);
-        }else{
+            return ((ITileEntityInterface) te).getGui(te, player.inventory);
+        } else {
             return null;
         }
     }
-
 }

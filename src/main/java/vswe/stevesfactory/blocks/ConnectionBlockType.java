@@ -30,7 +30,7 @@ public enum ConnectionBlockType {
     }
 
     public <T> T getObject(TileEntity tileEntity) {
-        return (T)tileEntity;
+        return (T) tileEntity;
     }
 
     public boolean isGroup() {

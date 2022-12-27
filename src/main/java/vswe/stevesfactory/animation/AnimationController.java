@@ -1,10 +1,8 @@
 package vswe.stevesfactory.animation;
 
-
+import java.util.*;
 import vswe.stevesfactory.blocks.TileEntityManager;
 import vswe.stevesfactory.components.*;
-
-import java.util.*;
 
 public class AnimationController {
 
@@ -44,7 +42,7 @@ public class AnimationController {
                     }
                     groups.get(oldId).add(component);
                     continue;
-                }else{
+                } else {
                     component.setParent(blueprints.get(id));
                 }
             }
@@ -65,7 +63,7 @@ public class AnimationController {
                 Integer count = groupNodes.get(id);
                 if (count == null) {
                     groupNodes.put(id, 1);
-                }else{
+                } else {
                     groupNodes.put(id, count + 1);
                 }
             }
@@ -80,7 +78,8 @@ public class AnimationController {
         manager.setSelectedComponent(null);
     }
 
-    private void addComponent(FlowComponent component, Map<Integer, Integer> ids, Map<Integer, List<FlowComponent>> groups) {
+    private void addComponent(
+            FlowComponent component, Map<Integer, Integer> ids, Map<Integer, List<FlowComponent>> groups) {
         int oldId = component.getId();
         int newId = blueprints.size();
         ids.put(oldId, newId);
@@ -95,15 +94,18 @@ public class AnimationController {
     }
 
     private float time;
+
     public void update(float elapsedSeconds) {
         time += elapsedSeconds * mult;
 
-        while (execute());
+        while (execute())
+            ;
     }
 
-    private static final int MOVE_SPEED = 300; //pixels per second
-    private static final int MOVE_SPEED_CONNECTION = 300; //pixels per second
+    private static final int MOVE_SPEED = 300; // pixels per second
+    private static final int MOVE_SPEED_CONNECTION = 300; // pixels per second
     private static final int MOVE_SPEED_NODE = 250;
+
     private boolean execute() {
 
         if (delay != 0) {
@@ -123,34 +125,45 @@ public class AnimationController {
         switch (progress) {
             case GROUP:
                 if (groupTracking != null) {
-                    if (groupTracking.size() > 0)  {
+                    if (groupTracking.size() > 0) {
                         if (!openNext) {
                             for (FlowComponent component : manager.getFlowItems()) {
                                 component.close();
                             }
-                            if (groupTracking.get(0) != null && groupTracking.get(0).isVisible()) {
-                                manager.getFlowItems().get(groupTracking.get(0).getId()).setOpen(true);
-                                manager.getFlowItems().get(groupTracking.get(0).getId()).setOpenMenuId(0);
+                            if (groupTracking.get(0) != null
+                                    && groupTracking.get(0).isVisible()) {
+                                manager.getFlowItems()
+                                        .get(groupTracking.get(0).getId())
+                                        .setOpen(true);
+                                manager.getFlowItems()
+                                        .get(groupTracking.get(0).getId())
+                                        .setOpenMenuId(0);
                                 moveToFront(groupTracking.get(0));
                             }
 
                             openNext = true;
-                        }else{
+                        } else {
                             if (groupTracking.get(0) != null) {
-                                manager.getFlowItems().get(groupTracking.get(0).getId()).setOpen(false);
+                                manager.getFlowItems()
+                                        .get(groupTracking.get(0).getId())
+                                        .setOpen(false);
                             }
 
-                            if(manager.getSelectedComponent() != null && manager.getSelectedComponent().isVisible(groupTracking.get(0))) {
-                                manager.getFlowItems().get(manager.getSelectedComponent().getId()).setOpen(true);
-                                manager.getFlowItems().get(manager.getSelectedComponent().getId()).setOpenMenuId(0);
+                            if (manager.getSelectedComponent() != null
+                                    && manager.getSelectedComponent().isVisible(groupTracking.get(0))) {
+                                manager.getFlowItems()
+                                        .get(manager.getSelectedComponent().getId())
+                                        .setOpen(true);
+                                manager.getFlowItems()
+                                        .get(manager.getSelectedComponent().getId())
+                                        .setOpenMenuId(0);
                                 moveToFront(manager.getSelectedComponent());
                             }
-
 
                             manager.setSelectedComponent(groupTracking.remove(0));
                             openNext = false;
                         }
-                    }else{
+                    } else {
                         for (FlowComponent component : manager.getFlowItems()) {
                             component.close();
                         }
@@ -159,7 +172,7 @@ public class AnimationController {
                     }
                     delay = 0.5F;
                     return true;
-                }else if (time >= 0.5F && items.size() > 0 ) {
+                } else if (time >= 0.5F && items.size() > 0) {
                     time -= 0.5F;
                     blueprint = items.remove(0);
                     List<FlowComponent> parents = new ArrayList<FlowComponent>();
@@ -175,7 +188,6 @@ public class AnimationController {
                     while ((index = parents.indexOf(current)) == -1) {
                         groupTracking.add(current = current.getParent());
                     }
-
 
                     for (int i = index - 1; i >= 0; i--) {
                         groupTracking.add(parents.get(i));
@@ -193,7 +205,8 @@ public class AnimationController {
                 manager.getFlowItems().add(target = new FlowComponent(manager, 50, 50, blueprint.getType()));
                 target.setId(blueprint.getId());
                 if (blueprint.getParent() != null) {
-                    target.setParent(manager.getFlowItems().get(blueprint.getParent().getId()));
+                    target.setParent(
+                            manager.getFlowItems().get(blueprint.getParent().getId()));
                 }
                 manager.getZLevelRenderingList().add(0, target);
                 virtualId = target.getId();
@@ -204,14 +217,15 @@ public class AnimationController {
             case POSITION:
                 int distanceX = blueprint.getX() - target.getX();
                 int distanceY = blueprint.getY() - target.getY();
-                float distance = (float)Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+                float distance = (float) Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 
                 if (distance < 1) {
                     target.setX(blueprint.getX());
                     target.setY(blueprint.getY());
-                    if (target.getType() == ComponentType.GROUP && target.getName().equals(blueprint.getName())) {
+                    if (target.getType() == ComponentType.GROUP
+                            && target.getName().equals(blueprint.getName())) {
                         progress = Progress.CLOSE;
-                    }else{
+                    } else {
                         progress = Progress.OPEN;
                     }
                     delay = 0.25F + distance * MOVE_SPEED;
@@ -221,8 +235,8 @@ public class AnimationController {
                 float timeMovement = time * MOVE_SPEED;
                 float movement = Math.min(distance, timeMovement);
 
-                target.setX(target.getX() + (int)(distanceX * (movement / distance)));
-                target.setY(target.getY() + (int)(distanceY * (movement / distance)));
+                target.setX(target.getX() + (int) (distanceX * (movement / distance)));
+                target.setY(target.getY() + (int) (distanceY * (movement / distance)));
                 time = Math.max(0, time - movement / MOVE_SPEED);
                 return true;
             case OPEN:
@@ -236,7 +250,7 @@ public class AnimationController {
                     menuId = target.getMenus().size() - 1;
                     target.setNameEdited(false);
                     delay = 0.5F;
-                }else{
+                } else {
                     if (!target.isNameBeingEdited()) {
                         target.setNameEdited(true);
                         delay = 0.5F;
@@ -259,13 +273,13 @@ public class AnimationController {
                     if (target.getOpenMenuId() == menu.getId()) {
                         if (setMenuInfo) {
                             target.setOpenMenuId(-1);
-                        }else{
+                        } else {
                             setMenuInfo = true;
                             menu.copyFrom(blueprint.getMenus().get(menu.getId()));
                             delay = 0.5F;
                             return true;
                         }
-                    }else{
+                    } else {
                         setMenuInfo = false;
                         target.setOpenMenuId(menu.getId());
                         delay = 0.5F;
@@ -276,7 +290,7 @@ public class AnimationController {
 
                 if (target.getMenus().size() == 1 || menuId == target.getMenus().size() - 2) {
                     progress = Progress.CLOSE;
-                }else{
+                } else {
                     menuId = (menuId + 1) % target.getMenus().size();
                 }
                 delay = 0.2F;
@@ -293,13 +307,16 @@ public class AnimationController {
 
                         distanceX = targetConnectionX - target.getOverrideX();
                         distanceY = targetConnectionY - target.getOverrideY();
-                        distance = (float)Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+                        distance = (float) Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 
                         if (distance < 1) {
                             int connectionId = manager.getCurrentlyConnecting().getConnectionId();
-                            Connection connection = blueprint.getConnection(connectionId).copy();
+                            Connection connection =
+                                    blueprint.getConnection(connectionId).copy();
                             target.setConnection(connectionId, connection);
-                            manager.getFlowItems().get(connection.getComponentId()).setConnection(connection.getConnectionId(), manager.getCurrentlyConnecting());
+                            manager.getFlowItems()
+                                    .get(connection.getComponentId())
+                                    .setConnection(connection.getConnectionId(), manager.getCurrentlyConnecting());
                             manager.setCurrentlyConnecting(null);
                             delay = 0.25F + distance / MOVE_SPEED_CONNECTION;
                             return true;
@@ -311,21 +328,27 @@ public class AnimationController {
                         target.setOverrideX(target.getOverrideX() + (int) (distanceX * (movement / distance)));
                         target.setOverrideY(target.getOverrideY() + (int) (distanceY * (movement / distance)));
                         time = Math.max(0, time - movement / MOVE_SPEED_CONNECTION);
-                    }else{
+                    } else {
                         for (int i = 0; i < blueprint.getConnectionSet().getConnections().length; i++) {
                             if (target.getConnection(i) == null) {
                                 Connection connection = blueprint.getConnection(i);
-                                if (connection != null && connection.getComponentId() < virtualId && groupNodes.get(connection.getComponentId()) == null) {
+                                if (connection != null
+                                        && connection.getComponentId() < virtualId
+                                        && groupNodes.get(connection.getComponentId()) == null) {
                                     int[] location = target.getConnectionLocationFromId(i);
                                     if (location != null) {
                                         manager.setCurrentlyConnecting(new Connection(target.getId(), i));
                                         target.setOverrideX(location[0] + location[3] / 2);
                                         target.setOverrideY(location[1] + location[4] / 2);
-                                        int[] targetConnectionLocation = manager.getFlowItems().get(connection.getComponentId()).getConnectionLocationFromId(connection.getConnectionId());
-                                        targetConnectionX = targetConnectionLocation[0] + targetConnectionLocation[3] / 2;
-                                        targetConnectionY = targetConnectionLocation[1] + targetConnectionLocation[4] / 2;
+                                        int[] targetConnectionLocation = manager.getFlowItems()
+                                                .get(connection.getComponentId())
+                                                .getConnectionLocationFromId(connection.getConnectionId());
+                                        targetConnectionX =
+                                                targetConnectionLocation[0] + targetConnectionLocation[3] / 2;
+                                        targetConnectionY =
+                                                targetConnectionLocation[1] + targetConnectionLocation[4] / 2;
                                         return true;
-                                    }else{
+                                    } else {
                                         blueprint.setConnection(i, null);
                                     }
                                 }
@@ -346,7 +369,7 @@ public class AnimationController {
                                 moveToFront(target);
                                 delay = 0.75F;
                                 return true;
-                            }else{
+                            } else {
                                 groupNodes.put(id, count - 1);
                             }
                         }
@@ -354,7 +377,7 @@ public class AnimationController {
                         progress = Progress.NODES;
                         return true;
                     }
-                }else{
+                } else {
                     progress = Progress.NODES;
                     return true;
                 }
@@ -365,24 +388,26 @@ public class AnimationController {
                         if (nodesBlueprint.size() == 0) {
                             nodesConnection = null;
                             return true;
-                        }else{
+                        } else {
                             blueprintNode = nodesBlueprint.remove(0);
                             if (nodesConnection.getNodes().size() == 0) {
                                 nodesConnection.addAndSelectNode(connectionX, connectionY, 0);
-                            }else{
-                                nodesConnection.addAndSelectNode(nodesConnection.getNodes().get(0).getX(), nodesConnection.getNodes().get(0).getY(), 0);
+                            } else {
+                                nodesConnection.addAndSelectNode(
+                                        nodesConnection.getNodes().get(0).getX(),
+                                        nodesConnection.getNodes().get(0).getY(),
+                                        0);
                             }
 
                             delay = 0.2F;
                             return true;
                         }
-                    }else{
+                    } else {
                         Point node = nodesConnection.getSelectedNode();
-
 
                         distanceX = blueprintNode.getX() - node.getX();
                         distanceY = blueprintNode.getY() - node.getY();
-                        distance = (float)Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+                        distance = (float) Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 
                         if (distance < 1) {
                             node.setX(blueprintNode.getX());
@@ -400,16 +425,25 @@ public class AnimationController {
                         node.setY(node.getY() + (int) (distanceY * (movement / distance)));
                         time = Math.max(0, time - movement / MOVE_SPEED_NODE);
                     }
-                }else{
+                } else {
                     for (int i = 0; i < target.getConnectionSet().getConnections().length; i++) {
                         if (target.getConnection(i) != null) {
-                            boolean reverse = target.getId() >= target.getConnection(i).getComponentId();
-                            FlowComponent other = blueprints.get(target.getConnection(i).getComponentId());
-                            FlowComponent otherTarget = manager.getFlowItems().get(target.getConnection(i).getComponentId());
-                            Connection connection = reverse ? other.getConnection(target.getConnection(i).getConnectionId()) : blueprint.getConnection(i);
-                            Connection targetConnection = reverse ? otherTarget.getConnection(target.getConnection(i).getConnectionId()) : target.getConnection(i);
-                            if (targetConnection.getNodes().isEmpty() && !connection.getNodes().isEmpty()) {
-
+                            boolean reverse =
+                                    target.getId() >= target.getConnection(i).getComponentId();
+                            FlowComponent other =
+                                    blueprints.get(target.getConnection(i).getComponentId());
+                            FlowComponent otherTarget = manager.getFlowItems()
+                                    .get(target.getConnection(i).getComponentId());
+                            Connection connection = reverse
+                                    ? other.getConnection(
+                                            target.getConnection(i).getConnectionId())
+                                    : blueprint.getConnection(i);
+                            Connection targetConnection = reverse
+                                    ? otherTarget.getConnection(
+                                            target.getConnection(i).getConnectionId())
+                                    : target.getConnection(i);
+                            if (targetConnection.getNodes().isEmpty()
+                                    && !connection.getNodes().isEmpty()) {
 
                                 nodesConnection = targetConnection;
                                 nodesBlueprint = new ArrayList<Point>(connection.getNodes());
@@ -418,7 +452,10 @@ public class AnimationController {
                                     Collections.reverse(nodesBlueprint);
                                 }
 
-                                int[] location = reverse ? other.getConnectionLocationFromId(target.getConnection(i).getConnectionId()) : target.getConnectionLocationFromId(i);
+                                int[] location = reverse
+                                        ? other.getConnectionLocationFromId(
+                                                target.getConnection(i).getConnectionId())
+                                        : target.getConnectionLocationFromId(i);
 
                                 connectionX = location[0] + location[3] / 2;
                                 connectionY = location[1] + location[4] / 2;
@@ -431,7 +468,6 @@ public class AnimationController {
                     progress = Progress.GROUP;
                     return true;
                 }
-
         }
 
         return false;
@@ -455,11 +491,9 @@ public class AnimationController {
         NODES
     }
 
-
     private void moveToFront(FlowComponent c) {
         FlowComponent component = manager.getFlowItems().get(c.getId());
         manager.getZLevelRenderingList().remove(c);
         manager.getZLevelRenderingList().add(0, component);
     }
-
 }

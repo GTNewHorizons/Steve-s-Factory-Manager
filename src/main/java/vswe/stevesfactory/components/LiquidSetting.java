@@ -1,5 +1,7 @@
 package vswe.stevesfactory.components;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -7,9 +9,6 @@ import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LiquidSetting extends Setting {
     private Fluid fluid;

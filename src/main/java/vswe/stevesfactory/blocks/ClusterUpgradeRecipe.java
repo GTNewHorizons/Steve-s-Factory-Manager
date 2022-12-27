@@ -1,14 +1,12 @@
 package vswe.stevesfactory.blocks;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.RecipeSorter;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class ClusterUpgradeRecipe extends ShapelessRecipes {
 
@@ -26,7 +24,11 @@ public class ClusterUpgradeRecipe extends ShapelessRecipes {
 
     public ClusterUpgradeRecipe() {
         super(RESULT, RECIPE);
-        RecipeSorter.register("sfm:clusterupgrade", ClusterUpgradeRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.register(
+                "sfm:clusterupgrade",
+                ClusterUpgradeRecipe.class,
+                RecipeSorter.Category.SHAPELESS,
+                "after:minecraft:shapeless");
     }
 
     @Override
@@ -34,7 +36,9 @@ public class ClusterUpgradeRecipe extends ShapelessRecipes {
         for (int i = 0; i < inv.getSizeInventory(); i++) {
             ItemStack itemStack = inv.getStackInSlot(i);
 
-            if (itemStack != null && itemStack.getItem() != null && Block.getBlockFromItem(itemStack.getItem()) == ModBlocks.blockCableCluster) {
+            if (itemStack != null
+                    && itemStack.getItem() != null
+                    && Block.getBlockFromItem(itemStack.getItem()) == ModBlocks.blockCableCluster) {
                 ItemStack copy = itemStack.copy();
                 copy.setItemDamage(8);
                 return copy;

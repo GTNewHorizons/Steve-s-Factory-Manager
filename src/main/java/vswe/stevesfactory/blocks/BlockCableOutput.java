@@ -1,6 +1,5 @@
 package vswe.stevesfactory.blocks;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
@@ -12,7 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import vswe.stevesfactory.StevesFactoryManager;
 
-//This is indeed not a subclass to the cable, you can't relay signals through this block
+// This is indeed not a subclass to the cable, you can't relay signals through this block
 public class BlockCableOutput extends BlockContainer {
     public BlockCableOutput() {
         super(Material.iron);
@@ -29,8 +28,10 @@ public class BlockCableOutput extends BlockContainer {
 
     @SideOnly(Side.CLIENT)
     private IIcon inactiveIcon;
+
     @SideOnly(Side.CLIENT)
     private IIcon weakIcon;
+
     @SideOnly(Side.CLIENT)
     private IIcon strongIcon;
 
@@ -41,7 +42,6 @@ public class BlockCableOutput extends BlockContainer {
         weakIcon = register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":cable_output_weak");
         inactiveIcon = register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":cable_idle");
     }
-
 
     @Override
     public IIcon getIcon(int side, int meta) {
@@ -54,8 +54,8 @@ public class BlockCableOutput extends BlockContainer {
         if (te != null && te.getStrengthFromSide(side) > 0) {
             return te.hasStrongSignalAtSide(side) ? strongIcon : weakIcon;
         }
-        return inactiveIcon;    }
-
+        return inactiveIcon;
+    }
 
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
@@ -86,7 +86,7 @@ public class BlockCableOutput extends BlockContainer {
     }
 
     @Override
-    public boolean canProvidePower(){
+    public boolean canProvidePower() {
         return true;
     }
 }

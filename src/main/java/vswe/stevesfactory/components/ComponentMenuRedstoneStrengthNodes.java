@@ -1,6 +1,5 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public class ComponentMenuRedstoneStrengthNodes extends ComponentMenuRedstoneStrength {

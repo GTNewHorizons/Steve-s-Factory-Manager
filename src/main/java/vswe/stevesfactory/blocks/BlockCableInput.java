@@ -11,7 +11,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import vswe.stevesfactory.StevesFactoryManager;
 
-
 public class BlockCableInput extends BlockContainer {
     public BlockCableInput() {
         super(Material.iron);

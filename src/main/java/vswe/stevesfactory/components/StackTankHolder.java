@@ -1,7 +1,5 @@
 package vswe.stevesfactory.components;
 
-
-
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -24,7 +22,6 @@ public class StackTankHolder {
     public FluidStack getFluidStack() {
         return fluidStack;
     }
-
 
     public IFluidHandler getTank() {
         return tank;

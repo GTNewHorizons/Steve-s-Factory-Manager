@@ -1,6 +1,5 @@
 package vswe.stevesfactory.wrappers;
 
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,7 +18,7 @@ public class InventoryWrapperPlayer extends InventoryWrapper {
             int armorType = 39 - i;
             Item item = itemstack.getItem();
             return item != null && item.isValidArmor(itemstack, armorType, player);
-        }else{
+        } else {
             return super.isItemValidForSlot(i, itemstack);
         }
     }

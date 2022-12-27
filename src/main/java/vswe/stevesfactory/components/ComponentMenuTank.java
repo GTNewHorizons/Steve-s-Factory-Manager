@@ -1,10 +1,8 @@
 package vswe.stevesfactory.components;
 
+import java.util.List;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.ConnectionBlockType;
-
-import java.util.List;
-
 
 public class ComponentMenuTank extends ComponentMenuContainer {
     public ComponentMenuTank(FlowComponent parent) {

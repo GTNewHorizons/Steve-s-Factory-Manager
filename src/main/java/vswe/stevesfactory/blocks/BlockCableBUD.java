@@ -1,6 +1,5 @@
 package vswe.stevesfactory.blocks;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -38,6 +37,4 @@ public class BlockCableBUD extends BlockContainer {
             bud.onTrigger();
         }
     }
-
-
 }

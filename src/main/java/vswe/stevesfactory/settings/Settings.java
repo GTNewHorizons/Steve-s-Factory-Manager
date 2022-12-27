@@ -1,6 +1,5 @@
 package vswe.stevesfactory.settings;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.blocks.TileEntityManager;
@@ -8,7 +7,6 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.FileHelper;
 import vswe.stevesfactory.network.PacketHandler;
-
 
 public final class Settings {
 
@@ -47,12 +45,12 @@ public final class Settings {
                 if (version >= 1) {
                     priorityMoveFirst = dr.readBoolean();
                 }
-            }catch (Exception ignored){
+            } catch (Exception ignored) {
                 loadDefault();
-            }finally {
+            } finally {
                 dr.close();
             }
-        }else{
+        } else {
             loadDefault();
         }
     }
@@ -152,7 +150,7 @@ public final class Settings {
     }
 
     public static boolean isLimitless(TileEntityManager manager) {
-       return ( manager.getWorldObj().getBlockMetadata(manager.xCoord, manager.yCoord, manager.zCoord) & 1) != 0;
+        return (manager.getWorldObj().getBlockMetadata(manager.xCoord, manager.yCoord, manager.zCoord) & 1) != 0;
     }
 
     public static void setLimitless(TileEntityManager manager, boolean limitless) {
@@ -160,11 +158,11 @@ public final class Settings {
             DataWriter dw = PacketHandler.getWriterForServerActionPacket();
             dw.writeBoolean(limitless);
             PacketHandler.sendDataToServer(dw);
-        }else{
+        } else {
             int meta = manager.getWorldObj().getBlockMetadata(manager.xCoord, manager.yCoord, manager.zCoord);
             if (limitless) {
                 meta |= 1;
-            }else{
+            } else {
                 meta &= ~1;
             }
             manager.getWorldObj().setBlockMetadataWithNotify(manager.xCoord, manager.yCoord, manager.zCoord, meta, 3);

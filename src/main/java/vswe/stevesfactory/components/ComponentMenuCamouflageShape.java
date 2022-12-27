@@ -11,7 +11,6 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
-
 public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvanced {
     public ComponentMenuCamouflageShape(FlowComponent parent) {
         super(parent);
@@ -35,61 +34,65 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
             }
         });
 
-        checkBoxes.addCheckBox(new CheckBox(Localization.CAMOUFLAGE_COLLISION_USE, CHECK_BOX_X, CHECK_BOX_Y + CHECK_BOX_SPACING_Y) {
-            @Override
-            public void setValue(boolean val) {
-                useCollision = val;
-            }
+        checkBoxes.addCheckBox(
+                new CheckBox(Localization.CAMOUFLAGE_COLLISION_USE, CHECK_BOX_X, CHECK_BOX_Y + CHECK_BOX_SPACING_Y) {
+                    @Override
+                    public void setValue(boolean val) {
+                        useCollision = val;
+                    }
 
-            @Override
-            public boolean getValue() {
-                return useCollision;
-            }
+                    @Override
+                    public boolean getValue() {
+                        return useCollision;
+                    }
 
-            @Override
-            public void onUpdate() {
-                sendCheckBoxPacket();
-            }
+                    @Override
+                    public void onUpdate() {
+                        sendCheckBoxPacket();
+                    }
 
-            @Override
-            public boolean isVisible() {
-                return inUse;
-            }
-        });
+                    @Override
+                    public boolean isVisible() {
+                        return inUse;
+                    }
+                });
 
-        checkBoxes.addCheckBox(new CheckBox(Localization.CAMOUFLAGE_COLLISION_FULL, CHECK_BOX_X + CHECK_BOX_SPACING_X, CHECK_BOX_Y + CHECK_BOX_SPACING_Y) {
-            @Override
-            public void setValue(boolean val) {
-                fullCollision = val;
-            }
+        checkBoxes.addCheckBox(
+                new CheckBox(
+                        Localization.CAMOUFLAGE_COLLISION_FULL,
+                        CHECK_BOX_X + CHECK_BOX_SPACING_X,
+                        CHECK_BOX_Y + CHECK_BOX_SPACING_Y) {
+                    @Override
+                    public void setValue(boolean val) {
+                        fullCollision = val;
+                    }
 
-            @Override
-            public boolean getValue() {
-                return fullCollision;
-            }
+                    @Override
+                    public boolean getValue() {
+                        return fullCollision;
+                    }
 
-            @Override
-            public void onUpdate() {
-                sendCheckBoxPacket();
-            }
+                    @Override
+                    public void onUpdate() {
+                        sendCheckBoxPacket();
+                    }
 
-            @Override
-            public boolean isVisible() {
-                return inUse && useCollision;
-            }
-        });
-
+                    @Override
+                    public boolean isVisible() {
+                        return inUse && useCollision;
+                    }
+                });
 
         textBoxes = new TextBoxNumberList();
         for (int i = 0; i < 6; i++) {
             int x = i % 2;
             int y = i / 2;
 
-            textBoxes.addTextBox(new TextBoxRange(i, TEXT_BOX_X + TEXT_BOX_SPACING_X * x, TEXT_BOX_Y + TEXT_BOX_SPACING_Y * y, x == 0 ? 0 : 32));
+            textBoxes.addTextBox(new TextBoxRange(
+                    i, TEXT_BOX_X + TEXT_BOX_SPACING_X * x, TEXT_BOX_Y + TEXT_BOX_SPACING_Y * y, x == 0 ? 0 : 32));
         }
 
         loadDefault();
-
     }
 
     private void sendCheckBoxPacket() {
@@ -122,6 +125,7 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
     private class TextBoxRange extends TextBoxNumber {
         private int id;
         private int defaultNumber;
+
         public TextBoxRange(int id, int x, int y, int defaultNumber) {
             super(x, y, 2, false);
             this.defaultNumber = defaultNumber;
@@ -174,6 +178,7 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
     public String getName() {
         return Localization.BOUNDS_MENU.toString();
     }
+
     private Localization[] coordinates = {Localization.X, Localization.Y, Localization.Z};
 
     @SideOnly(Side.CLIENT)
@@ -199,24 +204,23 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
         }
     }
 
-
     @Override
     public boolean onKeyStroke(GuiManager gui, char c, int k) {
         if (inUse) {
             return textBoxes.onKeyStroke(gui, c, k);
-        }else{
+        } else {
             return super.onKeyStroke(gui, c, k);
         }
     }
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -240,7 +244,7 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
             for (int i = 0; i < 6; i++) {
                 textBoxes.getTextBox(i).setNumber(dr.readData(DataBitHelper.CAMOUFLAGE_BOUNDS));
             }
-        }else{
+        } else {
             loadDefault();
         }
     }
@@ -250,29 +254,33 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
         useCollision = true;
         fullCollision = false;
         for (int i = 0; i < 6; i++) {
-            ((TextBoxRange)textBoxes.getTextBox(i)).reset();
+            ((TextBoxRange) textBoxes.getTextBox(i)).reset();
         }
     }
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuCamouflageShape menuShape = (ComponentMenuCamouflageShape)menu;
+        ComponentMenuCamouflageShape menuShape = (ComponentMenuCamouflageShape) menu;
         if (menuShape.inUse) {
             inUse = true;
             useCollision = menuShape.useCollision;
             fullCollision = menuShape.fullCollision;
             for (int i = 0; i < 6; i++) {
-                textBoxes.getTextBox(i).setNumber(menuShape.textBoxes.getTextBox(i).getNumber());
+                textBoxes
+                        .getTextBox(i)
+                        .setNumber(menuShape.textBoxes.getTextBox(i).getNumber());
             }
-        }else{
+        } else {
             loadDefault();
         }
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuCamouflageShape newDataShape = (ComponentMenuCamouflageShape)newData;
-        if (inUse != newDataShape.inUse || useCollision != newDataShape.useCollision || fullCollision != newDataShape.fullCollision) {
+        ComponentMenuCamouflageShape newDataShape = (ComponentMenuCamouflageShape) newData;
+        if (inUse != newDataShape.inUse
+                || useCollision != newDataShape.useCollision
+                || fullCollision != newDataShape.fullCollision) {
             inUse = newDataShape.inUse;
 
             DataWriter dw = getWriterForClientComponentPacket(container);
@@ -280,7 +288,7 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
             dw.writeBoolean(inUse);
             if (!inUse) {
                 loadDefault();
-            }else{
+            } else {
                 useCollision = newDataShape.useCollision;
                 fullCollision = newDataShape.fullCollision;
                 dw.writeBoolean(useCollision);
@@ -290,8 +298,11 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
         }
 
         for (int i = 0; i < 6; i++) {
-            if (textBoxes.getTextBox(i).getNumber() != newDataShape.textBoxes.getTextBox(i).getNumber()) {
-                textBoxes.getTextBox(i).setNumber(newDataShape.textBoxes.getTextBox(i).getNumber());
+            if (textBoxes.getTextBox(i).getNumber()
+                    != newDataShape.textBoxes.getTextBox(i).getNumber()) {
+                textBoxes
+                        .getTextBox(i)
+                        .setNumber(newDataShape.textBoxes.getTextBox(i).getNumber());
 
                 DataWriter dw = getWriterForClientComponentPacket(container);
                 dw.writeData(i + 1, DataBitHelper.CAMOUFLAGE_BOUND_TYPE);
@@ -323,7 +334,7 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
             textBoxes.getTextBox(3).setNumber(nbtTagCompound.getByte(NBT_MAX_Y));
             textBoxes.getTextBox(4).setNumber(nbtTagCompound.getByte(NBT_MIN_Z));
             textBoxes.getTextBox(5).setNumber(nbtTagCompound.getByte(NBT_MAX_Z));
-        }else{
+        } else {
             loadDefault();
         }
     }
@@ -335,29 +346,27 @@ public class ComponentMenuCamouflageShape extends ComponentMenuCamouflageAdvance
             nbtTagCompound.setBoolean(NBT_COLLISION, useCollision);
             nbtTagCompound.setBoolean(NBT_FULL, fullCollision);
             nbtTagCompound.setByte(NBT_MIN_X, (byte) textBoxes.getTextBox(0).getNumber());
-            nbtTagCompound.setByte(NBT_MAX_X, (byte)textBoxes.getTextBox(1).getNumber());
-            nbtTagCompound.setByte(NBT_MIN_Y, (byte)textBoxes.getTextBox(2).getNumber());
-            nbtTagCompound.setByte(NBT_MAX_Y, (byte)textBoxes.getTextBox(3).getNumber());
-            nbtTagCompound.setByte(NBT_MIN_Z, (byte)textBoxes.getTextBox(4).getNumber());
-            nbtTagCompound.setByte(NBT_MAX_Z, (byte)textBoxes.getTextBox(5).getNumber());
+            nbtTagCompound.setByte(NBT_MAX_X, (byte) textBoxes.getTextBox(1).getNumber());
+            nbtTagCompound.setByte(NBT_MIN_Y, (byte) textBoxes.getTextBox(2).getNumber());
+            nbtTagCompound.setByte(NBT_MAX_Y, (byte) textBoxes.getTextBox(3).getNumber());
+            nbtTagCompound.setByte(NBT_MIN_Z, (byte) textBoxes.getTextBox(4).getNumber());
+            nbtTagCompound.setByte(NBT_MAX_Z, (byte) textBoxes.getTextBox(5).getNumber());
         }
     }
 
     @Override
     public void readNetworkComponent(DataReader dr) {
-       int id = dr.readData(DataBitHelper.CAMOUFLAGE_BOUND_TYPE);
-       if (id == 0) {
-           inUse = dr.readBoolean();
-           if (inUse) {
-               useCollision = dr.readBoolean();
-               fullCollision = dr.readBoolean();
-           }else{
-               loadDefault();
-           }
-       }else{
-           textBoxes.getTextBox(id - 1).setNumber(dr.readData(DataBitHelper.CAMOUFLAGE_BOUNDS));
-       }
+        int id = dr.readData(DataBitHelper.CAMOUFLAGE_BOUND_TYPE);
+        if (id == 0) {
+            inUse = dr.readBoolean();
+            if (inUse) {
+                useCollision = dr.readBoolean();
+                fullCollision = dr.readBoolean();
+            } else {
+                loadDefault();
+            }
+        } else {
+            textBoxes.getTextBox(id - 1).setNumber(dr.readData(DataBitHelper.CAMOUFLAGE_BOUNDS));
+        }
     }
-
-
 }

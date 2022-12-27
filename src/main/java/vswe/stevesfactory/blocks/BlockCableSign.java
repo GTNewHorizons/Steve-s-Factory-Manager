@@ -1,6 +1,5 @@
 package vswe.stevesfactory.blocks;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
@@ -15,7 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import vswe.stevesfactory.StevesFactoryManager;
 
-//This is indeed not a subclass to the cable, you can't relay signals through this block
+// This is indeed not a subclass to the cable, you can't relay signals through this block
 public class BlockCableSign extends BlockContainer {
     public BlockCableSign() {
         super(Material.iron);
@@ -32,7 +31,6 @@ public class BlockCableSign extends BlockContainer {
 
     @SideOnly(Side.CLIENT)
     private IIcon frontIcon;
-
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -52,11 +50,11 @@ public class BlockCableSign extends BlockContainer {
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
         return getIconFromSideAndMeta(side, world.getBlockMetadata(x, y, z));
     }
+
     @SideOnly(Side.CLIENT)
     private IIcon getIconFromSideAndMeta(int side, int meta) {
         return side == meta ? frontIcon : blockIcon;
     }
-
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack item) {
@@ -67,6 +65,4 @@ public class BlockCableSign extends BlockContainer {
             sign.setMetaData(meta);
         }
     }
-
-
 }

@@ -1,5 +1,7 @@
 package vswe.stevesfactory.components;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.CollisionHelper;
@@ -9,10 +11,6 @@ import vswe.stevesfactory.interfaces.GuiManager;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class ComponentMenuGroup extends ComponentMenu {
     public ComponentMenuGroup(FlowComponent parent) {
@@ -30,16 +28,22 @@ public class ComponentMenuGroup extends ComponentMenu {
 
     @Override
     public void draw(GuiManager gui, int mX, int mY) {
-        gui.drawSplitString(Localization.GROUP_INFO.toString(), TEXT_MARGIN_X, TEXT_Y, MENU_WIDTH - TEXT_MARGIN_X * 2, 1F, 0x404040);
+        gui.drawSplitString(
+                Localization.GROUP_INFO.toString(),
+                TEXT_MARGIN_X,
+                TEXT_Y,
+                MENU_WIDTH - TEXT_MARGIN_X * 2,
+                1F,
+                0x404040);
     }
 
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     private boolean inBounds(int mX, int mY) {
-        return  (CollisionHelper.inBounds(0, 0, MENU_WIDTH, FlowComponent.getMenuOpenSize(), mX, mY));
+        return (CollisionHelper.inBounds(0, 0, MENU_WIDTH, FlowComponent.getMenuOpenSize(), mX, mY));
     }
 
     @Override
@@ -49,7 +53,7 @@ public class ComponentMenuGroup extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -72,32 +76,32 @@ public class ComponentMenuGroup extends ComponentMenu {
 
     @Override
     public void writeData(DataWriter dw) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void readData(DataReader dr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound, int version, boolean pickup) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -122,12 +126,13 @@ public class ComponentMenuGroup extends ComponentMenu {
                     for (int i = 0; i < flowComponent.getConnectionSet().getConnections().length; i++) {
                         Connection connection = flowComponent.getConnection(i);
                         if (connection != null && connection.getComponentId() == parent.getId()) {
-                            flowComponent.removeConnection(i); //remove all connections to the component we're moving stuff into
+                            flowComponent.removeConnection(
+                                    i); // remove all connections to the component we're moving stuff into
                         }
                     }
                 }
             }
-        }else if (!component.equals(parent)){
+        } else if (!component.equals(parent)) {
             component.setParent(parent);
             component.removeAllConnections();
         }
@@ -140,7 +145,8 @@ public class ComponentMenuGroup extends ComponentMenu {
             for (int i = 0; i < component.getConnectionSet().getConnections().length; i++) {
                 Connection connection = component.getConnection(i);
                 if (connection != null) {
-                    findCluster(components, component.getManager().getFlowItems().get(connection.getComponentId()), parent);
+                    findCluster(
+                            components, component.getManager().getFlowItems().get(connection.getComponentId()), parent);
                 }
             }
         }

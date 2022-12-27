@@ -1,6 +1,5 @@
 package vswe.stevesfactory.proxy;
 
-
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import vswe.stevesfactory.blocks.ModBlocks;
 import vswe.stevesfactory.blocks.RenderCamouflage;

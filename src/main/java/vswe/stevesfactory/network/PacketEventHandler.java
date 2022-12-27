@@ -28,12 +28,11 @@ public class PacketEventHandler {
             if (container != null && container.windowId == containerId && container instanceof ContainerBase) {
                 if (dr.readBoolean()) {
                     ((ContainerBase) container).getTileEntity().readUpdatedData(dr, player);
-                }else{
-                    ((ContainerBase) container).getTileEntity().readAllData(dr , player);
+                } else {
+                    ((ContainerBase) container).getTileEntity().readAllData(dr, player);
                 }
-
             }
-        }else{
+        } else {
             int x = dr.readData(DataBitHelper.WORLD_COORDINATE);
             int y = dr.readData(DataBitHelper.WORLD_COORDINATE);
             int z = dr.readData(DataBitHelper.WORLD_COORDINATE);
@@ -41,7 +40,7 @@ public class PacketEventHandler {
             TileEntity te = player.worldObj.getTileEntity(x, y, z);
             if (te != null && te instanceof IPacketBlock) {
                 int id = dr.readData(((IPacketBlock) te).infoBitLength(false));
-                ((IPacketBlock)te).readData(dr, player, false, id);
+                ((IPacketBlock) te).readData(dr, player, false, id);
             }
         }
 
@@ -51,7 +50,7 @@ public class PacketEventHandler {
     @SubscribeEvent
     public void onServerPacket(FMLNetworkEvent.ServerCustomPacketEvent event) {
         DataReader dr = new DataReader(event.packet.payload().array());
-        EntityPlayer player = ((NetHandlerPlayServer)event.handler).playerEntity;
+        EntityPlayer player = ((NetHandlerPlayServer) event.handler).playerEntity;
 
         boolean useContainer = dr.readBoolean();
 
@@ -61,9 +60,9 @@ public class PacketEventHandler {
 
             if (container != null && container.windowId == containerId && container instanceof ContainerBase) {
                 ((ContainerBase) container).getTileEntity().readUpdatedData(dr, player);
-                ((TileEntity)((ContainerBase) container).getTileEntity()).markDirty();
+                ((TileEntity) ((ContainerBase) container).getTileEntity()).markDirty();
             }
-        }else{
+        } else {
             int x = dr.readData(DataBitHelper.WORLD_COORDINATE);
             int y = dr.readData(DataBitHelper.WORLD_COORDINATE);
             int z = dr.readData(DataBitHelper.WORLD_COORDINATE);
@@ -71,11 +70,10 @@ public class PacketEventHandler {
             TileEntity te = player.worldObj.getTileEntity(x, y, z);
             if (te != null && te instanceof IPacketBlock) {
                 int id = dr.readData(((IPacketBlock) te).infoBitLength(true));
-                ((IPacketBlock)te).readData(dr, player, true, id);
+                ((IPacketBlock) te).readData(dr, player, true, id);
             }
         }
 
         dr.close();
     }
-
 }

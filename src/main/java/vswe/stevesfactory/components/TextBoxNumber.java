@@ -1,6 +1,5 @@
 package vswe.stevesfactory.components;
 
-
 public class TextBoxNumber {
     private static final int TEXT_BOX_SIZE_W = 21;
     private static final int TEXT_BOX_SIZE_W_WIDE = 33;
@@ -10,6 +9,7 @@ public class TextBoxNumber {
     private int number;
     private int length;
     private boolean wide;
+
     public TextBoxNumber(int x, int y, int length, boolean wide) {
         this.x = x;
         this.y = y;

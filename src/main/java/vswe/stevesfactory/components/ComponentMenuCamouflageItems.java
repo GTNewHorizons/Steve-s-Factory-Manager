@@ -1,12 +1,10 @@
 package vswe.stevesfactory.components;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.GuiManager;
-
-import java.util.List;
 
 public class ComponentMenuCamouflageItems extends ComponentMenuItem {
     public ComponentMenuCamouflageItems(FlowComponent parent) {
@@ -44,7 +42,13 @@ public class ComponentMenuCamouflageItems extends ComponentMenuItem {
         super.draw(gui, mX, mY);
 
         if (!isEditing() && !isSearching()) {
-            gui.drawSplitString(Localization.CAMOUFLAGE_INFO.toString(), TEXT_MARGIN_X, TEXT_Y, MENU_WIDTH - TEXT_MARGIN_X * 2, 0.7F, 0x404040);
+            gui.drawSplitString(
+                    Localization.CAMOUFLAGE_INFO.toString(),
+                    TEXT_MARGIN_X,
+                    TEXT_Y,
+                    MENU_WIDTH - TEXT_MARGIN_X * 2,
+                    0.7F,
+                    0x404040);
         }
     }
 

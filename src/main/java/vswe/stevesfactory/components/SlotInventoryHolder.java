@@ -1,13 +1,11 @@
 package vswe.stevesfactory.components;
 
-
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidHandler;
 import vswe.stevesfactory.blocks.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SlotInventoryHolder {
     private TileEntity inventory;
@@ -26,35 +24,35 @@ public class SlotInventoryHolder {
     }
 
     public IInventory getInventory() {
-        return (IInventory)inventory;
+        return (IInventory) inventory;
     }
 
     public IFluidHandler getTank() {
-        return (IFluidHandler)inventory;
+        return (IFluidHandler) inventory;
     }
 
     public TileEntityOutput getEmitter() {
-        return (TileEntityOutput)inventory;
+        return (TileEntityOutput) inventory;
     }
 
     public IRedstoneNode getNode() {
-        return (IRedstoneNode)inventory;
+        return (IRedstoneNode) inventory;
     }
 
     public TileEntityInput getReceiver() {
-        return (TileEntityInput)inventory;
+        return (TileEntityInput) inventory;
     }
 
     public TileEntityBUD getBUD() {
-        return (TileEntityBUD)inventory;
+        return (TileEntityBUD) inventory;
     }
 
     public TileEntityCamouflage getCamouflage() {
-        return (TileEntityCamouflage)inventory;
+        return (TileEntityCamouflage) inventory;
     }
 
     public TileEntitySignUpdater getSign() {
-        return (TileEntitySignUpdater)inventory;
+        return (TileEntitySignUpdater) inventory;
     }
 
     public Map<Integer, SlotSideTarget> getValidSlots() {
@@ -80,7 +78,9 @@ public class SlotInventoryHolder {
 
         SlotInventoryHolder that = (SlotInventoryHolder) o;
 
-        return inventory.xCoord == that.inventory.xCoord && inventory.yCoord == that.inventory.yCoord && inventory.zCoord == that.inventory.yCoord;
+        return inventory.xCoord == that.inventory.xCoord
+                && inventory.yCoord == that.inventory.yCoord
+                && inventory.zCoord == that.inventory.yCoord;
     }
 
     @Override
@@ -93,6 +93,6 @@ public class SlotInventoryHolder {
     }
 
     public ITriggerNode getTrigger() {
-        return (ITriggerNode)inventory;
+        return (ITriggerNode) inventory;
     }
 }

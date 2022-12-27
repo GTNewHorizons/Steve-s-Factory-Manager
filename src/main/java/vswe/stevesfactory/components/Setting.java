@@ -2,12 +2,10 @@ package vswe.stevesfactory.components;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
-
-import java.util.List;
-
 
 public abstract class Setting {
     private int id;
@@ -43,16 +41,21 @@ public abstract class Setting {
     }
 
     public abstract int getAmount();
+
     public abstract void setAmount(int val);
+
     public abstract boolean isValid();
 
     public abstract void writeData(DataWriter dw);
+
     public abstract void readData(DataReader dr);
+
     public abstract void copyFrom(Setting setting);
 
     public abstract int getDefaultAmount();
 
     public abstract void load(NBTTagCompound settingTag);
+
     public abstract void save(NBTTagCompound settingTag);
 
     public abstract boolean isContentEqual(Setting otherSetting);

@@ -1,19 +1,17 @@
 package vswe.stevesfactory.blocks;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import vswe.stevesfactory.StevesFactoryManager;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 public class BlockCable extends Block {
     public BlockCable() {
@@ -66,35 +64,35 @@ public class BlockCable extends Block {
                 for (int y = -1; y <= 1; y++) {
                     for (int z = -1; z <= 1; z++) {
                         if (Math.abs(x) + Math.abs(y) + Math.abs(z) == 1) {
-                            WorldCoordinate target = new WorldCoordinate(element.getX() + x, element.getY() + y, element.getZ() + z, element.getDepth() + 1);
+                            WorldCoordinate target = new WorldCoordinate(
+                                    element.getX() + x, element.getY() + y, element.getZ() + z, element.getDepth() + 1);
 
                             if (!visited.contains(target)) {
                                 visited.add(target);
-                                //if (element.getDepth() < TileEntityManager.MAX_CABLE_LENGTH){
-                                    Block block = world.getBlock(target.getX(), target.getY(), target.getZ());
-                                    int meta = world.getBlockMetadata(target.getX(), target.getY(), target.getZ());
-                                    if (block == ModBlocks.blockManager){
-                                        TileEntity tileEntity = world.getTileEntity(target.getX(), target.getY(), target.getZ());
-                                        if (tileEntity != null && tileEntity instanceof TileEntityManager) {
-                                            ((TileEntityManager)tileEntity).updateInventories();
-                                        }
-                                    }else if (isCable(block, meta) /*&& target.getDepth() < TileEntityManager.MAX_CABLE_LENGTH*/) {
-                                        queue.add(target);
+                                // if (element.getDepth() < TileEntityManager.MAX_CABLE_LENGTH){
+                                Block block = world.getBlock(target.getX(), target.getY(), target.getZ());
+                                int meta = world.getBlockMetadata(target.getX(), target.getY(), target.getZ());
+                                if (block == ModBlocks.blockManager) {
+                                    TileEntity tileEntity =
+                                            world.getTileEntity(target.getX(), target.getY(), target.getZ());
+                                    if (tileEntity != null && tileEntity instanceof TileEntityManager) {
+                                        ((TileEntityManager) tileEntity).updateInventories();
                                     }
-                                //}
+                                } else if (isCable(
+                                        block, meta) /*&& target.getDepth() < TileEntityManager.MAX_CABLE_LENGTH*/) {
+                                    queue.add(target);
+                                }
+                                // }
                             }
                         }
                     }
                 }
             }
-
         }
-
-
-
     }
 
     public boolean isCable(Block block, int meta) {
-        return block == ModBlocks.blockCable || (block == ModBlocks.blockCableCluster && ModBlocks.blockCableCluster.isAdvanced(meta));
+        return block == ModBlocks.blockCable
+                || (block == ModBlocks.blockCableCluster && ModBlocks.blockCableCluster.isAdvanced(meta));
     }
 }

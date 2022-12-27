@@ -11,11 +11,9 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
-
 public class ComponentMenuSplit extends ComponentMenu {
     public ComponentMenuSplit(FlowComponent parent) {
         super(parent);
-
 
         radioButtons = new RadioButtonList() {
             @Override
@@ -73,7 +71,8 @@ public class ComponentMenuSplit extends ComponentMenu {
     private static final int RADIO_X = 5;
     private static final int RADIO_Y = 5;
     private static final int CHECK_BOX_X = 15;
-    private static final int SPACING_Y = 15 ;
+    private static final int SPACING_Y = 15;
+
     @Override
     public String getName() {
         return Localization.SPLIT_MENU.toString();
@@ -91,7 +90,7 @@ public class ComponentMenuSplit extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -104,12 +103,12 @@ public class ComponentMenuSplit extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -127,7 +126,7 @@ public class ComponentMenuSplit extends ComponentMenu {
         if (useSplit()) {
             setFair(dr.readBoolean());
             setEmpty(dr.readBoolean());
-        }else{
+        } else {
             setFair(false);
             setEmpty(false);
         }
@@ -135,15 +134,15 @@ public class ComponentMenuSplit extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-       ComponentMenuSplit menuSplit = (ComponentMenuSplit)menu;
-       setSplit(menuSplit.useSplit());
-       setFair(menuSplit.useFair());
-       setEmpty(menuSplit.useEmpty());
+        ComponentMenuSplit menuSplit = (ComponentMenuSplit) menu;
+        setSplit(menuSplit.useSplit());
+        setFair(menuSplit.useFair());
+        setEmpty(menuSplit.useEmpty());
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuSplit newDataSplit = (ComponentMenuSplit)newData;
+        ComponentMenuSplit newDataSplit = (ComponentMenuSplit) newData;
 
         if (useSplit() != newDataSplit.useSplit()) {
             setSplit(newDataSplit.useSplit());
@@ -235,7 +234,8 @@ public class ComponentMenuSplit extends ComponentMenu {
     }
 
     public static boolean isSplitConnection(FlowComponent component) {
-        return component.getConnectionSet() == ConnectionSet.MULTIPLE_OUTPUT_2 || component.getConnectionSet() == ConnectionSet.MULTIPLE_OUTPUT_5;
+        return component.getConnectionSet() == ConnectionSet.MULTIPLE_OUTPUT_2
+                || component.getConnectionSet() == ConnectionSet.MULTIPLE_OUTPUT_5;
     }
 
     public boolean useSplit() {
@@ -261,5 +261,4 @@ public class ComponentMenuSplit extends ComponentMenu {
     private void setEmpty(boolean val) {
         useEmpty = val;
     }
-
 }

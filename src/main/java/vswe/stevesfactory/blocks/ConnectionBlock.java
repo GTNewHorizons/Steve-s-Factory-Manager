@@ -2,6 +2,7 @@ package vswe.stevesfactory.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.EnumSet;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.tileentity.TileEntity;
 import vswe.stevesfactory.Localization;
@@ -9,8 +10,6 @@ import vswe.stevesfactory.components.ComponentMenuContainer;
 import vswe.stevesfactory.components.IContainerSelection;
 import vswe.stevesfactory.components.Variable;
 import vswe.stevesfactory.interfaces.GuiManager;
-
-import java.util.EnumSet;
 
 public class ConnectionBlock implements IContainerSelection {
 
@@ -30,11 +29,15 @@ public class ConnectionBlock implements IContainerSelection {
     }
 
     public static boolean isOfType(EnumSet<ConnectionBlockType> types, ConnectionBlockType type) {
-        return type == null || types.contains(type) || (type == ConnectionBlockType.NODE && (types.contains(ConnectionBlockType.RECEIVER) || types.contains(ConnectionBlockType.EMITTER)));
+        return type == null
+                || types.contains(type)
+                || (type == ConnectionBlockType.NODE
+                        && (types.contains(ConnectionBlockType.RECEIVER)
+                                || types.contains(ConnectionBlockType.EMITTER)));
     }
 
     public boolean isOfType(ConnectionBlockType type) {
-       return isOfType(this.types, type);
+        return isOfType(this.types, type);
     }
 
     public boolean isOfAnyType(EnumSet<ConnectionBlockType> types) {
@@ -71,7 +74,8 @@ public class ConnectionBlock implements IContainerSelection {
 
         str += getVariableTag(gui);
 
-        str += "\n" + Localization.X + ": " + tileEntity.xCoord + " " + Localization.Y + ": " + tileEntity.yCoord + " " + Localization.Z + ": " + tileEntity.zCoord;
+        str += "\n" + Localization.X + ": " + tileEntity.xCoord + " " + Localization.Y + ": " + tileEntity.yCoord + " "
+                + Localization.Z + ": " + tileEntity.zCoord;
         int distance = getDistance(gui.getManager());
         str += "\n" + distance + " " + (distance > 1 ? Localization.BLOCKS_AWAY : Localization.BLOCK_AWAY);
         str += "\n" + cableDistance + " " + (cableDistance > 1 ? Localization.CABLES_AWAY : Localization.CABLE_AWAY);
@@ -79,9 +83,9 @@ public class ConnectionBlock implements IContainerSelection {
         return str;
     }
 
-
     public int getDistance(TileEntityManager manager) {
-        return (int)Math.round(Math.sqrt(manager.getDistanceFrom(tileEntity.xCoord + 0.5, tileEntity.yCoord + 0.5, tileEntity.zCoord + 0.5)));
+        return (int) Math.round(Math.sqrt(
+                manager.getDistanceFrom(tileEntity.xCoord + 0.5, tileEntity.yCoord + 0.5, tileEntity.zCoord + 0.5)));
     }
 
     public int getCableDistance() {
@@ -97,7 +101,6 @@ public class ConnectionBlock implements IContainerSelection {
     public boolean isVariable() {
         return false;
     }
-
 
     @SideOnly(Side.CLIENT)
     private String getVariableTag(GuiManager gui) {
@@ -118,6 +121,10 @@ public class ConnectionBlock implements IContainerSelection {
 
     @SideOnly(Side.CLIENT)
     public boolean isPartOfVariable(Variable variable) {
-        return variable.isValid() && ((ComponentMenuContainer)variable.getDeclaration().getMenus().get(2)).getSelectedInventories().contains(id);
+        return variable.isValid()
+                && ((ComponentMenuContainer)
+                                variable.getDeclaration().getMenus().get(2))
+                        .getSelectedInventories()
+                        .contains(id);
     }
 }

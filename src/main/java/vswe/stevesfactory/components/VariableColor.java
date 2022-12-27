@@ -1,6 +1,5 @@
 package vswe.stevesfactory.components;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -43,7 +42,6 @@ public enum VariableColor {
     public void applyColor() {
         GL11.glColor4f(red, green, blue, 1F);
     }
-
 
     @Override
     public String toString() {

@@ -1,6 +1,5 @@
 package vswe.stevesfactory.network;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,10 +23,10 @@ public final class FileHelper {
             File file = new File(dir, name + ".dat");
             if (file.exists()) {
                 return new DataReader(new FileInputStream(file));
-            }else{
+            } else {
                 return null;
             }
-        }catch (IOException ignored) {
+        } catch (IOException ignored) {
             return null;
         }
     }
@@ -41,10 +40,10 @@ public final class FileHelper {
         try {
             File file = new File(dir, name + ".dat");
             if (file.exists()) {
-                //file.delete()
+                // file.delete()
             }
             return new DataWriter(new FileOutputStream(file));
-        }catch (IOException ignored) {
+        } catch (IOException ignored) {
             return null;
         }
     }

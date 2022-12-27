@@ -1,6 +1,5 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public enum ConnectionOption {
@@ -24,7 +23,6 @@ public enum ConnectionOption {
     private Localization name;
     private ConnectionType type;
 
-
     private ConnectionOption(Localization name, ConnectionType type) {
         this.name = name;
         this.type = type;
@@ -34,25 +32,30 @@ public enum ConnectionOption {
         return type == ConnectionType.INPUT;
     }
 
-
     public ConnectionType getType() {
         return type;
     }
-
 
     public String getName(FlowComponent component, int id) {
 
         if (name != null) {
             return name.toString();
-        }else if (this == DYNAMIC_INPUT){
-            return id < component.getChildrenInputNodes().size() ? component.getChildrenInputNodes().get(id).getName() : "";
-        }else {
-            return id < component.getChildrenOutputNodes().size() ? component.getChildrenOutputNodes().get(id).getName() : "";
+        } else if (this == DYNAMIC_INPUT) {
+            return id < component.getChildrenInputNodes().size()
+                    ? component.getChildrenInputNodes().get(id).getName()
+                    : "";
+        } else {
+            return id < component.getChildrenOutputNodes().size()
+                    ? component.getChildrenOutputNodes().get(id).getName()
+                    : "";
         }
     }
 
     public boolean isValid(FlowComponent component, int id) {
-        return name != null || (this == DYNAMIC_INPUT ? id < component.getChildrenInputNodes().size() : id < component.getChildrenOutputNodes().size());
+        return name != null
+                || (this == DYNAMIC_INPUT
+                        ? id < component.getChildrenInputNodes().size()
+                        : id < component.getChildrenOutputNodes().size());
     }
 
     public enum ConnectionType {

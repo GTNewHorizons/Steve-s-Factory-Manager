@@ -1,10 +1,8 @@
 package vswe.stevesfactory.components;
 
+import java.util.List;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.ConnectionBlockType;
-
-import java.util.List;
-
 
 public class ComponentMenuCamouflage extends ComponentMenuContainer {
     public ComponentMenuCamouflage(FlowComponent parent) {
@@ -18,7 +16,7 @@ public class ComponentMenuCamouflage extends ComponentMenuContainer {
 
     @Override
     protected void initRadioButtons() {
-        //nothing here
+        // nothing here
     }
 
     @Override

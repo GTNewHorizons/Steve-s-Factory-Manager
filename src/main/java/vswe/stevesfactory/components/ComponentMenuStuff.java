@@ -1,8 +1,10 @@
 package vswe.stevesfactory.components;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import vswe.stevesfactory.CollisionHelper;
@@ -14,19 +16,10 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class ComponentMenuStuff extends ComponentMenu {
-
-
 
     public ComponentMenuStuff(FlowComponent parent, Class<? extends Setting> settingClass) {
         super(parent);
-
-
-
 
         settings = new ArrayList<Setting>();
         externalSettings = new ArrayList<Setting>();
@@ -34,22 +27,20 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
             try {
                 Constructor<? extends Setting> constructor = settingClass.getConstructor(int.class);
                 Object obj = constructor.newInstance(i);
-                Setting setting = (Setting)obj;
+                Setting setting = (Setting) obj;
                 settings.add(setting);
                 externalSettings.add(setting);
-            }catch (Exception ex) {
+            } catch (Exception ex) {
                 System.err.println("Failed to create setting");
             }
-
         }
         numberTextBoxes = new TextBoxNumberList();
-
 
         radioButtons = new RadioButtonList() {
             @Override
             public void updateSelectedOption(int selectedOption) {
                 DataWriter dw = getWriterForServerComponentPacket();
-                dw.writeBoolean(false); //no specific item
+                dw.writeBoolean(false); // no specific item
                 writeRadioButtonRefreshState(dw, selectedOption == 0);
                 PacketHandler.sendDataToServer(dw);
             }
@@ -120,11 +111,10 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
                 selectedSetting = setting;
                 editSetting = button == 1 && doAllowEdit();
 
-
                 if (editSetting && !selectedSetting.isValid()) {
                     selectedSetting = null;
                     editSetting = false;
-                }else{
+                } else {
                     if (editSetting) {
                         updateTextBoxes();
                     }
@@ -137,7 +127,13 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
                 int srcSettingX = setting.isValid() ? 0 : 1;
                 int srcSettingY = hover ? 1 : 0;
 
-                gui.drawTexture(x, y, SETTING_SRC_X + srcSettingX * ITEM_SIZE, SETTING_SRC_Y + srcSettingY * ITEM_SIZE, ITEM_SIZE, ITEM_SIZE);
+                gui.drawTexture(
+                        x,
+                        y,
+                        SETTING_SRC_X + srcSettingX * ITEM_SIZE,
+                        SETTING_SRC_Y + srcSettingY * ITEM_SIZE,
+                        ITEM_SIZE,
+                        ITEM_SIZE);
                 if (setting.isValid()) {
                     drawSettingObject(gui, setting, x, y);
                 }
@@ -148,17 +144,15 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
                 if (setting.isValid()) {
                     gui.drawMouseOver(getSettingObjectMouseOver(setting), mX, mY);
                 }
-
             }
         };
     }
-
 
     @Override
     public void update(float partial) {
         if (isSearching()) {
             scrollControllerSearch.update(partial);
-        }else if (!isSearching() && !isEditing()) {
+        } else if (!isSearching() && !isEditing()) {
             scrollControllerSelected.update(partial);
         }
     }
@@ -167,7 +161,7 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
     public void doScroll(int scroll) {
         if (isSearching()) {
             scrollControllerSearch.doScroll(scroll);
-        }else if (!isSearching() && !isEditing()) {
+        } else if (!isSearching() && !isEditing()) {
             scrollControllerSelected.doScroll(scroll);
         }
     }
@@ -181,11 +175,9 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
     protected static final int RADIO_BUTTON_X_RIGHT = 65;
     protected static final int RADIO_BUTTON_Y = 5;
 
-
     protected int getSettingCount() {
         return 30;
     }
-
 
     protected boolean doAllowEdit() {
         return true;
@@ -199,13 +191,11 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
     protected static final int ITEM_SIZE_WITH_MARGIN = 20;
     protected static final int ITEM_X = 5;
 
-
     private static final int SETTING_SRC_X = 0;
     private static final int SETTING_SRC_Y = 189;
 
     protected static final int EDIT_ITEM_X = 5;
     protected static final int EDIT_ITEM_Y = 5;
-
 
     private static final int BACK_SRC_X = 46;
     private static final int BACK_SRC_Y = 52;
@@ -261,9 +251,16 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
             drawInfoMenuContent(gui, mX, mY);
 
             int srcDeleteY = inDeleteBounds(mX, mY) ? 1 : 0;
-            gui.drawTexture(DELETE_X, DELETE_Y, DELETE_SRC_X, DELETE_SRC_Y + srcDeleteY * DELETE_SIZE_H, DELETE_SIZE_W, DELETE_SIZE_H);
-            gui.drawCenteredString(Localization.DELETE.toString(), DELETE_X, DELETE_Y + DELETE_TEXT_Y, 0.7F, DELETE_SIZE_W, 0xBB4040);
-        }else{
+            gui.drawTexture(
+                    DELETE_X,
+                    DELETE_Y,
+                    DELETE_SRC_X,
+                    DELETE_SRC_Y + srcDeleteY * DELETE_SIZE_H,
+                    DELETE_SIZE_W,
+                    DELETE_SIZE_H);
+            gui.drawCenteredString(
+                    Localization.DELETE.toString(), DELETE_X, DELETE_Y + DELETE_TEXT_Y, 0.7F, DELETE_SIZE_W, 0xBB4040);
+        } else {
             if (!isSearching()) {
                 radioButtons.draw(gui, mX, mY);
             }
@@ -291,35 +288,23 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
         return isSearching() ? scrollControllerSearch : scrollControllerSelected;
     }
 
-
-
-
-
-
-
-
     @SideOnly(Side.CLIENT)
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
         if (isEditing()) {
             if (CollisionHelper.inBounds(EDIT_ITEM_X, EDIT_ITEM_Y, ITEM_SIZE, ITEM_SIZE, mX, mY)) {
                 scrollControllerSelected.drawMouseOver(gui, selectedSetting, mX, mY);
-            }else if(inDeleteBounds(mX, mY)) {
+            } else if (inDeleteBounds(mX, mY)) {
                 gui.drawMouseOver(Localization.DELETE_ITEM_SELECTION.toString(), mX, mY);
             }
-        }else if (isListVisible()){
+        } else if (isListVisible()) {
             getScrollingList().drawMouseOver(gui, mX, mY);
         }
-
-
 
         if (selectedSetting != null && inBackBounds(mX, mY)) {
             gui.drawMouseOver(isEditing() ? Localization.GO_BACK.toString() : Localization.CANCEL.toString(), mX, mY);
         }
     }
-
-
-
 
     @Override
     public void onClick(int mX, int mY, int button) {
@@ -334,7 +319,7 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
                 selectedSetting = null;
                 getScrollingList().updateScrolling();
             }
-        }else{
+        } else {
             if (!isSearching()) {
                 radioButtons.onClick(mX, mY, button);
             }
@@ -351,7 +336,6 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
 
     protected abstract void updateTextBoxes();
 
-
     protected boolean isEditing() {
         return selectedSetting != null && editSetting;
     }
@@ -361,9 +345,7 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
     }
 
     @Override
-    public void onDrag(int mX, int mY, boolean isMenuOpen) {
-
-    }
+    public void onDrag(int mX, int mY, boolean isMenuOpen) {}
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
@@ -373,7 +355,8 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public boolean onKeyStroke(GuiManager gui, char c, int k) {
-        return isSearching() && getScrollingList().onKeyStroke(gui, c, k) || isEditing() && numberTextBoxes.onKeyStroke(gui, c, k);
+        return isSearching() && getScrollingList().onKeyStroke(gui, c, k)
+                || isEditing() && numberTextBoxes.onKeyStroke(gui, c, k);
     }
 
     @Override
@@ -399,14 +382,14 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
         for (Setting setting : settings) {
             if (!dr.readBoolean()) {
                 setting.clear();
-            }else{
+            } else {
                 setting.readData(dr);
                 if (setting.isAmountSpecific()) {
                     setting.setLimitedByAmount(dr.readBoolean());
 
                     if (setting.isLimitedByAmount()) {
                         setting.setAmount(dr.readData(getAmountBitLength()));
-                    }else{
+                    } else {
                         setting.setDefaultAmount();
                     }
                 }
@@ -418,14 +401,14 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuStuff menuItem = (ComponentMenuStuff)menu;
+        ComponentMenuStuff menuItem = (ComponentMenuStuff) menu;
 
         setFirstRadioButtonSelected(menuItem.isFirstRadioButtonSelected());
 
         for (int i = 0; i < settings.size(); i++) {
             if (!menuItem.settings.get(i).isValid()) {
                 settings.get(i).clear();
-            }else{
+            } else {
                 settings.get(i).copyFrom(menuItem.settings.get(i));
                 if (settings.get(i).isAmountSpecific()) {
                     settings.get(i).setLimitedByAmount(menuItem.settings.get(i).isLimitedByAmount());
@@ -437,18 +420,18 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        if (((ComponentMenuStuff)newData).isFirstRadioButtonSelected() != isFirstRadioButtonSelected()) {
+        if (((ComponentMenuStuff) newData).isFirstRadioButtonSelected() != isFirstRadioButtonSelected()) {
             setFirstRadioButtonSelected(((ComponentMenuStuff) newData).isFirstRadioButtonSelected());
 
             DataWriter dw = getWriterForClientComponentPacket(container);
-            dw.writeBoolean(false); //no specific setting
+            dw.writeBoolean(false); // no specific setting
             writeRadioButtonRefreshState(dw, isFirstRadioButtonSelected());
             PacketHandler.sendDataToListeningClients(container, dw);
         }
 
         for (int i = 0; i < settings.size(); i++) {
             Setting setting = settings.get(i);
-            Setting newSetting = ((ComponentMenuStuff)newData).settings.get(i);
+            Setting newSetting = ((ComponentMenuStuff) newData).settings.get(i);
 
             if (!newSetting.isValid() && setting.isValid()) {
                 setting.clear();
@@ -509,11 +492,10 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
                     break;
                 default:
                     readSpecificHeaderData(dr, header, setting);
-
             }
 
             onSettingContentChange();
-        }else{
+        } else {
             readNonSettingData(dr);
         }
     }
@@ -545,7 +527,7 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
     protected abstract DataBitHelper getAmountBitLength();
 
     private void writeData(DataWriter dw, DataTypeHeader header, Setting setting) {
-        dw.writeBoolean(true); //specific setting is being used
+        dw.writeBoolean(true); // specific setting is being used
         dw.writeData(setting.getId(), DataBitHelper.MENU_ITEM_SETTING_ID);
         dw.writeData(header.id, DataBitHelper.MENU_ITEM_TYPE_HEADER);
 
@@ -564,16 +546,16 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
                 break;
             default:
                 writeSpecificHeaderData(dw, header, setting);
-
         }
 
-        //if the client send data to the server, do the update right away on that client
+        // if the client send data to the server, do the update right away on that client
         if (getParent().getManager().getWorldObj().isRemote) {
             onSettingContentChange();
         }
     }
 
     protected abstract void readSpecificHeaderData(DataReader dr, DataTypeHeader header, Setting setting);
+
     protected abstract void writeSpecificHeaderData(DataWriter dw, DataTypeHeader header, Setting setting);
 
     public List<Setting> getSettings() {
@@ -593,6 +575,7 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
         META(5);
 
         private int id;
+
         private DataTypeHeader(int header) {
             this.id = header;
         }
@@ -604,21 +587,11 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
                 return header;
             }
         }
-        return  null;
+        return null;
     }
-
 
     @SideOnly(Side.CLIENT)
     protected abstract List updateSearch(String search, boolean showAll);
-
-
-
-
-
-
-
-
-
 
     protected boolean isFirstRadioButtonSelected() {
         return radioButtons.getSelectedOption() == 0;
@@ -639,7 +612,7 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound, int version, boolean pickup) {
-       setFirstRadioButtonSelected(nbtTagCompound.getBoolean(NBT_RADIO_SELECTION));
+        setFirstRadioButtonSelected(nbtTagCompound.getBoolean(NBT_RADIO_SELECTION));
 
         NBTTagList settingTagList = nbtTagCompound.getTagList(NBT_SETTINGS, 10);
         for (int i = 0; i < settingTagList.tagCount(); i++) {
@@ -663,7 +636,7 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
             Setting setting = settings.get(i);
             if (setting.isValid()) {
                 NBTTagCompound settingTag = new NBTTagCompound();
-                settingTag.setByte(NBT_SETTING_ID, (byte)setting.getId());
+                settingTag.setByte(NBT_SETTING_ID, (byte) setting.getId());
                 setting.save(settingTag);
                 if (setting.isAmountSpecific()) {
                     settingTag.setBoolean(NBT_SETTING_USE_SIZE, setting.isLimitedByAmount());
@@ -686,9 +659,5 @@ public abstract class ComponentMenuStuff extends ComponentMenu {
         }
     }
 
-    protected void onSettingContentChange() {
-
-    }
+    protected void onSettingContentChange() {}
 }
-
-

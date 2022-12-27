@@ -2,6 +2,7 @@ package vswe.stevesfactory.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -16,9 +17,6 @@ import vswe.stevesfactory.interfaces.GuiManager;
 import vswe.stevesfactory.interfaces.IInterfaceRenderer;
 import vswe.stevesfactory.network.*;
 import vswe.stevesfactory.settings.Settings;
-
-import java.util.*;
-
 
 public class TileEntityManager extends TileEntity implements ITileEntityInterface {
     public static final TriggerHelperRedstone redstoneTrigger = new TriggerHelperRedstone(3, 4);
@@ -40,6 +38,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     private List<FlowComponent> zLevelRenderingList;
     private Variable[] variables;
     private FlowComponent selectedComponent;
+
     @SideOnly(Side.CLIENT)
     public IInterfaceRenderer specialRenderer;
 
@@ -82,11 +81,9 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             }
         });
 
-       buttons.add(new Button(Localization.PREFERENCES) {
+        buttons.add(new Button(Localization.PREFERENCES) {
             @Override
-            protected void onClick(DataReader dr) {
-
-            }
+            protected void onClick(DataReader dr) {}
 
             @Override
             public boolean onClick(DataWriter dw) {
@@ -102,7 +99,8 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 FlowComponent component = items.get(id);
                 boolean moveCluster = dr.readBoolean();
                 if (component.getParent() != null) {
-                    ComponentMenuGroup.moveComponents(component, component.getParent().getParent(), moveCluster);
+                    ComponentMenuGroup.moveComponents(
+                            component, component.getParent().getParent(), moveCluster);
                 }
             }
 
@@ -110,7 +108,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             public boolean onClick(DataWriter dw) {
                 for (FlowComponent item : items) {
                     if (item.isBeingMoved()) {
-                        //For the server only
+                        // For the server only
                         justSentServerComponentRemovalPacket = true;
                         dw.writeComponentId(self, item.getId());
                         dw.writeBoolean(GuiScreen.isShiftKeyDown());
@@ -119,7 +117,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                     }
                 }
 
-                //Client only
+                // Client only
                 selectedComponent = selectedComponent.getParent();
                 return false;
             }
@@ -154,12 +152,12 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     private List<Integer> removedIds;
 
     public void removeFlowComponent(int idToRemove, List<FlowComponent> items) {
-        for (int i =  items.size() - 1; i >= 0; i--) {
+        for (int i = items.size() - 1; i >= 0; i--) {
             FlowComponent component = items.get(i);
             if (i == idToRemove) {
-                component.setParent(null); //unlink it
+                component.setParent(null); // unlink it
                 items.remove(i);
-            }else{
+            } else {
                 component.updateConnectionIdsAtRemoval(idToRemove);
             }
         }
@@ -168,7 +166,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             selectedComponent = null;
         }
 
-        //do this afterwards so the new ids won't mess anything up
+        // do this afterwards so the new ids won't mess anything up
         for (int i = idToRemove; i < items.size(); i++) {
             items.get(i).decreaseId();
         }
@@ -178,7 +176,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         removeFlowComponent(idToRemove, items);
         if (!worldObj.isRemote) {
             removedIds.add(idToRemove);
-        }else{
+        } else {
             for (int i = 0; i < zLevelRenderingList.size(); i++) {
                 if (zLevelRenderingList.get(i).getId() == idToRemove) {
                     zLevelRenderingList.remove(i);
@@ -189,7 +187,6 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         updateVariables();
     }
 
-
     public List<FlowComponent> getFlowItems() {
         return items;
     }
@@ -199,6 +196,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     }
 
     List<ConnectionBlock> inventories = new ArrayList<ConnectionBlock>();
+
     public List<ConnectionBlock> getConnectedInventories() {
         return inventories;
     }
@@ -233,33 +231,37 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 for (int y = -1; y <= 1; y++) {
                     for (int z = -1; z <= 1; z++) {
                         if (Math.abs(x) + Math.abs(y) + Math.abs(z) == 1) {
-                            WorldCoordinate target = new WorldCoordinate(element.getX() + x, element.getY() + y, element.getZ() + z, element.getDepth() + 1);
+                            WorldCoordinate target = new WorldCoordinate(
+                                    element.getX() + x, element.getY() + y, element.getZ() + z, element.getDepth() + 1);
 
-                            if (!visited.contains(target) && (Settings.isLimitless(this) || inventories.size() < MAX_CONNECTED_INVENTORIES)) {
+                            if (!visited.contains(target)
+                                    && (Settings.isLimitless(this) || inventories.size() < MAX_CONNECTED_INVENTORIES)) {
                                 visited.add(target);
                                 TileEntity te = worldObj.getTileEntity(target.getX(), target.getY(), target.getZ());
 
                                 if (te instanceof TileEntityCluster) {
 
-                                    for (TileEntityClusterElement tileEntityClusterElement : ((TileEntityCluster) te).getElements()) {
-                                        ((TileEntityCluster)te).setWorldObject(tileEntityClusterElement);
+                                    for (TileEntityClusterElement tileEntityClusterElement :
+                                            ((TileEntityCluster) te).getElements()) {
+                                        ((TileEntityCluster) te).setWorldObject(tileEntityClusterElement);
                                         addInventory(tileEntityClusterElement, target);
                                     }
-                                }else{
+                                } else {
                                     addInventory(te, target);
                                 }
 
-
-                                if ((Settings.isLimitless(this) || element.getDepth() < MAX_CABLE_LENGTH) && ModBlocks.blockCable.isCable(worldObj.getBlock(target.getX(), target.getY(), target.getZ()), worldObj.getBlockMetadata(target.getX(), target.getY(), target.getZ()))){
+                                if ((Settings.isLimitless(this) || element.getDepth() < MAX_CABLE_LENGTH)
+                                        && ModBlocks.blockCable.isCable(
+                                                worldObj.getBlock(target.getX(), target.getY(), target.getZ()),
+                                                worldObj.getBlockMetadata(
+                                                        target.getX(), target.getY(), target.getZ()))) {
                                     queue.add(target);
                                 }
                             }
                         }
-
                     }
                 }
             }
-
         }
 
         if (!firstInventoryUpdate) {
@@ -267,27 +269,28 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 if (oldCoordinate.getTileEntity() instanceof ISystemListener) {
                     boolean found = false;
                     for (ConnectionBlock inventory : inventories) {
-                        if (oldCoordinate.getX() == inventory.getTileEntity().xCoord && oldCoordinate.getY() == inventory.getTileEntity().yCoord && oldCoordinate.getZ() == inventory.getTileEntity().zCoord) {
+                        if (oldCoordinate.getX() == inventory.getTileEntity().xCoord
+                                && oldCoordinate.getY() == inventory.getTileEntity().yCoord
+                                && oldCoordinate.getZ() == inventory.getTileEntity().zCoord) {
                             found = true;
                             break;
                         }
                     }
 
                     if (!found) {
-                        ((ISystemListener)oldCoordinate.getTileEntity()).removed(this);
+                        ((ISystemListener) oldCoordinate.getTileEntity()).removed(this);
                     }
                 }
             }
 
             if (!worldObj.isRemote) {
                 updateInventorySelection(oldCoordinates);
-            }else{
+            } else {
                 for (FlowComponent item : items) {
                     item.setInventoryListDirty(true);
                 }
             }
         }
-
 
         firstInventoryUpdate = false;
     }
@@ -311,7 +314,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             }
             inventories.add(connection);
             if (connection.getTileEntity() instanceof ISystemListener) {
-                ((ISystemListener)connection.getTileEntity()).added(this);
+                ((ISystemListener) connection.getTileEntity()).added(this);
             }
         }
     }
@@ -320,13 +323,12 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         for (FlowComponent item : items) {
             for (ComponentMenu menu : item.getMenus()) {
                 if (menu instanceof ComponentMenuContainer) {
-                    ComponentMenuContainer menuInventory = (ComponentMenuContainer)menu;
+                    ComponentMenuContainer menuInventory = (ComponentMenuContainer) menu;
 
                     List<Integer> oldSelection = menuInventory.getSelectedInventories();
                     menuInventory.setSelectedInventories(getNewSelection(oldCoordinates, oldSelection, true));
                 }
             }
-
         }
 
         for (Variable variable : variables) {
@@ -334,7 +336,8 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         }
     }
 
-    private List<Integer> getNewSelection(WorldCoordinate[] oldCoordinates, List<Integer> oldSelection, boolean hasVariables)  {
+    private List<Integer> getNewSelection(
+            WorldCoordinate[] oldCoordinates, List<Integer> oldSelection, boolean hasVariables) {
 
         List<Integer> newSelection = new ArrayList<Integer>();
 
@@ -342,9 +345,9 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             int selection = oldSelection.get(i);
             if (hasVariables && selection >= 0 && selection < 16) {
                 newSelection.add(selection);
-            }else{
+            } else {
                 if (hasVariables) {
-                    selection -=  variables.length;
+                    selection -= variables.length;
                 }
 
                 if (selection >= 0 && selection < oldCoordinates.length) {
@@ -352,7 +355,12 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
 
                     for (int j = 0; j < inventories.size(); j++) {
                         TileEntity inventory = inventories.get(j).getTileEntity();
-                        if (coordinate.getX() == inventory.xCoord && coordinate.getY() == inventory.yCoord && coordinate.getZ() == inventory.zCoord && inventory.getClass().equals(coordinate.getTileEntity().getClass())) {
+                        if (coordinate.getX() == inventory.xCoord
+                                && coordinate.getY() == inventory.yCoord
+                                && coordinate.getZ() == inventory.zCoord
+                                && inventory
+                                        .getClass()
+                                        .equals(coordinate.getTileEntity().getClass())) {
                             int id = j + (hasVariables ? variables.length : 0);
                             if (!newSelection.contains(id)) {
                                 newSelection.add(id);
@@ -361,14 +369,12 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                             break;
                         }
                     }
-
                 }
             }
         }
 
         return newSelection;
     }
-
 
     public Connection getCurrentlyConnecting() {
         return currentlyConnecting;
@@ -379,6 +385,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     }
 
     private int timer = 0;
+
     @Override
     public void updateEntity() {
         justSentServerComponentRemovalPacket = false;
@@ -390,7 +397,8 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 for (FlowComponent item : items) {
 
                     if (item.getType() == ComponentType.TRIGGER) {
-                        ComponentMenuInterval componentMenuInterval = (ComponentMenuInterval)item.getMenus().get(TriggerHelper.TRIGGER_INTERVAL_ID);
+                        ComponentMenuInterval componentMenuInterval =
+                                (ComponentMenuInterval) item.getMenus().get(TriggerHelper.TRIGGER_INTERVAL_ID);
                         int interval = componentMenuInterval.getInterval();
                         if (interval == 0) {
                             continue;
@@ -402,7 +410,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                             EnumSet<ConnectionOption> valid = EnumSet.of(ConnectionOption.INTERVAL);
                             if (item.getConnectionSet() == ConnectionSet.REDSTONE) {
                                 redstoneTrigger.onTrigger(item, valid);
-                            }else if(item.getConnectionSet() == ConnectionSet.BUD) {
+                            } else if (item.getConnectionSet() == ConnectionSet.BUD) {
                                 budTrigger.onTrigger(item, valid);
                             }
                             activateTrigger(item, valid);
@@ -410,8 +418,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                     }
                 }
 
-
-            }else{
+            } else {
                 timer++;
             }
         }
@@ -439,11 +446,6 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         new CommandExecutor(this).executeTriggerCommand(component, validTriggerOutputs);
     }
 
-
-
-
-
-
     public void triggerRedstone(TileEntityInput inputTrigger) {
         for (FlowComponent item : items) {
             if (item.getType() == ComponentType.TRIGGER && item.getConnectionSet() == ConnectionSet.REDSTONE) {
@@ -460,17 +462,14 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         }
     }
 
-
-
-
     public void readGenericData(DataReader dr) {
         if (worldObj.isRemote) {
-            if (dr.readBoolean()){
+            if (dr.readBoolean()) {
                 updateInventories();
-            }else{
+            } else {
                 removeFlowComponent(dr.readComponentId());
             }
-        }else{
+        } else {
             int buttonId = dr.readData(DataBitHelper.GUI_BUTTON_ID);
             if (buttonId >= 0 && buttonId < buttons.size()) {
                 Button button = buttons.get(buttonId);
@@ -481,8 +480,6 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         }
     }
 
-
-
     private TileEntityManager self = this;
 
     public List<Integer> getRemovedIds() {
@@ -491,13 +488,13 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
 
     @Override
     public Container getContainer(TileEntity te, InventoryPlayer inv) {
-        return new ContainerManager((TileEntityManager)te, inv);
+        return new ContainerManager((TileEntityManager) te, inv);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(TileEntity te, InventoryPlayer inv) {
-        return new GuiManager((TileEntityManager)te, inv);
+        return new GuiManager((TileEntityManager) te, inv);
     }
 
     @Override
@@ -515,8 +512,8 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
 
         if (Settings.isAutoCloseGroup()) {
             selectedComponent = null;
-        }else{
-            while(selectedComponent != null && !findNewSelectedComponent(selectedComponent.getId())) {
+        } else {
+            while (selectedComponent != null && !findNewSelectedComponent(selectedComponent.getId())) {
                 selectedComponent = selectedComponent.getParent();
             }
         }
@@ -544,7 +541,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         boolean hasParent = dr.readBoolean();
         if (hasParent) {
             flowComponent.setParentLoadId(dr.readComponentId());
-        }else{
+        } else {
             flowComponent.setParentLoadId(-1);
         }
 
@@ -560,14 +557,16 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 Connection connection = new Connection(dr.readComponentId(), dr.readData(DataBitHelper.CONNECTION_ID));
                 flowComponent.setConnection(i, connection);
 
-
                 int length = dr.readData(DataBitHelper.NODE_ID);
                 for (int j = 0; j < length; j++) {
-                    connection.getNodes().add(new Point(dr.readData(DataBitHelper.FLOW_CONTROL_X), dr.readData(DataBitHelper.FLOW_CONTROL_Y)));
+                    connection
+                            .getNodes()
+                            .add(new Point(
+                                    dr.readData(DataBitHelper.FLOW_CONTROL_X),
+                                    dr.readData(DataBitHelper.FLOW_CONTROL_Y)));
                 }
             }
         }
-
 
         getFlowItems().add(flowComponent);
         getZLevelRenderingList().add(0, flowComponent);
@@ -576,6 +575,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     }
 
     private boolean usingUnlimitedInventories;
+
     private boolean isUsingUnlimitedStuff() {
         return items.size() > MAX_COMPONENT_AMOUNT || usingUnlimitedInventories;
     }
@@ -587,7 +587,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             if ((val || !isUsingUnlimitedStuff()) && player.capabilities.isCreativeMode) {
                 Settings.setLimitless(this, val);
             }
-            //TODO use ids for different actions
+            // TODO use ids for different actions
             /*System.out.println("ACTION");
             for (FlowComponent item : items) {
                 item.adjustEverythingToGridRaw();
@@ -602,7 +602,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         if (isNew) {
             readAllComponentData(dr);
             items.get(items.size() - 1).linkParentAfterLoad();
-        }else{
+        } else {
             boolean isSpecificComponent = dr.readBoolean();
             if (isSpecificComponent) {
 
@@ -611,7 +611,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 if (nr != null) {
                     nr.readNetworkComponent(dr);
                 }
-            }else{
+            } else {
                 readGenericData(dr);
             }
         }
@@ -636,7 +636,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 if (menuId >= 0 && menuId < component.getMenus().size()) {
                     return component.getMenus().get(menuId);
                 }
-            }else{
+            } else {
                 return component;
             }
         }
@@ -655,7 +655,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
 
         for (FlowComponent item : items) {
             if (item.getType() == ComponentType.VARIABLE && item.getConnectionSet() == ConnectionSet.EMPTY) {
-                int selectedVariable = ((ComponentMenuVariable)item.getMenus().get(0)).getSelectedVariable();
+                int selectedVariable = ((ComponentMenuVariable) item.getMenus().get(0)).getSelectedVariable();
                 variables[selectedVariable].setDeclaration(item);
             }
         }
@@ -677,8 +677,6 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         this.selectedComponent = selectedComponent;
     }
 
-
-
     public abstract class Button {
         private int x;
         private int y;
@@ -686,12 +684,13 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
 
         protected Button(Localization mouseOver) {
             int id = buttons.size();
-            this.x = 5 + (id / 13) * 18  ;
+            this.x = 5 + (id / 13) * 18;
             this.y = 5 + (id % 13) * 18;
             this.mouseOver = mouseOver;
         }
 
         protected abstract void onClick(DataReader dr);
+
         public abstract boolean onClick(DataWriter dw);
 
         public int getX() {
@@ -739,25 +738,25 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 boolean autoBlackList = dr.readBoolean();
                 boolean moveFirst = dr.readBoolean();
                 boolean isInput = type == ComponentType.INPUT || type == ComponentType.LIQUID_INPUT;
-                boolean isOutput= type == ComponentType.OUTPUT || type == ComponentType.LIQUID_OUTPUT;
+                boolean isOutput = type == ComponentType.OUTPUT || type == ComponentType.LIQUID_OUTPUT;
                 if (autoSide) {
                     for (ComponentMenu componentMenu : component.getMenus()) {
                         if (componentMenu instanceof ComponentMenuTarget) {
-                            ((ComponentMenuTarget)componentMenu).setActive(isOutput ? 1 : 0);
+                            ((ComponentMenuTarget) componentMenu).setActive(isOutput ? 1 : 0);
                         }
                     }
                 }
-                if(autoBlackList && isInput) {
+                if (autoBlackList && isInput) {
                     for (ComponentMenu componentMenu : component.getMenus()) {
                         if (componentMenu instanceof ComponentMenuStuff) {
-                            ((ComponentMenuStuff)componentMenu).setBlackList();
+                            ((ComponentMenuStuff) componentMenu).setBlackList();
                         }
                     }
                 }
                 if (type == ComponentType.AUTO_CRAFTING) {
                     for (ComponentMenu componentMenu : component.getMenus()) {
                         if (componentMenu instanceof ComponentMenuCraftingPriority) {
-                            ((ComponentMenuCraftingPriority)componentMenu).setPrioritizeCrafting(!moveFirst);
+                            ((ComponentMenuCraftingPriority) componentMenu).setPrioritizeCrafting(!moveFirst);
                         }
                     }
                 }
@@ -771,13 +770,13 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             if (selectedComponent != null) {
                 dw.writeBoolean(true);
                 dw.writeComponentId(self, selectedComponent.getId());
-            }else{
+            } else {
                 dw.writeBoolean(false);
             }
 
-            //these are written for all different types, that's because the type itself doesn't really know what menus
-            //it will use, this will create a super tiny overhead (each setting is a bit) and could be eliminated with
-            //some semi-ugly code, I decided this approach was fine
+            // these are written for all different types, that's because the type itself doesn't really know what menus
+            // it will use, this will create a super tiny overhead (each setting is a bit) and could be eliminated with
+            // some semi-ugly code, I decided this approach was fine
             dw.writeBoolean(Settings.isAutoSide());
             dw.writeBoolean(Settings.isAutoBlacklist());
             dw.writeBoolean(Settings.isPriorityMoveFirst());
@@ -789,12 +788,11 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         public String getMouseOver() {
             if (!Settings.isLimitless(self) && getFlowItems().size() == MAX_COMPONENT_AMOUNT) {
                 return Localization.MAXIMUM_COMPONENT_ERROR.toString();
-            }else{
+            } else {
                 return Localization.CREATE_COMMAND.toString() + " " + super.getMouseOver();
             }
         }
     }
-
 
     private static final String NBT_TIMER = "Timer";
     private static final String NBT_COMPONENTS = "Components";
@@ -815,8 +813,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     }
 
     public void readContentFromNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        int version =  nbtTagCompound.getByte(ModBlocks.NBT_PROTOCOL_VERSION);
-
+        int version = nbtTagCompound.getByte(ModBlocks.NBT_PROTOCOL_VERSION);
 
         timer = nbtTagCompound.getByte(NBT_TIMER);
 
@@ -834,10 +831,12 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                     if (connection != null) {
                         if (connection.getComponentId() < 0 || connection.getComponentId() >= items.size()) {
                             item.setConnection(i, null);
-                        }else{
+                        } else {
                             FlowComponent otherItem = getFlowItems().get(connection.getComponentId());
                             Connection otherConnection = otherItem.getConnection(connection.getConnectionId());
-                            if (otherConnection == null || otherConnection.getComponentId() < 0 || otherConnection.getComponentId() >= items.size()) {
+                            if (otherConnection == null
+                                    || otherConnection.getComponentId() < 0
+                                    || otherConnection.getComponentId() >= items.size()) {
                                 otherItem.setConnection(connection.getConnectionId(), new Connection(item.getId(), i));
                             }
                         }
@@ -855,13 +854,12 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             NBTTagCompound variableTag = variablesTag.getCompoundTagAt(i);
             variables[i].readFromNBT(variableTag);
         }
-
     }
 
     public void writeContentToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
         nbtTagCompound.setByte(ModBlocks.NBT_PROTOCOL_VERSION, ModBlocks.NBT_CURRENT_PROTOCOL_VERSION);
 
-        nbtTagCompound.setByte(NBT_TIMER, (byte)timer);
+        nbtTagCompound.setByte(NBT_TIMER, (byte) timer);
 
         NBTTagList components = new NBTTagList();
         for (FlowComponent item : items) {
@@ -871,7 +869,6 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         }
         nbtTagCompound.setTag(NBT_COMPONENTS, components);
 
-
         NBTTagList variablesTag = new NBTTagList();
         for (Variable variable : variables) {
             NBTTagCompound variableTag = new NBTTagCompound();
@@ -880,5 +877,4 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         }
         nbtTagCompound.setTag(NBT_VARIABLES, variablesTag);
     }
-
 }

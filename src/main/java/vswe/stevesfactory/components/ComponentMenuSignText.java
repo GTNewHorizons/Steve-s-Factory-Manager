@@ -13,7 +13,6 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
-
 public class ComponentMenuSignText extends ComponentMenu {
     private static final int TEXT_BOX_SIZE_W = 64;
     private static final int TEXT_BOX_SIZE_H = 12;
@@ -36,6 +35,7 @@ public class ComponentMenuSignText extends ComponentMenu {
     private boolean[] update;
     private float[] hasChanged;
     private int selected = -1;
+
     public ComponentMenuSignText(FlowComponent parent) {
         super(parent);
 
@@ -54,31 +54,31 @@ public class ComponentMenuSignText extends ComponentMenu {
             textBoxes[i].setMult(0.6F);
             textBoxes[i].setTextAndCursor("");
 
-            checkBoxes.addCheckBox(new CheckBox(Localization.UPDATE_LINE, CHECK_BOX_X, CHECK_BOX_Y + TEXT_BOX_Y + i * TEXT_BOX_Y_SPACING) {
-                @Override
-                public void setValue(boolean val) {
-                    update[id] = val;
-                }
+            checkBoxes.addCheckBox(
+                    new CheckBox(
+                            Localization.UPDATE_LINE, CHECK_BOX_X, CHECK_BOX_Y + TEXT_BOX_Y + i * TEXT_BOX_Y_SPACING) {
+                        @Override
+                        public void setValue(boolean val) {
+                            update[id] = val;
+                        }
 
-                @Override
-                public boolean getValue() {
-                    return update[id];
-                }
+                        @Override
+                        public boolean getValue() {
+                            return update[id];
+                        }
 
-                @Override
-                public void onUpdate() {
-                    DataWriter dw = getWriterForServerComponentPacket();
-                    dw.writeData(id, DataBitHelper.LINE_ID);
-                    dw.writeBoolean(false);
-                    dw.writeBoolean(getValue());
-                    PacketHandler.sendDataToServer(dw);
-                }
-            });
+                        @Override
+                        public void onUpdate() {
+                            DataWriter dw = getWriterForServerComponentPacket();
+                            dw.writeData(id, DataBitHelper.LINE_ID);
+                            dw.writeBoolean(false);
+                            dw.writeBoolean(getValue());
+                            PacketHandler.sendDataToServer(dw);
+                        }
+                    });
             update[i] = true;
         }
-
     }
-
 
     @Override
     public void update(float partial) {
@@ -114,11 +114,18 @@ public class ComponentMenuSignText extends ComponentMenu {
 
             int srcBoxY = selected == i ? 1 : 0;
             int y = TEXT_BOX_Y + i * TEXT_BOX_Y_SPACING;
-            gui.drawTexture(TEXT_BOX_X, y, TEXT_BOX_SRC_X, TEXT_BOX_SRC_Y + srcBoxY * TEXT_BOX_SIZE_H, TEXT_BOX_SIZE_W, TEXT_BOX_SIZE_H);
+            gui.drawTexture(
+                    TEXT_BOX_X,
+                    y,
+                    TEXT_BOX_SRC_X,
+                    TEXT_BOX_SRC_Y + srcBoxY * TEXT_BOX_SIZE_H,
+                    TEXT_BOX_SIZE_W,
+                    TEXT_BOX_SIZE_H);
             gui.drawString(textBox.getText(), TEXT_BOX_X + TEXT_BOX_TEXT_X, y + TEXT_BOX_TEXT_Y, 0.6F, 0xFFFFFF);
 
             if (selected == i) {
-                gui.drawCursor(TEXT_BOX_X + textBox.getCursorPosition(gui) + CURSOR_X, y + CURSOR_Y, CURSOR_Z, 0xFFFFFFFF);
+                gui.drawCursor(
+                        TEXT_BOX_X + textBox.getCursorPosition(gui) + CURSOR_X, y + CURSOR_Y, CURSOR_Z, 0xFFFFFFFF);
             }
         }
         checkBoxes.draw(gui, mX, mY);
@@ -126,9 +133,7 @@ public class ComponentMenuSignText extends ComponentMenu {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawMouseOver(GuiManager gui, int mX, int mY) {
-
-    }
+    public void drawMouseOver(GuiManager gui, int mX, int mY) {}
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -137,9 +142,9 @@ public class ComponentMenuSignText extends ComponentMenu {
             selected = (selected + 1) % 4;
             onSelectedChange();
             return true;
-        }else if (selected == -1) {
+        } else if (selected == -1) {
             return super.onKeyStroke(gui, c, k);
-        }else{
+        } else {
             textBoxes[selected].onKeyStroke(gui, c, k);
             return true;
         }
@@ -152,10 +157,11 @@ public class ComponentMenuSignText extends ComponentMenu {
     @Override
     public void onClick(int mX, int mY, int button) {
         for (int i = 0; i < textBoxes.length; i++) {
-            if (CollisionHelper.inBounds(TEXT_BOX_X, TEXT_BOX_Y + TEXT_BOX_Y_SPACING * i, TEXT_BOX_SIZE_W, TEXT_BOX_SIZE_H, mX, mY)) {
+            if (CollisionHelper.inBounds(
+                    TEXT_BOX_X, TEXT_BOX_Y + TEXT_BOX_Y_SPACING * i, TEXT_BOX_SIZE_W, TEXT_BOX_SIZE_H, mX, mY)) {
                 if (i == selected) {
                     selected = -1;
-                }else{
+                } else {
                     selected = i;
                 }
                 onSelectedChange();
@@ -166,14 +172,10 @@ public class ComponentMenuSignText extends ComponentMenu {
     }
 
     @Override
-    public void onDrag(int mX, int mY, boolean isMenuOpen) {
-
-    }
+    public void onDrag(int mX, int mY, boolean isMenuOpen) {}
 
     @Override
-    public void onRelease(int mX, int mY, boolean isMenuOpen) {
-
-    }
+    public void onRelease(int mX, int mY, boolean isMenuOpen) {}
 
     @Override
     public void writeData(DataWriter dw) {
@@ -202,7 +204,7 @@ public class ComponentMenuSignText extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuSignText textMenu = (ComponentMenuSignText)menu;
+        ComponentMenuSignText textMenu = (ComponentMenuSignText) menu;
         for (int i = 0; i < textBoxes.length; i++) {
             textBoxes[i].setText(textMenu.textBoxes[i].getText());
             update[i] = textMenu.update[i];
@@ -211,7 +213,7 @@ public class ComponentMenuSignText extends ComponentMenu {
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuSignText newDataText = (ComponentMenuSignText)newData;
+        ComponentMenuSignText newDataText = (ComponentMenuSignText) newData;
         for (int i = 0; i < textBoxes.length; i++) {
             if (!newDataText.textBoxes[i].getText().equals(textBoxes[i].getText())) {
                 textBoxes[i].setText(newDataText.textBoxes[i].getText());
@@ -232,7 +234,6 @@ public class ComponentMenuSignText extends ComponentMenu {
             }
         }
     }
-
 
     private static final String NBT_LINES = "Lines";
     private static final String NBT_UPDATE = "Update";
@@ -268,7 +269,7 @@ public class ComponentMenuSignText extends ComponentMenu {
         if (dr.readBoolean()) {
             setTextPostSync(id, dr.readString(DataBitHelper.LINE_LENGTH));
             textBoxes[id].updateCursor();
-        }else{
+        } else {
             update[id] = dr.readBoolean();
         }
     }

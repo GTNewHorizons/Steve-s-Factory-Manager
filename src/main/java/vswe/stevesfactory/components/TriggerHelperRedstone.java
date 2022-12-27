@@ -1,12 +1,10 @@
 package vswe.stevesfactory.components;
 
-
+import java.util.EnumSet;
+import java.util.List;
 import net.minecraftforge.common.util.ForgeDirection;
 import vswe.stevesfactory.blocks.ConnectionBlockType;
 import vswe.stevesfactory.blocks.TileEntityInput;
-
-import java.util.EnumSet;
-import java.util.List;
 
 public class TriggerHelperRedstone extends TriggerHelper {
     private int strengthId;
@@ -19,7 +17,8 @@ public class TriggerHelperRedstone extends TriggerHelper {
 
     @Override
     protected boolean isBlockPowered(FlowComponent component, int power) {
-        ComponentMenuRedstoneStrength menuStrength = (ComponentMenuRedstoneStrength)component.getMenus().get(strengthId);
+        ComponentMenuRedstoneStrength menuStrength =
+                (ComponentMenuRedstoneStrength) component.getMenus().get(strengthId);
         boolean inRange = menuStrength.getLow() <= power && power <= menuStrength.getHigh();
 
         return inRange != menuStrength.isInverted();
@@ -36,10 +35,12 @@ public class TriggerHelperRedstone extends TriggerHelper {
     }
 
     public void onRedstoneTrigger(FlowComponent item, TileEntityInput inputTrigger) {
-        List<SlotInventoryHolder> receivers = CommandExecutor.getContainers(item.getManager(), item.getMenus().get(containerId), blockType);
+        List<SlotInventoryHolder> receivers =
+                CommandExecutor.getContainers(item.getManager(), item.getMenus().get(containerId), blockType);
 
         if (receivers != null) {
-            ComponentMenuContainer componentMenuContainer = (ComponentMenuContainer)item.getMenus().get(containerId);
+            ComponentMenuContainer componentMenuContainer =
+                    (ComponentMenuContainer) item.getMenus().get(containerId);
             int[] newPower = new int[ForgeDirection.VALID_DIRECTIONS.length];
             int[] oldPower = new int[ForgeDirection.VALID_DIRECTIONS.length];
             if (canUseMergedDetection && componentMenuContainer.getOption() == 0) {
@@ -57,8 +58,11 @@ public class TriggerHelperRedstone extends TriggerHelper {
                 if (isPulseReceived(item, newPower, oldPower, false)) {
                     activateTrigger(item, EnumSet.of(ConnectionOption.REDSTONE_PULSE_LOW));
                 }
-            }else {
-                TileEntityInput trigger = (componentMenuContainer.getOption() == 0 || (componentMenuContainer.getOption() == 1 && canUseMergedDetection)) ? inputTrigger : null;
+            } else {
+                TileEntityInput trigger = (componentMenuContainer.getOption() == 0
+                                || (componentMenuContainer.getOption() == 1 && canUseMergedDetection))
+                        ? inputTrigger
+                        : null;
                 if (isPulseReceived(item, receivers, trigger, true)) {
                     activateTrigger(item, EnumSet.of(ConnectionOption.REDSTONE_PULSE_HIGH));
                 }
@@ -67,7 +71,6 @@ public class TriggerHelperRedstone extends TriggerHelper {
                     activateTrigger(item, EnumSet.of(ConnectionOption.REDSTONE_PULSE_LOW));
                 }
             }
-
         }
     }
 }

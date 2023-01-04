@@ -1,11 +1,14 @@
 package vswe.stevesfactory.components;
 
-import java.util.ArrayList;
-import java.util.List;
+
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import org.lwjgl.opengl.GL11;
 import vswe.stevesfactory.interfaces.GuiManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Variable implements IContainerSelection {
     private int id;
@@ -58,9 +61,10 @@ public class Variable implements IContainerSelection {
     private String getNameFromColor(VariableColor color) {
         if (getDeclaration() == null || getDeclaration().getComponentName() == null) {
             return color.toString();
-        } else {
+        }else{
             return getDeclaration().getComponentName();
         }
+
     }
 
     public void setDeclaration(FlowComponent flowComponent) {
@@ -78,7 +82,7 @@ public class Variable implements IContainerSelection {
     }
 
     public void add(int id) {
-        if (!containers.contains((Integer) id)) {
+        if (!containers.contains((Integer)id)) {
             containers.add(id);
         }
     }
@@ -100,7 +104,7 @@ public class Variable implements IContainerSelection {
     }
 
     public void remove(int id) {
-        containers.remove((Integer) id);
+        containers.remove((Integer)id);
     }
 
     private static final String NBT_EXECUTED = "Executed";
@@ -115,7 +119,7 @@ public class Variable implements IContainerSelection {
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound selectionTag = tagList.getCompoundTagAt(i);
 
-            containers.add((int) selectionTag.getShort(NBT_SELECTION_ID));
+            containers.add((int)selectionTag.getShort(NBT_SELECTION_ID));
         }
     }
 
@@ -127,7 +131,7 @@ public class Variable implements IContainerSelection {
         for (int i = 0; i < containers.size(); i++) {
             NBTTagCompound selectionTag = new NBTTagCompound();
 
-            selectionTag.setShort(NBT_SELECTION_ID, (short) (int) containers.get(i));
+            selectionTag.setShort(NBT_SELECTION_ID, (short)(int)containers.get(i));
             tagList.appendTag(selectionTag);
         }
 

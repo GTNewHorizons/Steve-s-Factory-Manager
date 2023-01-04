@@ -2,7 +2,6 @@ package vswe.stevesfactory.components;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.Comparator;
 import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
@@ -11,6 +10,9 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
+
+import java.util.Comparator;
+
 
 public class ComponentMenuListOrder extends ComponentMenu {
     public ComponentMenuListOrder(FlowComponent parent) {
@@ -74,18 +76,17 @@ public class ComponentMenuListOrder extends ComponentMenu {
         all = true;
 
         textBoxes = new TextBoxNumberList();
-        textBoxes.addTextBox(
-                textBox = new TextBoxNumber(TEXT_BOX_X, TEXT_BOX_Y, 2, false) {
-                    @Override
-                    public boolean isVisible() {
-                        return !all;
-                    }
+        textBoxes.addTextBox(textBox = new TextBoxNumber(TEXT_BOX_X, TEXT_BOX_Y, 2, false) {
+            @Override
+            public boolean isVisible() {
+                return !all;
+            }
 
-                    @Override
-                    public void onNumberChanged() {
-                        sendServerData(UpdateType.AMOUNT);
-                    }
-                });
+            @Override
+            public void onNumberChanged() {
+                sendServerData(UpdateType.AMOUNT);
+            }
+        });
 
         textBox.setNumber(1);
     }
@@ -104,7 +105,7 @@ public class ComponentMenuListOrder extends ComponentMenu {
     private static final int CHECK_BOX_REVERSE_Y = 58;
 
     private static final int TEXT_BOX_X = 60;
-    private static final int TEXT_BOX_Y = 3;
+    private static final int TEXT_BOX_Y= 3;
 
     private TextBoxNumberList textBoxes;
     private TextBoxNumber textBox;
@@ -116,15 +117,15 @@ public class ComponentMenuListOrder extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public void draw(GuiManager gui, int mX, int mY) {
-        radioButtons.draw(gui, mX, mY);
-        checkBoxes.draw(gui, mX, mY);
-        textBoxes.draw(gui, mX, mY);
+       radioButtons.draw(gui, mX, mY);
+       checkBoxes.draw(gui, mX, mY);
+       textBoxes.draw(gui, mX, mY);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -136,12 +137,12 @@ public class ComponentMenuListOrder extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private void sendServerData(UpdateType type) {
@@ -171,6 +172,7 @@ public class ComponentMenuListOrder extends ComponentMenu {
             case REVERSED:
                 dw.writeBoolean(reversed);
         }
+
     }
 
     @SideOnly(Side.CLIENT)
@@ -197,7 +199,7 @@ public class ComponentMenuListOrder extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuListOrder menuOrder = ((ComponentMenuListOrder) menu);
+        ComponentMenuListOrder menuOrder = ((ComponentMenuListOrder)menu);
         all = menuOrder.all;
         textBox.setNumber(menuOrder.textBox.getNumber());
         reversed = menuOrder.reversed;
@@ -206,7 +208,7 @@ public class ComponentMenuListOrder extends ComponentMenu {
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuListOrder newDataOrder = (ComponentMenuListOrder) newData;
+        ComponentMenuListOrder newDataOrder = (ComponentMenuListOrder)newData;
 
         if (all != newDataOrder.all) {
             all = newDataOrder.all;
@@ -228,7 +230,6 @@ public class ComponentMenuListOrder extends ComponentMenu {
             sendClientData(container, UpdateType.TYPE);
         }
     }
-
     private static final String NBT_ALL = "All";
     private static final String NBT_AMOUNT = "Amount";
     private static final String NBT_REVERSED = "Reversed";
@@ -245,9 +246,9 @@ public class ComponentMenuListOrder extends ComponentMenu {
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
         nbtTagCompound.setBoolean(NBT_ALL, all);
-        nbtTagCompound.setByte(NBT_AMOUNT, (byte) textBox.getNumber());
+        nbtTagCompound.setByte(NBT_AMOUNT, (byte)textBox.getNumber());
         nbtTagCompound.setBoolean(NBT_REVERSED, reversed);
-        nbtTagCompound.setByte(NBT_ORDER, (byte) radioButtons.getSelectedOption());
+        nbtTagCompound.setByte(NBT_ORDER, (byte)radioButtons.getSelectedOption());
     }
 
     @Override
@@ -266,11 +267,13 @@ public class ComponentMenuListOrder extends ComponentMenu {
             case TYPE:
                 radioButtons.setSelectedOption(dr.readData(DataBitHelper.ORDER_TYPES));
         }
+
     }
 
     public Comparator<? super Integer> getComparator() {
         return reversed ? getOrder().reversedComparator : getOrder().comparator;
     }
+
 
     public boolean isReversed() {
         return reversed;
@@ -311,10 +314,12 @@ public class ComponentMenuListOrder extends ComponentMenu {
             }
         }
 
+
         @Override
         public String toString() {
             return name.toString();
         }
+
 
         public Localization getName() {
             return name;

@@ -1,10 +1,8 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.ConnectionBlockType;
@@ -14,6 +12,10 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 public class ComponentMenuContainerTypes extends ComponentMenu {
     public ComponentMenuContainerTypes(FlowComponent parent) {
@@ -31,34 +33,31 @@ public class ComponentMenuContainerTypes extends ComponentMenu {
             checked[i] = true;
         }
         checkBoxes = new CheckBoxList();
-        for (int i = 0; i < types.size(); i++) {
+        for (int i = 0; i  < types.size(); i++) {
             final int id = i;
             int x = i % 2;
             int y = i / 2;
-            checkBoxes.addCheckBox(
-                    new CheckBox(
-                            types.get(i).getName(),
-                            CHECK_BOX_X + CHECK_BOX_SPACING_X * x,
-                            CHECK_BOX_Y + CHECK_BOX_SPACING_Y * y) {
-                        @Override
-                        public void setValue(boolean val) {
-                            checked[id] = val;
-                        }
+            checkBoxes.addCheckBox(new CheckBox(types.get(i).getName(), CHECK_BOX_X + CHECK_BOX_SPACING_X * x, CHECK_BOX_Y + CHECK_BOX_SPACING_Y * y) {
+                @Override
+                public void setValue(boolean val) {
+                    checked[id] = val;
+                }
 
-                        @Override
-                        public boolean getValue() {
-                            return checked[id];
-                        }
+                @Override
+                public boolean getValue() {
+                    return checked[id];
+                }
 
-                        @Override
-                        public void onUpdate() {
-                            DataWriter dw = getWriterForServerComponentPacket();
-                            dw.writeData(id, DataBitHelper.CONTAINER_TYPE);
-                            dw.writeBoolean(checked[id]);
-                            PacketHandler.sendDataToServer(dw);
-                        }
-                    });
+                @Override
+                public void onUpdate() {
+                    DataWriter dw = getWriterForServerComponentPacket();
+                    dw.writeData(id, DataBitHelper.CONTAINER_TYPE);
+                    dw.writeBoolean(checked[id]);
+                    PacketHandler.sendDataToServer(dw);
+                }
+            });
         }
+
     }
 
     @Override
@@ -71,9 +70,11 @@ public class ComponentMenuContainerTypes extends ComponentMenu {
     private static final int CHECK_BOX_SPACING_X = 55;
     private static final int CHECK_BOX_SPACING_Y = 12;
 
+
     private List<ConnectionBlockType> types;
     private boolean[] checked;
     private CheckBoxList checkBoxes;
+
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -84,7 +85,7 @@ public class ComponentMenuContainerTypes extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -94,12 +95,12 @@ public class ComponentMenuContainerTypes extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -118,7 +119,7 @@ public class ComponentMenuContainerTypes extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuContainerTypes menuTypes = (ComponentMenuContainerTypes) menu;
+        ComponentMenuContainerTypes menuTypes = (ComponentMenuContainerTypes)menu;
 
         for (int i = 0; i < checked.length; i++) {
             checked[i] = menuTypes.checked[i];
@@ -127,7 +128,7 @@ public class ComponentMenuContainerTypes extends ComponentMenu {
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuContainerTypes newDataTypes = (ComponentMenuContainerTypes) newData;
+        ComponentMenuContainerTypes newDataTypes = (ComponentMenuContainerTypes)newData;
 
         for (int i = 0; i < checked.length; i++) {
             if (newDataTypes.checked[i] != checked[i]) {

@@ -1,6 +1,5 @@
 package vswe.stevesfactory.blocks;
 
-import static vswe.stevesfactory.StevesFactoryManager.isDevelopmentEnvironment;
 
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -19,6 +18,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import vswe.stevesfactory.StevesFactoryManager;
 
+import static vswe.stevesfactory.StevesFactoryManager.isDevelopmentEnvironment;
+
 public class BlockManager extends BlockContainer {
     public BlockManager() {
         super(Material.iron);
@@ -29,14 +30,14 @@ public class BlockManager extends BlockContainer {
         setHardness(2F);
     }
 
+
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityManager();
     }
 
     @Override
-    public boolean onBlockActivated(
-            World world, int x, int y, int z, EntityPlayer player, int side, float xSide, float ySide, float zSide) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xSide, float ySide, float zSide) {
         if (!world.isRemote) {
             FMLNetworkHandler.openGui(player, StevesFactoryManager.instance, 0, world, x, y, z);
         }
@@ -46,10 +47,8 @@ public class BlockManager extends BlockContainer {
 
     @SideOnly(Side.CLIENT)
     private IIcon sideIcon;
-
     @SideOnly(Side.CLIENT)
     private IIcon topIcon;
-
     @SideOnly(Side.CLIENT)
     private IIcon botIcon;
 
@@ -66,9 +65,9 @@ public class BlockManager extends BlockContainer {
     public IIcon getIcon(int side, int meta) {
         if (side == 0) {
             return botIcon;
-        } else if (side == 1) {
+        }else if(side == 1) {
             return topIcon;
-        } else {
+        }else{
             return sideIcon;
         }
     }
@@ -77,7 +76,7 @@ public class BlockManager extends BlockContainer {
     public void onBlockAdded(World world, int x, int y, int z) {
         super.onBlockAdded(world, x, y, z);
 
-        updateInventories(world, x, y, z);
+        updateInventories(world, x, y, z);  
     }
 
     @Override
@@ -86,6 +85,8 @@ public class BlockManager extends BlockContainer {
 
         updateInventories(world, x, y, z);
     }
+
+
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
@@ -97,17 +98,18 @@ public class BlockManager extends BlockContainer {
     private void updateInventories(World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity != null && tileEntity instanceof TileEntityManager) {
-            ((TileEntityManager) tileEntity).updateInventories();
+            ((TileEntityManager)tileEntity).updateInventories();
         }
     }
 
-    @Override
+
+   @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-        if (isDevelopmentEnvironment()) {
+       if (isDevelopmentEnvironment()) {
             System.out.println("Picked" + world.isRemote);
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityManager) {
-                TileEntityManager manager = (TileEntityManager) te;
+                TileEntityManager manager = (TileEntityManager)te;
 
                 if (manager.xCoord != x || manager.yCoord != y || manager.zCoord != z) {
                     return null;
@@ -131,11 +133,12 @@ public class BlockManager extends BlockContainer {
             }
 
             System.out.println("failed to write");
-            return null;
-        } else {
-            return super.getPickBlock(target, world, x, y, z);
-        }
+            return  null;
+       }else{
+           return super.getPickBlock(target, world, x, y, z);
+       }
     }
+
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
@@ -143,16 +146,17 @@ public class BlockManager extends BlockContainer {
             System.out.println("Placed" + world.isRemote);
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityManager) {
-                TileEntityManager manager = (TileEntityManager) te;
+                TileEntityManager manager = (TileEntityManager)te;
                 if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("Manager")) {
                     manager.readContentFromNBT(itemStack.getTagCompound().getCompoundTag("Manager"), true);
                     System.out.println("read");
-                } else {
+                }else{
                     System.out.println("no data");
                 }
             }
-        } else {
+        }else{
             super.onBlockPlacedBy(world, x, y, z, entity, itemStack);
         }
     }
+
 }

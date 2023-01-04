@@ -1,11 +1,8 @@
 package vswe.stevesfactory.blocks;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,13 +17,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import vswe.stevesfactory.network.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class TileEntityCluster extends TileEntity implements ITileEntityInterface, IPacketBlock {
 
     private boolean requestedInfo;
     private List<TileEntityClusterElement> elements;
     private List<ClusterRegistry> registryList;
     private Map<ClusterMethodRegistration, List<Pair>> methodRegistration;
-    private ITileEntityInterface interfaceObject; // only the relay is currently having a interface
+    private ITileEntityInterface interfaceObject;  //only the relay is currently having a interface
     private TileEntityCamouflage camouflageObject;
 
     public TileEntityCluster() {
@@ -55,13 +57,12 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
         for (byte type : types) {
             ClusterRegistry block = ClusterRegistry.getRegistryList().get(type);
             registryList.add(block);
-            TileEntityClusterElement element =
-                    (TileEntityClusterElement) block.getBlock().createNewTileEntity(getWorldObj(), 0);
+            TileEntityClusterElement element = (TileEntityClusterElement)block.getBlock().createNewTileEntity(getWorldObj(), 0);
             elements.add(element);
             if (element instanceof ITileEntityInterface) {
-                interfaceObject = (ITileEntityInterface) element;
-            } else if (element instanceof TileEntityCamouflage) {
-                camouflageObject = (TileEntityCamouflage) element;
+                interfaceObject = (ITileEntityInterface)element;
+            }else if(element instanceof TileEntityCamouflage) {
+                camouflageObject = (TileEntityCamouflage)element;
             }
             for (ClusterMethodRegistration clusterMethodRegistration : element.getRegistrations()) {
                 methodRegistration.get(clusterMethodRegistration).add(new Pair(block, element));
@@ -87,6 +88,7 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
     public List<TileEntityClusterElement> getElements() {
         return elements;
     }
+
 
     @Override
     public void updateEntity() {
@@ -117,12 +119,9 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
     }
 
     public void onBlockPlacedBy(EntityLivingBase entity, ItemStack itemStack) {
-        for (Pair blockContainer : getRegistrations(ClusterMethodRegistration.ON_BLOCK_PLACED_BY)) {
+        for (Pair blockContainer :  getRegistrations(ClusterMethodRegistration.ON_BLOCK_PLACED_BY)) {
             setWorldObject(blockContainer.te);
-            blockContainer
-                    .registry
-                    .getBlock()
-                    .onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, entity, blockContainer.registry.getItemStack());
+            blockContainer.registry.getBlock().onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, entity, blockContainer.registry.getItemStack());
         }
     }
 
@@ -162,14 +161,13 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
         return false;
     }
 
+
     public int isProvidingWeakPower(int side) {
         int max = 0;
 
         for (Pair blockContainer : getRegistrations(ClusterMethodRegistration.IS_PROVIDING_WEAK_POWER)) {
             setWorldObject(blockContainer.te);
-            max = Math.max(
-                    max,
-                    blockContainer.registry.getBlock().isProvidingWeakPower(worldObj, xCoord, yCoord, zCoord, side));
+            max = Math.max(max, blockContainer.registry.getBlock().isProvidingWeakPower(worldObj, xCoord, yCoord, zCoord, side));
         }
 
         return max;
@@ -180,9 +178,7 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
 
         for (Pair blockContainer : getRegistrations(ClusterMethodRegistration.IS_PROVIDING_STRONG_POWER)) {
             setWorldObject(blockContainer.te);
-            max = Math.max(
-                    max,
-                    blockContainer.registry.getBlock().isProvidingStrongPower(worldObj, xCoord, yCoord, zCoord, side));
+            max = Math.max(max, blockContainer.registry.getBlock().isProvidingStrongPower(worldObj, xCoord, yCoord, zCoord, side));
         }
 
         return max;
@@ -191,10 +187,7 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
     public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         for (Pair blockContainer : getRegistrations(ClusterMethodRegistration.ON_BLOCK_ACTIVATED)) {
             setWorldObject(blockContainer.te);
-            if (blockContainer
-                    .registry
-                    .getBlock()
-                    .onBlockActivated(worldObj, xCoord, yCoord, zCoord, player, side, hitX, hitY, hitZ)) {
+            if (blockContainer.registry.getBlock().onBlockActivated(worldObj, xCoord, yCoord, zCoord, player, side, hitX, hitY, hitZ)) {
                 return true;
             }
         }
@@ -202,17 +195,17 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
         return false;
     }
 
-    public static <T> T getTileEntity(
-            Class<? extends TileEntityClusterElement> clazz, IBlockAccess world, int x, int y, int z) {
+
+    public static <T> T getTileEntity(Class<? extends TileEntityClusterElement> clazz, IBlockAccess world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
 
         if (te != null) {
             if (clazz.isInstance(te)) {
-                return (T) te;
-            } else if (te instanceof TileEntityCluster) {
+                return (T)te;
+            }else if(te instanceof TileEntityCluster) {
                 for (TileEntityClusterElement element : ((TileEntityCluster) te).getElements()) {
                     if (clazz.isInstance(element)) {
-                        return (T) element;
+                        return (T)element;
                     }
                 }
             }
@@ -221,9 +214,10 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
         return null;
     }
 
+
     @Override
     public Container getContainer(TileEntity te, InventoryPlayer inv) {
-        return interfaceObject == null ? null : interfaceObject.getContainer((TileEntity) interfaceObject, inv);
+        return interfaceObject == null ? null : interfaceObject.getContainer((TileEntity)interfaceObject, inv);
     }
 
     @Override
@@ -265,12 +259,13 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
             TileEntityClusterElement element = elements.get(i);
             ClusterRegistry registryElement = registryList.get(i);
             NBTTagCompound sub = new NBTTagCompound();
-            sub.setByte(NBT_SUB_BLOCK_ID, (byte) registryElement.getId());
-            sub.setByte(NBT_SUB_BLOCK_META, (byte) element.getBlockMetadata());
+            sub.setByte(NBT_SUB_BLOCK_ID, (byte)registryElement.getId());
+            sub.setByte(NBT_SUB_BLOCK_META, (byte)element.getBlockMetadata());
             element.writeContentToNBT(sub);
 
             subList.appendTag(sub);
         }
+
 
         tagCompound.setTag(NBT_SUB_BLOCKS, subList);
     }
@@ -304,18 +299,18 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
             if (camouflageObject != null) {
                 camouflageObject.writeData(dw, player, onServer, id);
             }
-        } else {
+        }else{
 
             if (onServer) {
                 dw.writeData(elements.size(), DataBitHelper.CLUSTER_SUB_ID);
                 for (int i = 0; i < elements.size(); i++) {
-                    dw.writeData((byte) registryList.get(i).getId(), DataBitHelper.CLUSTER_SUB_ID);
+                    dw.writeData((byte)registryList.get(i).getId(), DataBitHelper.CLUSTER_SUB_ID);
                 }
                 for (int i = 0; i < elements.size(); i++) {
-                    dw.writeData((byte) elements.get(i).getBlockMetadata(), DataBitHelper.BLOCK_META);
+                    dw.writeData((byte)elements.get(i).getBlockMetadata(), DataBitHelper.BLOCK_META);
                 }
-            } else {
-                // nothing to write, empty packet
+            }else{
+                //nothing to write, empty packet
             }
         }
     }
@@ -326,16 +321,16 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
             if (camouflageObject != null) {
                 camouflageObject.readData(dr, player, onServer, id);
             }
-        } else {
+        }else{
 
             if (onServer) {
-                // respond by sending the data to the client that required it
+                //respond by sending the data to the client that required it
                 PacketHandler.sendBlockPacket(this, player, 1);
-            } else {
+            }else{
                 int length = dr.readData(DataBitHelper.CLUSTER_SUB_ID);
                 byte[] types = new byte[length];
                 for (int i = 0; i < length; i++) {
-                    types[i] = (byte) dr.readData(DataBitHelper.CLUSTER_SUB_ID);
+                    types[i] = (byte)dr.readData(DataBitHelper.CLUSTER_SUB_ID);
                 }
                 loadElements(types);
                 for (int i = 0; i < length; i++) {
@@ -353,7 +348,7 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
     public byte[] getTypes() {
         byte[] bytes = new byte[registryList.size()];
         for (int i = 0; i < bytes.length; i++) {
-            bytes[i] = (byte) registryList.get(i).getId();
+            bytes[i] = (byte)registryList.get(i).getId();
         }
 
         return bytes;

@@ -1,8 +1,8 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
@@ -11,31 +11,29 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 
+import java.util.List;
+
 public class ComponentMenuTargetInventory extends ComponentMenuTarget {
     public ComponentMenuTargetInventory(FlowComponent parent) {
         super(parent);
 
         textBoxes = new TextBoxNumberList();
-        textBoxes.addTextBox(
-                startTextBox = new TextBoxNumber(39, 49, 2, false) {
-                    @Override
-                    public void onNumberChanged() {
-                        if (selectedDirectionId != -1
-                                && getParent().getManager().getWorldObj().isRemote) {
-                            writeData(DataTypeHeader.START_OR_TANK_DATA, getNumber());
-                        }
-                    }
-                });
-        textBoxes.addTextBox(
-                endTextBox = new TextBoxNumber(60, 49, 2, false) {
-                    @Override
-                    public void onNumberChanged() {
-                        if (selectedDirectionId != -1
-                                && getParent().getManager().getWorldObj().isRemote) {
-                            writeData(DataTypeHeader.END, getNumber());
-                        }
-                    }
-                });
+        textBoxes.addTextBox(startTextBox = new TextBoxNumber(39 ,49, 2, false) {
+            @Override
+            public void onNumberChanged() {
+                if (selectedDirectionId != -1 && getParent().getManager().getWorldObj().isRemote) {
+                    writeData(DataTypeHeader.START_OR_TANK_DATA, getNumber());
+                }
+            }
+        });
+        textBoxes.addTextBox(endTextBox = new TextBoxNumber(60 ,49, 2, false) {
+            @Override
+            public void onNumberChanged() {
+                if (selectedDirectionId != -1 && getParent().getManager().getWorldObj().isRemote) {
+                    writeData(DataTypeHeader.END, getNumber());
+                }
+            }
+        });
     }
 
     private TextBoxNumberList textBoxes;
@@ -50,16 +48,12 @@ public class ComponentMenuTargetInventory extends ComponentMenuTarget {
         return new Button(27) {
             @Override
             protected String getLabel() {
-                return useAdvancedSetting(selectedDirectionId)
-                        ? Localization.ALL_SLOTS.toString()
-                        : Localization.ID_RANGE.toString();
+                return useAdvancedSetting(selectedDirectionId) ? Localization.ALL_SLOTS.toString() : Localization.ID_RANGE.toString();
             }
 
             @Override
             protected String getMouseOverText() {
-                return useAdvancedSetting(selectedDirectionId)
-                        ? Localization.ALL_SLOTS_LONG.toString()
-                        : Localization.ID_RANGE_LONG.toString();
+                return useAdvancedSetting(selectedDirectionId) ? Localization.ALL_SLOTS_LONG.toString() : Localization.ID_RANGE_LONG.toString();
             }
 
             @Override
@@ -97,7 +91,7 @@ public class ComponentMenuTargetInventory extends ComponentMenuTarget {
 
     @Override
     protected void copyAdvancedSetting(ComponentMenu menu, int i) {
-        ComponentMenuTargetInventory menuTarget = (ComponentMenuTargetInventory) menu;
+        ComponentMenuTargetInventory menuTarget = (ComponentMenuTargetInventory)menu;
         startRange[i] = menuTarget.startRange[i];
         endRange[i] = menuTarget.endRange[i];
     }
@@ -118,27 +112,27 @@ public class ComponentMenuTargetInventory extends ComponentMenuTarget {
 
     @Override
     protected void saveAdvancedComponent(NBTTagCompound directionTag, int i) {
-        directionTag.setByte(NBT_START, (byte) getStart(i));
-        directionTag.setByte(NBT_END, (byte) getEnd(i));
+        directionTag.setByte(NBT_START, (byte)getStart(i));
+        directionTag.setByte(NBT_END, (byte)getEnd(i));
     }
 
     @Override
     protected void resetAdvancedSetting(int i) {
-        startRange[i] = endRange[i] = 0;
+        startRange[i] =  endRange[i] = 0;
     }
 
     @Override
     protected void refreshAdvancedComponentData(ContainerManager container, ComponentMenu newData, int i) {
-        ComponentMenuTargetInventory newDataTarget = (ComponentMenuTargetInventory) newData;
+        ComponentMenuTargetInventory newDataTarget = (ComponentMenuTargetInventory)newData;
 
         if (startRange[i] != newDataTarget.startRange[i]) {
-            startRange[i] = newDataTarget.startRange[i];
+            startRange[i] =  newDataTarget.startRange[i];
 
             writeUpdatedData(container, i, DataTypeHeader.START_OR_TANK_DATA, startRange[i]);
         }
 
         if (endRange[i] != newDataTarget.endRange[i]) {
-            endRange[i] = newDataTarget.endRange[i];
+            endRange[i] =  newDataTarget.endRange[i];
 
             writeUpdatedData(container, i, DataTypeHeader.END, endRange[i]);
         }
@@ -158,6 +152,7 @@ public class ComponentMenuTargetInventory extends ComponentMenuTarget {
         }
     }
 
+
     public int getStart(int i) {
         return startRange[i];
     }
@@ -170,8 +165,7 @@ public class ComponentMenuTargetInventory extends ComponentMenuTarget {
     public void addErrors(List<String> errors) {
         for (int i = 0; i < directions.length; i++) {
             if (isActive(i) && getStart(i) > getEnd(i)) {
-                errors.add(Localization.getForgeDirectionLocalization(i).toString() + " "
-                        + Localization.INVALID_RANGE.toString());
+                errors.add(Localization.getForgeDirectionLocalization(i).toString() + " " + Localization.INVALID_RANGE.toString());
             }
         }
 
@@ -184,6 +178,7 @@ public class ComponentMenuTargetInventory extends ComponentMenuTarget {
         if (selectedDirectionId != -1 && useAdvancedSetting(selectedDirectionId)) {
             return textBoxes.onKeyStroke(gui, c, k);
         }
+
 
         return false;
     }

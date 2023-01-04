@@ -2,8 +2,6 @@ package vswe.stevesfactory.settings;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
@@ -13,6 +11,9 @@ import vswe.stevesfactory.components.CheckBoxList;
 import vswe.stevesfactory.components.ComponentType;
 import vswe.stevesfactory.interfaces.GuiManager;
 import vswe.stevesfactory.interfaces.IInterfaceRenderer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class SettingsScreen implements IInterfaceRenderer {
@@ -38,7 +39,6 @@ public class SettingsScreen implements IInterfaceRenderer {
     private static final int MARGIN_X = 30;
     private static final int START_Y = 20;
     private static final int MAX_Y = 250;
-
     private abstract class CheckBoxSetting extends CheckBox {
         private CheckBoxSetting(Localization name) {
             super(name, getXAndGenerateY(name), currentY);
@@ -56,7 +56,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         String str = name.toString();
 
         List<String> lines = cachedGui.getLinesFromText(str, CHECK_BOX_WIDTH);
-        int height = (int) ((lines.size() + 1) * cachedGui.getFontHeight() * 0.7F);
+        int height = (int)((lines.size() + 1) * cachedGui.getFontHeight() * 0.7F);
         offsetY = height;
 
         if (currentY + height > MAX_Y) {
@@ -68,13 +68,12 @@ public class SettingsScreen implements IInterfaceRenderer {
     }
 
     private CheckBoxList checkBoxes;
-    private String cachedString;
+    private  String cachedString;
     private Localization localization = Localization.CLOSE_GROUP_LABEL;
     private int currentX;
     private int currentY;
     private int offsetY;
     private GuiManager cachedGui;
-
     private void addCheckboxes(GuiManager gui) {
         cachedGui = gui;
         cachedString = localization.toString();
@@ -190,6 +189,7 @@ public class SettingsScreen implements IInterfaceRenderer {
             }
         });
 
+
         currentX = START_SETTINGS_X;
         currentY = START_Y;
         offsetY = 0;
@@ -247,22 +247,30 @@ public class SettingsScreen implements IInterfaceRenderer {
     }
 
     @Override
-    public void onDrag(GuiManager gui, int mX, int mY) {}
+    public void onDrag(GuiManager gui, int mX, int mY) {
+
+    }
 
     @Override
-    public void onRelease(GuiManager gui, int mX, int mY) {}
+    public void onRelease(GuiManager gui, int mX, int mY) {
+
+    }
 
     @Override
-    public void onKeyTyped(GuiManager gui, char c, int k) {}
+    public void onKeyTyped(GuiManager gui, char c, int k) {
+
+    }
 
     @Override
-    public void onScroll(int scroll) {}
+    public void onScroll(int scroll) {
+
+    }
+
 
     private static final int BUTTON_SRC_X = 242;
     private static final int BUTTON_SRC_Y = 0;
     private static final int BUTTON_SIZE = 14;
     private static final int BUTTON_SIZE_INNER = 12;
-
     private abstract class Button {
         private int x;
         private int y;

@@ -1,9 +1,8 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.lang.reflect.Constructor;
-import java.util.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -14,6 +13,9 @@ import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
 import vswe.stevesfactory.network.*;
 import vswe.stevesfactory.settings.Settings;
+
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 public class FlowComponent implements IComponentNetworkReader, Comparable<FlowComponent> {
     private static final int COMPONENT_SRC_X = 0;
@@ -85,7 +87,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     private static final int EDIT_SIZE = 9;
     private static final int EDIT_SIZE_SMALL = 7;
 
-    private static final int TEXT_SPACE = 135;
+    private static final int TEXT_SPACE= 135;
     private static final int TEXT_SPACE_SHORT = 65;
     private static final int TEXT_MAX_LENGTH = 31;
 
@@ -100,11 +102,11 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         menus = new ArrayList<ComponentMenu>();
         for (Class<? extends ComponentMenu> componentMenuClass : type.getClasses()) {
             try {
-                Constructor<? extends ComponentMenu> constructor =
-                        componentMenuClass.getConstructor(FlowComponent.class);
+                Constructor<? extends ComponentMenu> constructor = componentMenuClass.getConstructor(FlowComponent.class);
                 Object obj = constructor.newInstance(this);
 
-                menus.add((ComponentMenu) obj);
+
+                menus.add((ComponentMenu)obj);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -143,6 +145,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     private List<FlowComponent> childrenOutputNodes;
     private boolean isInventoryListDirty = true;
 
+
     public int getCurrentInterval() {
         return currentInterval;
     }
@@ -170,19 +173,15 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     public ConnectionSet getConnectionSet() {
         return connectionSet;
     }
-
     private boolean isLoading;
-
     public void setConnectionSet(ConnectionSet connectionSet) {
-        if (this.connections != null && this.connectionSet != null && !isLoading) {
+        if (this.connections != null && this.connectionSet !=  null && !isLoading) {
             int oldLength = this.connectionSet.getConnections().length;
             int newLength = connectionSet.getConnections().length;
 
             for (int i = 0; i < Math.min(oldLength, newLength); i++) {
                 Connection connection = connections.get(i);
-                if (connection != null
-                        && this.connectionSet.getConnections()[i].isInput()
-                                != connectionSet.getConnections()[i].isInput()) {
+                if (connection != null && this.connectionSet.getConnections()[i].isInput() != connectionSet.getConnections()[i].isInput()) {
                     removeConnection(i);
                 }
             }
@@ -198,7 +197,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     }
 
     public void update(float partial) {
-        // no need for this to be precise, can ignore the partial time
+        //no need for this to be precise, can ignore the partial time
         if (resetTimer > 0) {
             if (resetTimer == 1) {
                 x = mouseStartX;
@@ -218,26 +217,15 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         GL11.glPushMatrix();
         GL11.glTranslatef(0, 0, zLevel);
 
-        gui.drawTexture(
-                x,
-                y,
-                isLarge ? COMPONENT_SRC_LARGE_X : COMPONENT_SRC_X,
-                COMPONENT_SRC_Y,
-                getComponentWidth(),
-                getComponentHeight());
+        gui.drawTexture(x, y, isLarge ? COMPONENT_SRC_LARGE_X : COMPONENT_SRC_X, COMPONENT_SRC_Y, getComponentWidth(), getComponentHeight());
 
         int internalX = mX - x;
         int internalY = mY - y;
 
         int srcArrowX = isLarge ? 1 : 0;
         int srcArrowY = inArrowBounds(internalX, internalY) ? 1 : 0;
-        gui.drawTexture(
-                x + getComponentWidth() + ARROW_X,
-                y + ARROW_Y,
-                ARROW_SRC_X + ARROW_SIZE_W * srcArrowX,
-                ARROW_SRC_Y + ARROW_SIZE_H * srcArrowY,
-                ARROW_SIZE_W,
-                ARROW_SIZE_H);
+        gui.drawTexture(x + getComponentWidth() + ARROW_X, y + ARROW_Y, ARROW_SRC_X + ARROW_SIZE_W * srcArrowX, ARROW_SRC_Y + ARROW_SIZE_H * srcArrowY, ARROW_SIZE_W, ARROW_SIZE_H);
+
 
         if (isLarge) {
             for (int i = 0; i < menus.size(); i++) {
@@ -257,19 +245,11 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
                 int srcItemArrowX = inMenuArrowBounds(i, internalX, internalY) ? 1 : 0;
                 int srcItemArrowY = i == openMenuId ? 1 : 0;
-                gui.drawTexture(
-                        itemX + MENU_ARROW_X,
-                        itemY + MENU_ARROW_Y,
-                        MENU_ARROW_SRC_X + MENU_ARROW_SIZE_W * srcItemArrowX,
-                        MENU_ARROW_SRC_Y + MENU_ARROW_SIZE_H * srcItemArrowY,
-                        MENU_ARROW_SIZE_W,
-                        MENU_ARROW_SIZE_H);
+                gui.drawTexture(itemX + MENU_ARROW_X, itemY + MENU_ARROW_Y, MENU_ARROW_SRC_X + MENU_ARROW_SIZE_W * srcItemArrowX, MENU_ARROW_SRC_Y + MENU_ARROW_SIZE_H * srcItemArrowY, MENU_ARROW_SIZE_W, MENU_ARROW_SIZE_H);
 
-                gui.drawString(
-                        menu.getName(),
-                        x + MENU_X + MENU_ITEM_TEXT_X,
-                        y + getMenuItemY(i) + MENU_ITEM_TEXT_Y,
-                        0x404040);
+
+
+                gui.drawString(menu.getName(), x + MENU_X + MENU_ITEM_TEXT_X, y + getMenuItemY(i) + MENU_ITEM_TEXT_Y, 0x404040);
 
                 if (i == openMenuId) {
                     GL11.glPushMatrix();
@@ -279,6 +259,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 }
             }
         }
+
 
         boolean hasConnection = false;
         int outputCount = 0;
@@ -294,38 +275,27 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
             if (connection.isInput()) {
                 inputCount++;
-            } else if (connection.getType() == ConnectionOption.ConnectionType.OUTPUT) {
+            }else if(connection.getType() == ConnectionOption.ConnectionType.OUTPUT){
                 outputCount++;
-            } else {
+            }else{
                 sideCount++;
             }
 
             int connectionWidth = location[3];
             int connectionHeight = location[4];
 
-            int srcConnectionX =
-                    (CollisionHelper.inBounds(location[0], location[1], connectionWidth, connectionHeight, mX, mY))
-                            ? 1
-                            : 0;
+            int srcConnectionX = (CollisionHelper.inBounds(location[0], location[1], connectionWidth, connectionHeight, mX, mY)) ? 1 : 0;
 
             Connection current = manager.getCurrentlyConnecting();
             if (current != null && current.getComponentId() == id && current.getConnectionId() == i) {
-                gui.drawLine(
-                        location[0] + connectionWidth / 2,
-                        location[1] + connectionHeight / 2,
-                        overrideX != -1 ? overrideX : mX,
-                        overrideY != -1 ? overrideY : mY);
+                gui.drawLine(location[0] + connectionWidth / 2, location[1] + connectionHeight / 2, overrideX != -1 ? overrideX : mX, overrideY != -1 ? overrideY : mY);
             }
 
             Connection connectedConnection = connections.get(i);
             if (connectedConnection != null) {
                 hasConnection = true;
-                if (id < connectedConnection.getComponentId()
-                        && connectedConnection.getComponentId()
-                                < manager.getFlowItems().size()) {
-                    int[] otherLocation = manager.getFlowItems()
-                            .get(connectedConnection.getComponentId())
-                            .getConnectionLocationFromId(connectedConnection.getConnectionId());
+                if (id < connectedConnection.getComponentId() && connectedConnection.getComponentId() < manager.getFlowItems().size()) {
+                    int[] otherLocation = manager.getFlowItems().get(connectedConnection.getComponentId()).getConnectionLocationFromId(connectedConnection.getConnectionId());
                     if (otherLocation == null) {
                         continue;
                     }
@@ -342,7 +312,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                         if (j == 0) {
                             x1 = startX;
                             y1 = startY;
-                        } else {
+                        }else{
                             x1 = nodes.get(j - 1).getX();
                             y1 = nodes.get(j - 1).getY();
                         }
@@ -350,7 +320,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                         if (j == nodes.size()) {
                             x2 = endX;
                             y2 = endY;
-                        } else {
+                        }else{
                             x2 = nodes.get(j).getX();
                             y2 = nodes.get(j).getY();
                         }
@@ -361,10 +331,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                     for (Point node : nodes) {
                         int x = node.getX() - NODE_SIZE / 2;
                         int y = node.getY() - NODE_SIZE / 2;
-                        int srcXNode = connectedConnection.getSelectedNode() == null
-                                        && CollisionHelper.inBounds(x, y, NODE_SIZE, NODE_SIZE, mX, mY)
-                                ? 1
-                                : 0;
+                        int srcXNode = connectedConnection.getSelectedNode() == null && CollisionHelper.inBounds(x, y, NODE_SIZE, NODE_SIZE, mX, mY) ? 1 : 0;
                         gui.drawTexture(x, y, NODE_SRC_X + srcXNode * NODE_SIZE, NODE_SRC_Y, NODE_SIZE, NODE_SIZE);
                     }
 
@@ -372,13 +339,8 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 }
             }
 
-            gui.drawTexture(
-                    location[0],
-                    location[1],
-                    CONNECTION_SRC_X + srcConnectionX * connectionWidth,
-                    location[2],
-                    connectionWidth,
-                    connectionHeight);
+            gui.drawTexture(location[0], location[1], CONNECTION_SRC_X + srcConnectionX * connectionWidth, location[2], connectionWidth, connectionHeight);
+
         }
 
         errors.clear();
@@ -391,15 +353,8 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         }
 
         if (!errors.isEmpty()) {
-            int srcErrorY =
-                    CollisionHelper.inBounds(x + ERROR_X, y + ERROR_Y, ERROR_SIZE_W, ERROR_SIZE_H, mX, mY) ? 1 : 0;
-            gui.drawTexture(
-                    x + ERROR_X,
-                    y + ERROR_Y,
-                    ERROR_SRC_X,
-                    ERROR_SRC_Y + srcErrorY * ERROR_SIZE_H,
-                    ERROR_SIZE_W,
-                    ERROR_SIZE_H);
+            int srcErrorY = CollisionHelper.inBounds(x + ERROR_X, y + ERROR_Y, ERROR_SIZE_W, ERROR_SIZE_H, mX, mY) ? 1 : 0;
+            gui.drawTexture(x + ERROR_X, y + ERROR_Y, ERROR_SRC_X, ERROR_SRC_Y + srcErrorY * ERROR_SIZE_H, ERROR_SIZE_W, ERROR_SIZE_H);
         }
 
         if (!isEditing || isLarge) {
@@ -415,48 +370,27 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         }
 
         if (name != null && Settings.isCommandTypes() && !GuiScreen.isCtrlKeyDown()) {
-            gui.drawCenteredString(
-                    getType().getName(),
-                    x + DRAGGABLE_SIZE,
-                    y + 3,
-                    0.7F,
-                    getComponentWidth() - DRAGGABLE_SIZE - ARROW_SIZE_W,
-                    0x707070);
+            gui.drawCenteredString(getType().getName(), x + DRAGGABLE_SIZE, y + 3, 0.7F, getComponentWidth() - DRAGGABLE_SIZE - ARROW_SIZE_W, 0x707070);
         }
 
         if (isLarge) {
             if (isEditing) {
-                gui.drawCursor(
-                        x + TEXT_X + (int) ((textBox.getCursorPosition(gui) + CURSOR_X) * 0.7F),
-                        y + TEXT_Y + (int) (CURSOR_Y * 0.7F),
-                        CURSOR_Z,
-                        0.7F,
-                        0xFFFFFFFF);
+                gui.drawCursor(x + TEXT_X + (int)((textBox.getCursorPosition(gui) +  CURSOR_X) * 0.7F), y + TEXT_Y + (int)(CURSOR_Y * 0.7F), CURSOR_Z, 0.7F, 0xFFFFFFFF);
                 for (int i = 0; i < 2; i++) {
                     int buttonX = x + EDIT_X_SMALL;
                     int buttonY = y + (i == 0 ? EDIT_Y_TOP : EDIT_Y_BOT);
 
-                    int srcXButton =
-                            CollisionHelper.inBounds(buttonX, buttonY, EDIT_SIZE_SMALL, EDIT_SIZE_SMALL, mX, mY)
-                                    ? 1
-                                    : 0;
+                    int srcXButton = CollisionHelper.inBounds(buttonX, buttonY, EDIT_SIZE_SMALL, EDIT_SIZE_SMALL, mX, mY) ? 1 : 0;
                     int srcYButton = i;
 
-                    gui.drawTexture(
-                            buttonX,
-                            buttonY,
-                            EDIT_SRC_X + srcXButton * EDIT_SIZE_SMALL,
-                            EDIT_SRC_Y + EDIT_SIZE + EDIT_SIZE_SMALL * srcYButton,
-                            EDIT_SIZE_SMALL,
-                            EDIT_SIZE_SMALL);
+                    gui.drawTexture(buttonX, buttonY, EDIT_SRC_X + srcXButton * EDIT_SIZE_SMALL, EDIT_SRC_Y + EDIT_SIZE + EDIT_SIZE_SMALL * srcYButton, EDIT_SIZE_SMALL, EDIT_SIZE_SMALL);
                 }
-            } else {
+            }else{
                 int buttonX = x + EDIT_X;
                 int buttonY = y + EDIT_Y;
                 int srcXButton = CollisionHelper.inBounds(buttonX, buttonY, EDIT_SIZE, EDIT_SIZE, mX, mY) ? 1 : 0;
 
-                gui.drawTexture(
-                        buttonX, buttonY, EDIT_SRC_X + srcXButton * EDIT_SIZE, EDIT_SRC_Y, EDIT_SIZE, EDIT_SIZE);
+                gui.drawTexture(buttonX, buttonY, EDIT_SRC_X + srcXButton * EDIT_SIZE, EDIT_SRC_Y, EDIT_SIZE, EDIT_SIZE);
             }
         }
 
@@ -465,7 +399,6 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
     private String cachedName;
     private String cachedShortName;
-
     private String getShortName(GuiManager gui, String name) {
         if (!name.equals(cachedName)) {
             cachedShortName = "";
@@ -482,9 +415,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
     @SideOnly(Side.CLIENT)
     public String getName() {
-        return textBox.getText() == null
-                ? name == null || GuiScreen.isCtrlKeyDown() ? getType().getName() : name
-                : textBox.getText();
+         return textBox.getText() == null ? name == null || GuiScreen.isCtrlKeyDown() ? getType().getName() : name : textBox.getText();
     }
 
     List<String> errors = new ArrayList<String>();
@@ -505,14 +436,15 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             }
             if (connection.isInput()) {
                 inputCount++;
-            } else if (connection.getType() == ConnectionOption.ConnectionType.OUTPUT) {
+            }else if(connection.getType() == ConnectionOption.ConnectionType.OUTPUT){
                 outputCount++;
-            } else {
+            }else{
                 sideCount++;
             }
         }
         return null;
     }
+
 
     @SideOnly(Side.CLIENT)
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
@@ -540,15 +472,14 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
             if (connection.isInput()) {
                 inputCount++;
-            } else if (connection.getType() == ConnectionOption.ConnectionType.OUTPUT) {
+            }else if(connection.getType() == ConnectionOption.ConnectionType.OUTPUT){
                 outputCount++;
-            } else {
+            }else{
                 sideCount++;
             }
 
             if (CollisionHelper.inBounds(location[0], location[1], CONNECTION_SIZE_W, CONNECTION_SIZE_H, mX, mY)) {
-                gui.drawMouseOver(
-                        connection.getName(this, (connection.isInput() ? inputCount : outputCount) - 1), mX, mY);
+                gui.drawMouseOver(connection.getName(this, (connection.isInput() ? inputCount : outputCount) - 1), mX, mY);
             }
         }
 
@@ -568,22 +499,17 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
     public boolean onClick(int mX, int mY, int button) {
         if (CollisionHelper.inBounds(x, y, getComponentWidth(), getComponentHeight(), mX, mY)) {
-            int internalX = mX - x;
-            int internalY = mY - y;
+           int internalX = mX - x;
+           int internalY = mY - y;
 
             if (internalX <= DRAGGABLE_SIZE && internalY <= DRAGGABLE_SIZE) {
                 mouseStartX = mouseDragX = mX;
                 mouseStartY = mouseDragY = mY;
                 isDragging = true;
-            } else if (isLarge
-                    && !isEditing
-                    && CollisionHelper.inBounds(EDIT_X, EDIT_Y, EDIT_SIZE, EDIT_SIZE, internalX, internalY)) {
+            }else if(isLarge && !isEditing && CollisionHelper.inBounds(EDIT_X, EDIT_Y, EDIT_SIZE, EDIT_SIZE, internalX, internalY)) {
                 isEditing = true;
                 textBox.setTextAndCursor(getName());
-            } else if (isLarge
-                    && isEditing
-                    && CollisionHelper.inBounds(
-                            EDIT_X_SMALL, EDIT_Y_TOP, EDIT_SIZE_SMALL, EDIT_SIZE_SMALL, internalX, internalY)) {
+            }else if(isLarge && isEditing && CollisionHelper.inBounds(EDIT_X_SMALL, EDIT_Y_TOP, EDIT_SIZE_SMALL, EDIT_SIZE_SMALL, internalX, internalY)) {
                 isEditing = false;
                 name = textBox.getText();
                 if (name.equals("")) {
@@ -591,41 +517,29 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 }
                 sendNameToServer();
                 textBox.setText(null);
-            } else if (isLarge
-                    && isEditing
-                    && CollisionHelper.inBounds(
-                            EDIT_X_SMALL, EDIT_Y_BOT, EDIT_SIZE_SMALL, EDIT_SIZE_SMALL, internalX, internalY)) {
+            }else if(isLarge && isEditing && CollisionHelper.inBounds(EDIT_X_SMALL, EDIT_Y_BOT, EDIT_SIZE_SMALL, EDIT_SIZE_SMALL, internalX, internalY)) {
                 isEditing = false;
                 textBox.setText(null);
-            } else if (isLarge
-                    && isEditing
-                    && CollisionHelper.inBounds(TEXT_X, TEXT_Y, TEXT_SPACE, TEXT_HEIGHT, internalX, internalY)) {
+            }else if(isLarge && isEditing && CollisionHelper.inBounds(TEXT_X, TEXT_Y, TEXT_SPACE, TEXT_HEIGHT, internalX, internalY)) {
                 if (button == 1) {
                     textBox.setTextAndCursor("");
                 }
-            } else if (inArrowBounds(internalX, internalY)
-                    || (Settings.isLargeOpenHitBox() && internalY < COMPONENT_SIZE_H)) {
-                if (!isLarge
-                        && type == ComponentType.GROUP
-                        && Settings.isQuickGroupOpen()
-                        && !GuiScreen.isShiftKeyDown()) {
+            }else if(inArrowBounds(internalX, internalY) || (Settings.isLargeOpenHitBox() &&  internalY < COMPONENT_SIZE_H)) {
+                if (!isLarge && type == ComponentType.GROUP && Settings.isQuickGroupOpen() && !GuiScreen.isShiftKeyDown()) {
                     manager.setSelectedComponent(this);
-                } else {
+                }else{
                     isLarge = !isLarge;
                 }
-            } else if (isLarge) {
+            }else if (isLarge){
 
                 for (int i = 0; i < menus.size(); i++) {
                     ComponentMenu menu = menus.get(i);
 
                     if (menu.isVisible()) {
-                        if (inMenuArrowBounds(i, internalX, internalY)
-                                || (Settings.isLargeOpenHitBoxMenu()
-                                        && internalY >= getMenuItemY(i)
-                                        && internalY <= getMenuItemY(i) + MENU_ITEM_SIZE_H)) {
+                        if (inMenuArrowBounds(i, internalX, internalY) || (Settings.isLargeOpenHitBoxMenu() && internalY >= getMenuItemY(i) && internalY <= getMenuItemY(i) + MENU_ITEM_SIZE_H)) {
                             if (openMenuId == i) {
                                 openMenuId = -1;
-                            } else {
+                            }else{
                                 openMenuId = i;
                             }
 
@@ -637,9 +551,10 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                         }
                     }
                 }
+
             }
             return true;
-        } else {
+        }else{
             int outputCount = 0;
             int inputCount = 0;
             int sideCount = 0;
@@ -652,13 +567,14 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 }
                 if (connection.isInput()) {
                     inputCount++;
-                } else if (connection.getType() == ConnectionOption.ConnectionType.OUTPUT) {
+                }else if(connection.getType() == ConnectionOption.ConnectionType.OUTPUT){
                     outputCount++;
-                } else {
+                }else{
                     sideCount++;
                 }
 
                 if (CollisionHelper.inBounds(location[0], location[1], CONNECTION_SIZE_W, CONNECTION_SIZE_H, mX, mY)) {
+
 
                     Connection current = manager.getCurrentlyConnecting();
                     if (button == 1 && current == null) {
@@ -673,25 +589,25 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                                 component = manager.getFlowItems().get(selected.getComponentId());
                                 selected = component.getConnection(selected.getConnectionId());
                                 reversed = true;
-                            }
+                           }
                             if (selected.getNodes().size() < MAX_NODES && selected.getSelectedNode() == null) {
                                 int id = reversed ? selected.getNodes().size() : 0;
                                 selected.addAndSelectNode(mX, mY, id);
                                 component.sendConnectionNode(connectionId, id, false, true, mX, mY);
                             }
                         }
-                    } else {
+                    }else{
                         if (current == null) {
                             if (connections.get(i) != null) {
                                 removeConnection(i);
                             }
                             manager.setCurrentlyConnecting(new Connection(id, i));
-                        } else if (current.getComponentId() == this.id && current.getConnectionId() == i) {
+                        }else if (current.getComponentId() == this.id && current.getConnectionId() == i) {
                             manager.setCurrentlyConnecting(null);
-                        } else if (current.getComponentId() != id) {
+                        }else if (current.getComponentId() != id){
                             FlowComponent connectTo = manager.getFlowItems().get(current.getComponentId());
-                            ConnectionOption connectToOption =
-                                    connectTo.connectionSet.getConnections()[current.getConnectionId()];
+                            ConnectionOption connectToOption = connectTo.connectionSet.getConnections()[current.getConnectionId()];
+
 
                             if (connectToOption.isInput() != connection.isInput()) {
 
@@ -712,7 +628,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                     }
 
                     return true;
-                } else {
+                }else{
                     Connection selected = connections.get(i);
                     if (selected != null) {
                         List<Point> nodes = selected.getNodes();
@@ -723,11 +639,10 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                             if (CollisionHelper.inBounds(x, y, NODE_SIZE, NODE_SIZE, mX, mY)) {
                                 if (button == 0) {
                                     selected.setSelectedNode(node);
-                                } else if (button == 1) {
+                                }else if (button == 1) {
                                     if (GuiScreen.isShiftKeyDown()) {
                                         sendConnectionNode(i, j, true, false, 0, 0);
-                                    } else if (selected.getNodes().size() < MAX_NODES
-                                            && selected.getSelectedNode() == null) {
+                                    }else if (selected.getNodes().size() < MAX_NODES && selected.getSelectedNode() == null) {
                                         selected.addAndSelectNode(mX, mY, j + 1);
                                         sendConnectionNode(i, j + 1, false, true, mX, mY);
                                     }
@@ -746,10 +661,8 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     private boolean checkForLoops(int connectionId, Connection connection) {
         return checkForLoops(new ArrayList<Integer>(), this, connectionId, connection);
     }
-
-    private boolean checkForLoops(
-            List<Integer> usedComponents, FlowComponent currentComponent, int connectionId, Connection connection) {
-        if (usedComponents.contains(currentComponent.getId())) {
+    private boolean checkForLoops(List<Integer> usedComponents, FlowComponent currentComponent, int connectionId, Connection connection) {
+        if (usedComponents.contains(currentComponent.getId()))  {
             return true;
         }
         usedComponents.add(currentComponent.getId());
@@ -759,30 +672,24 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 Connection c = null;
 
                 if (connectionId == i && currentComponent.getId() == this.id) {
-                    // the new connection
+                    //the new connection
                     c = connection;
-                } else if (connection.getComponentId() == currentComponent.getId()
-                        && connection.getConnectionId() == i) {
-                    // the new connection in the other direction
+                }else if(connection.getComponentId() == currentComponent.getId() && connection.getConnectionId() == i) {
+                    //the new connection in the other direction
                     c = new Connection(this.getId(), connectionId);
-                } else {
+                }else{
                     c = currentComponent.connections.get(i);
-                    // old connection that will be replaced
+                    //old connection that will be replaced
                     if (c != null && c.getComponentId() == this.id && c.getConnectionId() == connectionId) {
                         c = null;
                     }
                 }
 
                 if (c != null) {
-                    if (c.getComponentId() >= 0
-                            && c.getComponentId() < manager.getFlowItems().size()) {
+                    if (c.getComponentId() >= 0 && c.getComponentId() < manager.getFlowItems().size()) {
                         List<Integer> usedComponentsCopy = new ArrayList<Integer>(usedComponents);
 
-                        if (checkForLoops(
-                                usedComponentsCopy,
-                                manager.getFlowItems().get(c.getComponentId()),
-                                connectionId,
-                                connection)) {
+                        if (checkForLoops(usedComponentsCopy, manager.getFlowItems().get(c.getComponentId()), connectionId, connection)) {
                             return true;
                         }
                     }
@@ -798,7 +705,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             DataWriter dw = PacketHandler.getWriterForServerComponentPacket(this, null);
             if (connection != null) {
                 writeConnectionData(dw, id, true, connection.getComponentId(), connection.getConnectionId());
-            } else {
+            }else{
                 writeConnectionData(dw, id, false, 0, 0);
             }
             PacketHandler.sendDataToServer(dw);
@@ -819,8 +726,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         Connection connection = connections.get(id);
 
         addConnection(id, null);
-        if (connection.getComponentId() >= 0
-                && connection.getComponentId() < getManager().getFlowItems().size()) {
+        if (connection.getComponentId() >= 0 && connection.getComponentId() < getManager().getFlowItems().size()) {
             manager.getFlowItems().get(connection.getComponentId()).addConnection(connection.getConnectionId(), null);
         }
     }
@@ -833,6 +739,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
             menu.onDrag(mX - getMenuAreaX(), mY - getMenuAreaY(i), i == openMenuId);
         }
+
 
         for (int i = 0; i < connectionSet.getConnections().length; i++) {
             Connection connection = connections.get(i);
@@ -848,10 +755,13 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             writeLocationData();
         }
 
+
         for (int i = 0; i < menus.size(); i++) {
             ComponentMenu menu = menus.get(i);
             menu.onRelease(mX - getMenuAreaX(), mY - getMenuAreaY(i), isLarge && i == openMenuId);
         }
+
+
 
         for (int i = 0; i < connectionSet.getConnections().length; i++) {
             Connection connection = connections.get(i);
@@ -867,6 +777,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 }
             }
         }
+
     }
 
     public void postRelease() {
@@ -879,14 +790,15 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             x += mX - mouseDragX;
             y += mY - mouseDragY;
 
-            if (GuiScreen.isShiftKeyDown()) {
-                adjustToGrid();
-                mouseDragX = x;
-                mouseDragY = y;
-            } else {
-                mouseDragX = mX;
-                mouseDragY = mY;
-            }
+
+           if (GuiScreen.isShiftKeyDown()) {
+               adjustToGrid();
+               mouseDragX = x;
+               mouseDragY = y;
+           }else{
+               mouseDragX = mX;
+               mouseDragY = mY;
+           }
         }
     }
 
@@ -895,18 +807,18 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         y = (y / 10) * 10;
     }
 
+
     public void adjustEverythingToGridRaw() {
-        if (true) return; // TODO work in progress
+        if (true) return;  //TODO work in progress
         adjustToGrid();
         for (Connection connection : connections.values()) {
-            if (connection != null) {
+            if(connection != null) {
                 connection.adjustAllToGrid();
             }
         }
     }
-
     public void adjustEverythingToGridFine() {
-        if (true) return; // TODO work in progress
+        if (true) return; //TODO work in progress
         int outputCount = 0;
         int inputCount = 0;
         int sideCount = 0;
@@ -920,21 +832,19 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
             if (connectionOption.isInput()) {
                 inputCount++;
-            } else if (connectionOption.getType() == ConnectionOption.ConnectionType.OUTPUT) {
+            }else if(connectionOption.getType() == ConnectionOption.ConnectionType.OUTPUT){
                 outputCount++;
-            } else {
+            }else{
                 sideCount++;
             }
 
             Connection connection = connections.get(i);
             if (connection != null && id < connection.getComponentId()) {
 
+
                 int startX = location[0] + location[3] / 2;
                 int startY = location[1] + location[4] / 2;
-                int[] otherLocation = getManager()
-                        .getFlowItems()
-                        .get(connection.getComponentId())
-                        .getConnectionLocationFromId(connection.getConnectionId());
+                int[] otherLocation = getManager().getFlowItems().get(connection.getComponentId()).getConnectionLocationFromId(connection.getConnectionId());
                 if (otherLocation == null) {
                     return;
                 }
@@ -959,20 +869,20 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                         point = nodes.get(j - 1);
                         x = endX;
                         y = endY;
-                    } else {
-                        point = nodes.get(j);
+                    }else{
+                        point = nodes.get(j) ;
                     }
                     /*boolean closeX = Math.abs(point.getX() - x) < 20;
                     boolean closeY = Math.abs(point.getY() - y) < 20;
 
                     if (closeX && closeY) {
                         System.out.println("Double"); */
-                    if (Math.abs(point.getX() - x) < Math.abs(point.getY() - y)) {
-                        point.setX(x);
-                    } else {
-                        point.setY(y);
-                    }
-                    // TODO how do we decide?
+                        if (Math.abs(point.getX() - x) < Math.abs(point.getY() - y)) {
+                            point.setX(x);
+                        } else {
+                            point.setY(y);
+                        }
+                        //TODO how do we decide?
                     /*} else if (closeX) {
                         point.setX(x);
                     } else if (closeY) {
@@ -987,24 +897,22 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 }
             }
         }
+
+
     }
+
 
     private boolean inArrowBounds(int internalX, int internalY) {
-        return CollisionHelper.inBounds(
-                getComponentWidth() + ARROW_X, ARROW_Y, ARROW_SIZE_W, ARROW_SIZE_H, internalX, internalY);
+        return CollisionHelper.inBounds(getComponentWidth() + ARROW_X, ARROW_Y, ARROW_SIZE_W, ARROW_SIZE_H, internalX, internalY);
     }
 
+
     private boolean inMenuArrowBounds(int i, int internalX, int internalY) {
-        return CollisionHelper.inBounds(
-                MENU_X + MENU_ARROW_X,
-                getMenuItemY(i) + MENU_ARROW_Y,
-                MENU_ARROW_SIZE_W,
-                MENU_ARROW_SIZE_H,
-                internalX,
-                internalY);
+        return CollisionHelper.inBounds(MENU_X + MENU_ARROW_X, getMenuItemY(i) + MENU_ARROW_Y, MENU_ARROW_SIZE_W, MENU_ARROW_SIZE_H, internalX, internalY);
     }
 
     private int getMenuItemY(int id) {
+
 
         int ret = MENU_Y;
         for (int i = 0; i < id; i++) {
@@ -1016,12 +924,15 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             }
         }
 
+
         return ret;
     }
+
 
     public static int getMenuOpenSize() {
         return MENU_SIZE_H - MENU_ITEM_CAPACITY * (MENU_ITEM_SIZE_H - 1);
     }
+
 
     public int getComponentWidth() {
         return isLarge ? COMPONENT_SIZE_LARGE_W : COMPONENT_SIZE_W;
@@ -1034,7 +945,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     private int[] getConnectionLocation(ConnectionOption connection, int inputCount, int outputCount, int sideCount) {
         int id = inputCount + outputCount + sideCount;
         if (!connection.isInput()) {
-            id -= Math.min(connectionSet.getInputCount(), childrenInputNodes.size());
+            id -=  Math.min(connectionSet.getInputCount(), childrenInputNodes.size());
         }
 
         if (!connection.isValid(this, id)) {
@@ -1045,11 +956,11 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         int targetY;
 
         if (connection.getType() == ConnectionOption.ConnectionType.SIDE) {
-            targetY = y + (int) (getComponentHeight() * ((sideCount + 0.5) / connectionSet.getSideCount()));
+            targetY = y + (int)(getComponentHeight() * ((sideCount + 0.5)  / connectionSet.getSideCount()));
             targetY -= CONNECTION_SIZE_H / 2;
             targetX = x + getComponentWidth();
             return new int[] {targetX, targetY, CONNECTION_SRC_Y_SIDE, CONNECTION_SIZE_H, CONNECTION_SIZE_W};
-        } else {
+        }else{
             int srcConnectionY;
             int currentCount;
             int totalCount;
@@ -1064,7 +975,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
                 srcConnectionY = 1;
                 targetY = y - CONNECTION_SIZE_H;
-            } else {
+            }else{
                 currentCount = outputCount;
 
                 totalCount = connectionSet.getOutputCount();
@@ -1075,35 +986,29 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 targetY = y + getComponentHeight();
             }
 
-            targetX = x + (int) (getComponentWidth() * ((currentCount + 0.5) / totalCount));
+            targetX = x + (int)(getComponentWidth() * ((currentCount + 0.5)  / totalCount));
             targetX -= CONNECTION_SIZE_W / 2;
 
-            return new int[] {
-                targetX,
-                targetY,
-                CONNECTION_SRC_Y + srcConnectionY * CONNECTION_SIZE_H,
-                CONNECTION_SIZE_W,
-                CONNECTION_SIZE_H
-            };
+            return new int[] {targetX, targetY, CONNECTION_SRC_Y + srcConnectionY * CONNECTION_SIZE_H, CONNECTION_SIZE_W, CONNECTION_SIZE_H};
         }
     }
+
 
     private int getMenuAreaX() {
         return x + MENU_X;
     }
 
     private int getMenuAreaY(int i) {
-        return y + getMenuItemY(i) + MENU_ITEM_SIZE_H;
+        return  y + getMenuItemY(i) + MENU_ITEM_SIZE_H;
     }
-
     @SideOnly(Side.CLIENT)
     public boolean onKeyStroke(GuiManager gui, char c, int k) {
         if (isLarge && isEditing) {
             textBox.onKeyStroke(gui, c, k);
             return true;
-        } else if (isLarge && openMenuId != -1) {
+        }else if (isLarge && openMenuId != -1) {
             return menus.get(openMenuId).onKeyStroke(gui, c, k);
-        } else {
+        }else{
             return false;
         }
     }
@@ -1116,30 +1021,31 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         return menus;
     }
 
+
     public TileEntityManager getManager() {
         return manager;
     }
 
     @Override
     public void readNetworkComponent(DataReader dr) {
-        // might need some clean up
+        //might need some clean up
         if (dr.readBoolean()) {
             if (dr.readBoolean()) {
                 if (dr.readBoolean()) {
                     x = dr.readData(DataBitHelper.FLOW_CONTROL_X);
                     y = dr.readData(DataBitHelper.FLOW_CONTROL_Y);
-                } else {
+                }else{
                     if (dr.readBoolean()) {
                         setParent(getManager().getFlowItems().get(dr.readComponentId()));
-                    } else {
+                    }else{
                         setParent(null);
                     }
                 }
 
-            } else {
+            }else{
                 name = dr.readString(DataBitHelper.NAME_LENGTH);
             }
-        } else {
+        }else {
             int connectionId = dr.readData(DataBitHelper.CONNECTION_ID);
             if (dr.readBoolean()) {
                 Connection connection;
@@ -1148,12 +1054,12 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                     int targetConnectionId = dr.readData(DataBitHelper.CONNECTION_ID);
 
                     connection = new Connection(targetComponentId, targetConnectionId);
-                } else {
+                }else{
                     connection = null;
                 }
 
                 connections.put(connectionId, connection);
-            } else if (connections.get(connectionId) != null) {
+            }else if(connections.get(connectionId) != null){
                 Connection connection = connections.get(connectionId);
 
                 int id = dr.readData(DataBitHelper.NODE_ID);
@@ -1166,31 +1072,29 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 if (!deleted) {
                     created = dr.readBoolean();
                 }
-                if (id >= 0
-                        && ((created && id == connection.getNodes().size())
-                                || id < connection.getNodes().size())) {
+                if (id >= 0 && ((created && id == connection.getNodes().size()) || id < connection.getNodes().size())) {
                     if (deleted) {
                         connection.getNodes().remove(id);
-                    } else {
+                    }else {
                         Point node;
                         if (created) {
                             node = new Point();
-                            if (connection.getNodes().size() < MAX_NODES
-                                    && (!manager.getWorldObj().isRemote
-                                            || length > connection.getNodes().size())) {
+                            if (connection.getNodes().size() < MAX_NODES && (!manager.getWorldObj().isRemote || length > connection.getNodes().size())) {
                                 connection.getNodes().add(id, node);
                             }
-                        } else {
+                        }else{
                             node = connection.getNodes().get(id);
                         }
 
                         node.setX(dr.readData(DataBitHelper.FLOW_CONTROL_X));
                         node.setY(dr.readData(DataBitHelper.FLOW_CONTROL_Y));
                     }
+
                 }
             }
         }
     }
+
 
     private void writeLocationData() {
         DataWriter dw = PacketHandler.getWriterForServerComponentPacket(this, null);
@@ -1199,21 +1103,22 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     }
 
     private void writeLocationData(DataWriter dw) {
-        dw.writeBoolean(true); // component specific
-        dw.writeBoolean(true); // location
-        dw.writeBoolean(true); // position
+        dw.writeBoolean(true); //component specific
+        dw.writeBoolean(true); //location
+        dw.writeBoolean(true); //position
         dw.writeData(x, DataBitHelper.FLOW_CONTROL_X);
         dw.writeData(y, DataBitHelper.FLOW_CONTROL_Y);
     }
 
+
     private void writeParentData(DataWriter dw) {
-        dw.writeBoolean(true); // component specific
-        dw.writeBoolean(true); // location
-        dw.writeBoolean(false); // parent
+        dw.writeBoolean(true); //component specific
+        dw.writeBoolean(true); //location
+        dw.writeBoolean(false); //parent
         if (parent != null) {
             dw.writeBoolean(true);
             dw.writeComponentId(getManager(), parent.getId());
-        } else {
+        }else {
             dw.writeBoolean(false);
         }
     }
@@ -1229,6 +1134,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             copy.menus.get(i).copyFrom(menu);
         }
 
+
         for (int i = 0; i < connectionSet.getConnections().length; i++) {
             Connection connection = connections.get(i);
             if (connection != null) {
@@ -1242,7 +1148,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     private void writeConnectionData(DataWriter dw, int i, boolean target, int targetComponent, int targetConnection) {
         dw.writeBoolean(false);
         dw.writeData(i, DataBitHelper.CONNECTION_ID);
-        dw.writeBoolean(true); // connection
+        dw.writeBoolean(true); //connection
         dw.writeBoolean(target);
         if (target) {
             dw.writeComponentId(getManager(), targetComponent);
@@ -1250,11 +1156,10 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         }
     }
 
-    private void writeConnectionNode(
-            DataWriter dw, int length, int connectionId, int nodeId, boolean deleted, boolean created, int x, int y) {
+    private void writeConnectionNode(DataWriter dw, int length, int connectionId, int nodeId, boolean deleted, boolean created, int x, int y) {
         dw.writeBoolean(false);
         dw.writeData(connectionId, DataBitHelper.CONNECTION_ID);
-        dw.writeBoolean(false); // nodes
+        dw.writeBoolean(false); //nodes
         dw.writeData(nodeId, DataBitHelper.NODE_ID);
         if (length != -1) {
             dw.writeData(length, DataBitHelper.NODE_ID);
@@ -1265,6 +1170,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             dw.writeData(x, DataBitHelper.FLOW_CONTROL_X);
             dw.writeData(y, DataBitHelper.FLOW_CONTROL_Y);
         }
+
     }
 
     private void sendConnectionNode(int connectionId, int nodeId, boolean deleted, boolean created, int x, int y) {
@@ -1273,15 +1179,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         PacketHandler.sendDataToServer(dw);
     }
 
-    private void sendClientConnectionNode(
-            ContainerManager container,
-            int length,
-            int connectionId,
-            int nodeId,
-            boolean deleted,
-            boolean created,
-            int x,
-            int y) {
+    private void sendClientConnectionNode(ContainerManager container, int length, int connectionId, int nodeId, boolean deleted, boolean created, int x, int y) {
         DataWriter dw = PacketHandler.getWriterForClientComponentPacket(container, this, null);
         writeConnectionNode(dw, length, connectionId, nodeId, deleted, created, x, y);
         PacketHandler.sendDataToListeningClients(container, dw);
@@ -1297,11 +1195,10 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             PacketHandler.sendDataToListeningClients(container, dw);
         }
 
-        if (((parent == null) != (newData.parent == null))
-                || (parent != null && parent.getId() != newData.parent.getId())) {
+        if (((parent == null) != (newData.parent == null)) || (parent != null && parent.getId() != newData.parent.getId())) {
             if (newData.parent == null) {
                 setParent(null);
-            } else {
+            }else{
                 setParent(getManager().getFlowItems().get(newData.parent.getId()));
             }
 
@@ -1318,29 +1215,17 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 PacketHandler.sendDataToListeningClients(container, dw);
             }
 
-            if (newData.connections.get(i) != null
-                    && (connections.get(i) == null
-                            || newData.connections.get(i).getComponentId()
-                                    != connections.get(i).getComponentId()
-                            || newData.connections.get(i).getConnectionId()
-                                    != connections.get(i).getConnectionId())) {
+            if (newData.connections.get(i) != null && (connections.get(i) == null || newData.connections.get(i).getComponentId() != connections.get(i).getComponentId() || newData.connections.get(i).getConnectionId() != connections.get(i).getConnectionId())) {
                 connections.put(i, newData.connections.get(i).copy());
                 DataWriter dw = PacketHandler.getWriterForClientComponentPacket(container, this, null);
-                writeConnectionData(
-                        dw,
-                        i,
-                        true,
-                        connections.get(i).getComponentId(),
-                        connections.get(i).getConnectionId());
+                writeConnectionData(dw, i, true, connections.get(i).getComponentId(), connections.get(i).getConnectionId());
                 PacketHandler.sendDataToListeningClients(container, dw);
             }
             Connection connection = connections.get(i);
             Connection newConnection = newData.connections.get(i);
             if (connection != null && newConnection != null) {
-                boolean deleted =
-                        connection.getNodes().size() > newConnection.getNodes().size();
-                boolean created =
-                        connection.getNodes().size() < newConnection.getNodes().size();
+                boolean deleted = connection.getNodes().size() > newConnection.getNodes().size();
+                boolean created = connection.getNodes().size() < newConnection.getNodes().size();
 
                 if (deleted) {
                     boolean hasDeleted = false;
@@ -1349,25 +1234,16 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                         Point newNode = newConnection.getNodes().get(j);
 
                         if (node.getX() != newNode.getX() || node.getY() != newNode.getY()) {
-                            sendClientConnectionNode(
-                                    container, newConnection.getNodes().size(), i, j, true, false, 0, 0);
+                            sendClientConnectionNode(container, newConnection.getNodes().size(), i, j, true, false, 0, 0);
                             hasDeleted = true;
                             break;
                         }
                     }
 
                     if (!hasDeleted) {
-                        sendClientConnectionNode(
-                                container,
-                                newConnection.getNodes().size(),
-                                i,
-                                newConnection.getNodes().size(),
-                                true,
-                                false,
-                                0,
-                                0);
+                        sendClientConnectionNode(container, newConnection.getNodes().size(), i, newConnection.getNodes().size(), true, false, 0, 0);
                     }
-                } else {
+                }else{
                     boolean updated = false;
                     for (int j = 0; j < connection.getNodes().size(); j++) {
                         Point node = connection.getNodes().get(j);
@@ -1378,42 +1254,18 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                             if (created) {
                                 Point nextNode = newConnection.getNodes().get(j + 1);
                                 if (node.getX() == nextNode.getX() && node.getY() == nextNode.getY()) {
-                                    sendClientConnectionNode(
-                                            container,
-                                            newConnection.getNodes().size(),
-                                            i,
-                                            j,
-                                            false,
-                                            true,
-                                            newNode.getX(),
-                                            newNode.getY());
+                                    sendClientConnectionNode(container, newConnection.getNodes().size(), i, j, false, true, newNode.getX(), newNode.getY());
                                     break;
                                 }
                             }
-                            sendClientConnectionNode(
-                                    container,
-                                    newConnection.getNodes().size(),
-                                    i,
-                                    j,
-                                    false,
-                                    false,
-                                    newNode.getX(),
-                                    newNode.getY());
+                            sendClientConnectionNode(container, newConnection.getNodes().size(), i, j, false, false, newNode.getX(), newNode.getY());
                             break;
                         }
                     }
 
                     if (!updated && created) {
                         int nodeId = connection.getNodes().size();
-                        sendClientConnectionNode(
-                                container,
-                                newConnection.getNodes().size(),
-                                i,
-                                nodeId,
-                                false,
-                                true,
-                                newConnection.getNodes().get(nodeId).getX(),
-                                newConnection.getNodes().get(nodeId).getY());
+                        sendClientConnectionNode(container, newConnection.getNodes().size(), i, nodeId, false, true, newConnection.getNodes().get(nodeId).getX(), newConnection.getNodes().get(nodeId).getY());
                     }
                 }
 
@@ -1421,9 +1273,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             }
         }
 
-        if ((newData.name == null && name != null)
-                || (newData.name != null && name == null)
-                || (newData != null && name != null && !newData.name.equals(name))) {
+        if ((newData.name == null && name != null) || (newData.name != null && name == null) || (newData != null && name != null && !newData.name.equals(name))) {
             name = newData.name;
 
             sendNameToClient(container);
@@ -1437,6 +1287,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     public int getId() {
         return id;
     }
+
 
     public Connection getConnection(int i) {
         return connections.get(i);
@@ -1452,11 +1303,11 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
     public void updateConnectionIdsAtRemoval(int idToRemove) {
         for (int i = 0; i < connectionSet.getConnections().length; i++) {
-            Connection connection = connections.get(i);
+            Connection connection   = connections.get(i);
             if (connection != null) {
                 if (connection.getComponentId() == idToRemove) {
                     connections.remove(i);
-                } else if (connection.getComponentId() > idToRemove) {
+                }else if (connection.getComponentId() > idToRemove) {
                     connection.setComponentId(connection.getComponentId() - 1);
                 }
             }
@@ -1473,20 +1324,20 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     }
 
     private void sendNameToClient(ContainerManager container) {
-        DataWriter dw = PacketHandler.getWriterForClientComponentPacket(container, this, null);
+        DataWriter dw = PacketHandler.getWriterForClientComponentPacket(container, this, null) ;
         writeName(dw);
         PacketHandler.sendDataToListeningClients(container, dw);
     }
 
     private void writeName(DataWriter dw) {
-        dw.writeBoolean(true); // component specific
-        dw.writeBoolean(false); // name
+        dw.writeBoolean(true); //component specific
+        dw.writeBoolean(false); //name
         dw.writeString(name, DataBitHelper.NAME_LENGTH);
     }
 
     private static final String NBT_POS_X = "PosX";
     private static final String NBT_POS_Y = "PosY";
-    private static final String NBT_TYPE = "Type";
+    private static final String NBT_TYPE= "Type";
     private static final String NBT_CONNECTION = "Connection";
     private static final String NBT_CONNECTION_POS = "ConnectionPos";
     private static final String NBT_CONNECTION_TARGET_COMPONENT = "ConnectionComponent";
@@ -1497,8 +1348,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     private static final String NBT_NAME = "Name";
     private static final String NBT_PARENT = "Parent";
 
-    public static FlowComponent readFromNBT(
-            TileEntityManager jam, NBTTagCompound nbtTagCompound, int version, boolean pickup) {
+    public static FlowComponent readFromNBT(TileEntityManager jam, NBTTagCompound nbtTagCompound, int version, boolean pickup) {
         FlowComponent component = null;
         try {
             int x = nbtTagCompound.getShort(NBT_POS_X);
@@ -1510,7 +1360,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
             if (nbtTagCompound.hasKey(NBT_NAME)) {
                 component.name = nbtTagCompound.getString(NBT_NAME);
-            } else {
+            }else{
                 component.name = null;
             }
 
@@ -1525,11 +1375,10 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                 int componentId;
                 if (version < 9) {
                     componentId = connectionTag.getByte(NBT_CONNECTION_TARGET_COMPONENT);
-                } else {
+                }else{
                     componentId = connectionTag.getShort(NBT_CONNECTION_TARGET_COMPONENT);
                 }
-                Connection connection =
-                        new Connection(componentId, connectionTag.getByte(NBT_CONNECTION_TARGET_CONNECTION));
+                Connection connection = new Connection(componentId, connectionTag.getByte(NBT_CONNECTION_TARGET_CONNECTION));
 
                 if (connectionTag.hasKey(NBT_NODES)) {
                     connection.getNodes().clear();
@@ -1541,7 +1390,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                     }
                 }
 
-                component.connections.put((int) connectionTag.getByte(NBT_CONNECTION_POS), connection);
+                component.connections.put((int)connectionTag.getByte(NBT_CONNECTION_POS), connection);
             }
 
             if (component.type == ComponentType.TRIGGER) {
@@ -1553,22 +1402,25 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             for (int i = 0; i < menuTagList.tagCount(); i++) {
                 NBTTagCompound menuTag = menuTagList.getCompoundTagAt(i);
 
-                // added an extra menu to the triggers
+
+
+                //added an extra menu to the triggers
                 if (component.type == ComponentType.TRIGGER && i == 1 && version < 1) {
                     menuId++;
                 }
 
-                // added a second extra menu to the triggers
+                //added a second extra menu to the triggers
                 if (component.type == ComponentType.TRIGGER && i == 2 && version < 5) {
                     menuId++;
                 }
 
-                // added a third extra menu to the triggers
+                //added a third extra menu to the triggers
                 if (component.type == ComponentType.TRIGGER && i == 0 && version < 6) {
                     menuId++;
                 }
 
-                // added the bud menus to the triggers
+
+                //added the bud menus to the triggers
                 if (component.type == ComponentType.TRIGGER && i == 1 && version < 8) {
                     menuId++;
                 }
@@ -1576,17 +1428,17 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
                     menuId++;
                 }
 
-                // added an extra menu to the flow controls
+                //added an extra menu to the flow controls
                 if (component.type == ComponentType.FLOW_CONTROL && i == 0 && version < 4) {
                     menuId++;
                 }
 
-                // added two extra menus to the camouflage updater
+                //added two extra menus to the camouflage updater
                 if (component.type == ComponentType.CAMOUFLAGE && i == 1 && version < 10) {
                     menuId += 2;
                 }
 
-                // added crafting priority to the crafter
+                //added crafting priority to the crafter
                 if (component.type == ComponentType.AUTO_CRAFTING && i == 1 && version < 11) {
                     menuId++;
                 }
@@ -1596,7 +1448,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             }
 
             return component;
-        } finally {
+        }finally {
             if (component != null) {
                 component.isLoading = false;
             }
@@ -1604,24 +1456,23 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     }
 
     private int parentLoadId = -1;
-
     public void linkParentAfterLoad() {
         if (parentLoadId != -1) {
             setParent(getManager().getFlowItems().get(parentLoadId));
-        } else {
+        }else{
             setParent(null);
         }
     }
 
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setShort(NBT_POS_X, (short) x);
-        nbtTagCompound.setShort(NBT_POS_Y, (short) y);
-        nbtTagCompound.setByte(NBT_TYPE, (byte) type.getId());
+        nbtTagCompound.setShort(NBT_POS_X, (short)x);
+        nbtTagCompound.setShort(NBT_POS_Y, (short)y);
+        nbtTagCompound.setByte(NBT_TYPE, (byte)type.getId());
         if (name != null) {
             nbtTagCompound.setString(NBT_NAME, name);
         }
         if (parent != null) {
-            nbtTagCompound.setShort(NBT_PARENT, (short) parent.getId());
+            nbtTagCompound.setShort(NBT_PARENT, (short)parent.getId());
         }
         NBTTagList connections = new NBTTagList();
         for (int i = 0; i < connectionSet.getConnections().length; i++) {
@@ -1629,16 +1480,17 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
             if (connection != null) {
                 NBTTagCompound connectionTag = new NBTTagCompound();
-                connectionTag.setByte(NBT_CONNECTION_POS, (byte) i);
-                connectionTag.setShort(NBT_CONNECTION_TARGET_COMPONENT, (short) connection.getComponentId());
-                connectionTag.setByte(NBT_CONNECTION_TARGET_CONNECTION, (byte) connection.getConnectionId());
+                connectionTag.setByte(NBT_CONNECTION_POS, (byte)i);
+                connectionTag.setShort(NBT_CONNECTION_TARGET_COMPONENT, (short)connection.getComponentId());
+                connectionTag.setByte(NBT_CONNECTION_TARGET_CONNECTION, (byte)connection.getConnectionId());
+
 
                 NBTTagList nodes = new NBTTagList();
                 for (Point point : connection.getNodes()) {
                     NBTTagCompound nodeTag = new NBTTagCompound();
 
-                    nodeTag.setShort(NBT_POS_X, (short) point.getX());
-                    nodeTag.setShort(NBT_POS_Y, (short) point.getY());
+                    nodeTag.setShort(NBT_POS_X, (short)point.getX());
+                    nodeTag.setShort(NBT_POS_Y, (short)point.getY());
 
                     nodes.appendTag(nodeTag);
                 }
@@ -1663,6 +1515,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             menu.writeToNBT(menuTag, pickup);
 
             menuTagList.appendTag(menuTag);
+
         }
         nbtTagCompound.setTag(NBT_MENUS, menuTagList);
     }
@@ -1696,7 +1549,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     }
 
     public void setParent(FlowComponent parent) {
-        if (this.parent != null) {
+        if (this.parent != null)  {
             if (getConnectionSet() == ConnectionSet.INPUT_NODE || getConnectionSet() == ConnectionSet.OUTPUT_NODE) {
                 this.parent.childrenInputNodes.remove(this);
                 this.parent.childrenOutputNodes.remove(this);
@@ -1705,12 +1558,11 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
             }
         }
         this.parent = parent;
-        if (this.parent != null) {
+        if (this.parent != null)  {
             if (getConnectionSet() == ConnectionSet.INPUT_NODE && !this.parent.childrenInputNodes.contains(this)) {
                 this.parent.childrenInputNodes.add(this);
                 Collections.sort(this.parent.childrenInputNodes);
-            } else if (getConnectionSet() == ConnectionSet.OUTPUT_NODE
-                    && !this.parent.childrenOutputNodes.contains(this)) {
+            }else if (getConnectionSet() == ConnectionSet.OUTPUT_NODE && !this.parent.childrenOutputNodes.contains(this)) {
                 this.parent.childrenOutputNodes.add(this);
                 Collections.sort(this.parent.childrenOutputNodes);
             }
@@ -1752,8 +1604,9 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
     @Override
     public int compareTo(FlowComponent o) {
-        return ((Integer) id).compareTo((Integer) o.id);
+        return ((Integer)id).compareTo((Integer)o.id);
     }
+
 
     public void resetPosition() {
         resetTimer = 20;
@@ -1762,6 +1615,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
     public void setParentLoadId(int i) {
         parentLoadId = i;
     }
+
 
     public boolean isInventoryListDirty() {
         return isInventoryListDirty;
@@ -1794,7 +1648,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         isEditing = b;
         if (b) {
             textBox.setTextAndCursor("");
-        } else {
+        }else{
             textBox.setText(null);
         }
     }
@@ -1826,7 +1680,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         this.overrideX = overrideX;
     }
 
-    public Map<Integer, Connection> getConnections() {
+    public Map<Integer,Connection> getConnections() {
         return connections;
     }
 

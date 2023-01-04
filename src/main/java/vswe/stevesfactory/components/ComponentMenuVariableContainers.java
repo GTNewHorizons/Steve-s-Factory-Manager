@@ -1,8 +1,10 @@
 package vswe.stevesfactory.components;
 
-import java.util.EnumSet;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.ConnectionBlockType;
+
+import java.util.EnumSet;
+
 
 public class ComponentMenuVariableContainers extends ComponentMenuContainer {
     public ComponentMenuVariableContainers(FlowComponent parent) {
@@ -11,7 +13,7 @@ public class ComponentMenuVariableContainers extends ComponentMenuContainer {
 
     @Override
     protected void initRadioButtons() {
-        // nothing
+        //nothing
     }
 
     @Override
@@ -21,19 +23,16 @@ public class ComponentMenuVariableContainers extends ComponentMenuContainer {
 
     @Override
     protected EnumSet<ConnectionBlockType> getValidTypes() {
-        ComponentMenuContainerTypes componentMenuContainerTypes =
-                ((ComponentMenuContainerTypes) getParent().getMenus().get(1));
+        ComponentMenuContainerTypes componentMenuContainerTypes = ((ComponentMenuContainerTypes)getParent().getMenus().get(1));
 
         if (componentMenuContainerTypes.isVisible()) {
             return componentMenuContainerTypes.getValidTypes();
-        } else {
-            int variableId = ((ComponentMenuVariable) getParent().getMenus().get(0)).getSelectedVariable();
+        }else{
+            int variableId = ((ComponentMenuVariable)getParent().getMenus().get(0)).getSelectedVariable();
             Variable variable = getParent().getManager().getVariables()[variableId];
             if (variable.isValid()) {
-                return ((ComponentMenuContainerTypes)
-                                variable.getDeclaration().getMenus().get(1))
-                        .getValidTypes();
-            } else {
+                return ((ComponentMenuContainerTypes)variable.getDeclaration().getMenus().get(1)).getValidTypes();
+            }else{
                 return EnumSet.noneOf(ConnectionBlockType.class);
             }
         }
@@ -41,7 +40,6 @@ public class ComponentMenuVariableContainers extends ComponentMenuContainer {
 
     @Override
     public boolean isVariableAllowed(EnumSet<ConnectionBlockType> validTypes, int i) {
-        return super.isVariableAllowed(validTypes, i)
-                && i != ((ComponentMenuVariable) getParent().getMenus().get(0)).getSelectedVariable();
+        return super.isVariableAllowed(validTypes, i) && i != ((ComponentMenuVariable)getParent().getMenus().get(0)).getSelectedVariable();
     }
 }

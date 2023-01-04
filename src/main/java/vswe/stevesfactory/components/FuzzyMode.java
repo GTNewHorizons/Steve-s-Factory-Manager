@@ -1,5 +1,6 @@
 package vswe.stevesfactory.components;
 
+
 import vswe.stevesfactory.Localization;
 
 public enum FuzzyMode {
@@ -22,6 +23,7 @@ public enum FuzzyMode {
     public String toString() {
         return text.toString();
     }
+
 
     public boolean requiresMetaData() {
         return useMeta;

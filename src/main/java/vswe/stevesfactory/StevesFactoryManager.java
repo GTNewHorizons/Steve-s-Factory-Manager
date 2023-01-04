@@ -18,15 +18,14 @@ import vswe.stevesfactory.proxy.CommonProxy;
 @Mod(modid = "StevesFactoryManager", name = "Steve's Factory Manager", version = "GRADLETOKEN_VERSION")
 public class StevesFactoryManager {
 
+
     public static final String RESOURCE_LOCATION = "stevesfactory";
     public static final String CHANNEL = "FactoryManager";
     public static final String UNLOCALIZED_START = "sfm.";
 
     public static FMLEventChannel packetHandler;
 
-    @SidedProxy(
-            clientSide = "vswe.stevesfactory.proxy.ClientProxy",
-            serverSide = "vswe.stevesfactory.proxy.CommonProxy")
+    @SidedProxy(clientSide = "vswe.stevesfactory.proxy.ClientProxy", serverSide = "vswe.stevesfactory.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.Instance("StevesFactoryManager")
@@ -35,11 +34,12 @@ public class StevesFactoryManager {
     private static Boolean inDev = null;
 
     public static boolean isDevelopmentEnvironment() {
-        if (inDev == null) {
+        if(inDev == null) {
             inDev = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
         }
         return inDev;
     }
+
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -57,8 +57,9 @@ public class StevesFactoryManager {
         packetHandler.register(new PacketEventHandler());
 
         ModBlocks.addRecipes();
-        // new ChatListener();
+        //new ChatListener();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+
 
         FMLInterModComms.sendMessage("Waila", "register", "vswe.stevesfactory.waila.Provider.callbackRegister");
     }
@@ -67,4 +68,6 @@ public class StevesFactoryManager {
     public void postInit(FMLPostInitializationEvent event) {
         ModItemHelper.init();
     }
+
+
 }

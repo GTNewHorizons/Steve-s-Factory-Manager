@@ -1,5 +1,6 @@
 package vswe.stevesfactory.blocks;
 
+
 import net.minecraft.tileentity.TileEntity;
 
 public class WorldCoordinate implements Comparable<WorldCoordinate> {
@@ -57,7 +58,7 @@ public class WorldCoordinate implements Comparable<WorldCoordinate> {
 
     @Override
     public int compareTo(WorldCoordinate o) {
-        return ((Integer) depth).compareTo(o.depth);
+        return ((Integer)depth).compareTo(o.depth);
     }
 
     public void setTileEntity(TileEntity tileEntity) {

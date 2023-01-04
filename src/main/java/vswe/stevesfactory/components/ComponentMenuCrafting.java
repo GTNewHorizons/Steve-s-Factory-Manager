@@ -1,7 +1,9 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.item.ItemStack;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -31,6 +33,7 @@ public class ComponentMenuCrafting extends ComponentMenuItem {
         settings.add(resultItem);
         dummy = new CraftingDummy(this);
 
+
         scrollControllerSelected.setItemsPerRow(3);
         scrollControllerSelected.setVisibleRows(3);
         scrollControllerSelected.setItemUpperLimit(2);
@@ -41,6 +44,7 @@ public class ComponentMenuCrafting extends ComponentMenuItem {
     public String getName() {
         return Localization.CRAFTING_MENU.toString();
     }
+
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -67,7 +71,8 @@ public class ComponentMenuCrafting extends ComponentMenuItem {
     @Override
     public void onClick(int mX, int mY, int button) {
         super.onClick(mX, mY, button);
-        if (!isEditing()) editingResult = false;
+        if (!isEditing())
+            editingResult = false;
         if (!isEditing() && !isSearching() && resultItem.getItem() != null) {
             if (button == 1 && CollisionHelper.inBounds(getResultX(), getResultY(), ITEM_SIZE, ITEM_SIZE, mX, mY)) {
                 editingResult = true;
@@ -76,7 +81,7 @@ public class ComponentMenuCrafting extends ComponentMenuItem {
         }
     }
 
-    public Boolean isEditingResult() {
+    public Boolean isEditingResult(){
         return editingResult;
     }
 
@@ -93,15 +98,17 @@ public class ComponentMenuCrafting extends ComponentMenuItem {
         return 9;
     }
 
+
     @Override
     protected void initRadioButtons() {
-        // no radio buttons
+        //no radio buttons
     }
 
     @Override
     protected void onSettingContentChange() {
         resultItem.setItem(dummy.getResult());
     }
+
 
     public CraftingDummy getDummy() {
         return dummy;

@@ -1,5 +1,6 @@
 package vswe.stevesfactory.components;
 
+
 import vswe.stevesfactory.Localization;
 
 public abstract class CheckBox {
@@ -15,10 +16,9 @@ public abstract class CheckBox {
     }
 
     public abstract void setValue(boolean val);
-
     public abstract boolean getValue();
-
     public abstract void onUpdate();
+
 
     public int getX() {
         return x;

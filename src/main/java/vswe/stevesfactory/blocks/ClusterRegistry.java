@@ -1,15 +1,16 @@
 package vswe.stevesfactory.blocks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class ClusterRegistry {
 
-    private static HashMap<Class<? extends TileEntityClusterElement>, ClusterRegistry> registry =
-            new HashMap<Class<? extends TileEntityClusterElement>, ClusterRegistry>();
+    private static HashMap<Class<? extends TileEntityClusterElement>, ClusterRegistry> registry = new HashMap<Class<? extends TileEntityClusterElement>, ClusterRegistry>();
     private static List<ClusterRegistry> registryList = new ArrayList<ClusterRegistry>();
 
     protected final Class<? extends TileEntityClusterElement> clazz;
@@ -19,8 +20,7 @@ public class ClusterRegistry {
     protected ClusterRegistry headSubRegistry;
     protected final int id;
 
-    private ClusterRegistry(
-            Class<? extends TileEntityClusterElement> clazz, BlockContainer block, ItemStack itemStack) {
+    private ClusterRegistry(Class<? extends TileEntityClusterElement> clazz, BlockContainer block, ItemStack itemStack) {
         this.clazz = clazz;
         this.block = block;
         this.itemStack = itemStack;
@@ -37,7 +37,7 @@ public class ClusterRegistry {
         if (parent == null) {
             registry.put(registryElement.clazz, registryElement);
             registryElement.headSubRegistry = registryElement;
-        } else {
+        }else{
             registryElement.headSubRegistry = parent;
             ClusterRegistry elem = parent;
             while (elem.nextSubRegistry != null) {
@@ -50,6 +50,7 @@ public class ClusterRegistry {
     public int getId() {
         return id;
     }
+
 
     public BlockContainer getBlock() {
         return block;
@@ -97,8 +98,7 @@ public class ClusterRegistry {
 
     public static class ClusterRegistryAdvancedSensitive extends ClusterRegistry {
 
-        public ClusterRegistryAdvancedSensitive(
-                Class<? extends TileEntityClusterElement> clazz, BlockContainer block, ItemStack itemStack) {
+        public ClusterRegistryAdvancedSensitive(Class<? extends TileEntityClusterElement> clazz, BlockContainer block, ItemStack itemStack) {
             super(clazz, block, itemStack);
         }
 
@@ -109,8 +109,7 @@ public class ClusterRegistry {
     }
 
     public static class ClusterRegistryMetaSensitive extends ClusterRegistry {
-        public ClusterRegistryMetaSensitive(
-                Class<? extends TileEntityClusterElement> clazz, BlockContainer block, ItemStack itemStack) {
+        public ClusterRegistryMetaSensitive(Class<? extends TileEntityClusterElement> clazz, BlockContainer block, ItemStack itemStack) {
             super(clazz, block, itemStack);
         }
 

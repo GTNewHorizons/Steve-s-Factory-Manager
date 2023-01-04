@@ -1,5 +1,6 @@
 package vswe.stevesfactory.blocks;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
@@ -11,6 +12,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 
 public abstract class BlockCamouflageBase extends BlockContainer {
 
@@ -34,6 +36,7 @@ public abstract class BlockCamouflageBase extends BlockContainer {
             return null;
         }
 
+
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }
 
@@ -44,7 +47,7 @@ public abstract class BlockCamouflageBase extends BlockContainer {
         if (camouflage != null && camouflage.getCamouflageType().useSpecialShape()) {
             if (!camouflage.isUseCollision()) {
                 return false;
-            } else if (camouflage.isFullCollision()) {
+            }else if(camouflage.isFullCollision()) {
                 setBlockBoundsForItemRender();
             }
         }
@@ -59,6 +62,7 @@ public abstract class BlockCamouflageBase extends BlockContainer {
         return camouflage == null || camouflage.isNormalBlock();
     }
 
+
     @Override
     public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end) {
         if (!setBlockCollisionBoundsBasedOnState(world, x, y, z)) {
@@ -70,9 +74,8 @@ public abstract class BlockCamouflageBase extends BlockContainer {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
-        TileEntityCamouflage camouflage = TileEntityCluster.getTileEntity(
-                TileEntityCamouflage.class, worldObj, target.blockX, target.blockY, target.blockZ);
+    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer){
+        TileEntityCamouflage camouflage = TileEntityCluster.getTileEntity(TileEntityCamouflage.class, worldObj, target.blockX, target.blockY, target.blockZ);
         if (camouflage != null) {
             if (camouflage.addBlockEffect(this, target.sideHit, effectRenderer)) {
                 return true;
@@ -86,7 +89,7 @@ public abstract class BlockCamouflageBase extends BlockContainer {
         TileEntityCamouflage camouflage = TileEntityCluster.getTileEntity(TileEntityCamouflage.class, world, x, y, z);
         if (camouflage != null && camouflage.getCamouflageType().useSpecialShape()) {
             camouflage.setBlockBounds(this);
-        } else {
+        }else{
             setBlockBoundsForItemRender();
         }
     }
@@ -130,6 +133,7 @@ public abstract class BlockCamouflageBase extends BlockContainer {
 
         return getDefaultIcon(side, world.getBlockMetadata(x, y, z), 0);
     }
+
 
     @Override
     public boolean renderAsNormalBlock() {

@@ -1,13 +1,15 @@
 package vswe.stevesfactory.interfaces;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import vswe.stevesfactory.blocks.TileEntityRelay;
 import vswe.stevesfactory.blocks.UserPermission;
 import vswe.stevesfactory.network.PacketHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ContainerRelay extends ContainerBase {
 
@@ -47,4 +49,5 @@ public class ContainerRelay extends ContainerBase {
     public List<UserPermission> oldPermissions;
     public boolean oldCreativeMode;
     public boolean oldOpList;
+
 }

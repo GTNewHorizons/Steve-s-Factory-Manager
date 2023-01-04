@@ -1,8 +1,10 @@
 package vswe.stevesfactory.components;
 
+
+import net.minecraftforge.fluids.FluidStack;
+
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraftforge.fluids.FluidStack;
 
 public class LiquidBufferElement {
     private Setting setting;
@@ -18,19 +20,13 @@ public class LiquidBufferElement {
     private boolean fairShare;
     private int shareId;
 
-    public LiquidBufferElement(
-            FlowComponent owner,
-            Setting setting,
-            SlotInventoryHolder inventoryHolder,
-            boolean useWhiteList,
-            StackTankHolder target) {
+    public LiquidBufferElement(FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder, boolean useWhiteList, StackTankHolder target) {
         this(owner, setting, inventoryHolder, useWhiteList);
         addTarget(target);
         sharedBy = 1;
     }
 
-    public LiquidBufferElement(
-            FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder, boolean useWhiteList) {
+    public LiquidBufferElement(FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder, boolean useWhiteList) {
         this.component = owner;
         this.setting = setting;
         this.inventoryHolder = inventoryHolder;
@@ -38,15 +34,12 @@ public class LiquidBufferElement {
         holders = new ArrayList<StackTankHolder>();
     }
 
-    public boolean addTarget(
-            FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder, StackTankHolder target) {
+    public boolean addTarget(FlowComponent owner, Setting setting,  SlotInventoryHolder inventoryHolder, StackTankHolder target) {
 
-        if (component.getId() == owner.getId()
-                && (this.setting == null || (setting != null && this.setting.getId() == setting.getId()))
-                && (this.inventoryHolder.isShared() || this.inventoryHolder.equals(inventoryHolder))) {
+        if (component.getId() == owner.getId() && (this.setting == null || (setting != null && this.setting.getId() == setting.getId())) && (this.inventoryHolder.isShared() || this.inventoryHolder.equals(inventoryHolder))) {
             addTarget(target);
             return true;
-        } else {
+        }else{
             return false;
         }
     }
@@ -72,7 +65,7 @@ public class LiquidBufferElement {
     public int retrieveItemCount(int desiredItemCount) {
         if (setting == null || !setting.isLimitedByAmount()) {
             return desiredItemCount;
-        } else {
+        }else{
             int itemsAllowedToBeMoved;
             if (useWhiteList) {
                 int movedItems = totalTransferSize - currentTransferSize;
@@ -86,9 +79,10 @@ public class LiquidBufferElement {
                         itemsAllowedToBeMoved++;
                     }
                 }
-            } else {
+            }else{
                 itemsAllowedToBeMoved = currentTransferSize - setting.getAmount();
             }
+
 
             return Math.min(itemsAllowedToBeMoved, desiredItemCount);
         }
@@ -103,15 +97,15 @@ public class LiquidBufferElement {
 
         for (StackTankHolder holder : getHolders()) {
             FluidStack fluidStack = holder.getFluidStack();
-            if (fluidStack != null && fluidStack.getFluidID() == ((LiquidSetting) outputSetting).getLiquidId()) {
+            if (fluidStack != null && fluidStack.getFluidID() == ((LiquidSetting)outputSetting).getLiquidId()) {
                 bufferSize += fluidStack.amount;
             }
         }
-        if (setting != null && setting.isLimitedByAmount()) {
+        if (setting != null && setting.isLimitedByAmount()){
             int maxSize;
             if (useWhiteList) {
                 maxSize = setting.getAmount();
-            } else {
+            }else{
                 maxSize = totalTransferSize - setting.getAmount();
             }
             bufferSize = Math.min(bufferSize, maxSize);
@@ -121,8 +115,7 @@ public class LiquidBufferElement {
 
     public LiquidBufferElement getSplitElement(int elementAmount, int id, boolean fair) {
 
-        LiquidBufferElement element =
-                new LiquidBufferElement(this.component, this.setting, this.inventoryHolder, this.useWhiteList);
+        LiquidBufferElement element = new LiquidBufferElement(this.component, this.setting, this.inventoryHolder, this.useWhiteList);
         element.holders = new ArrayList<StackTankHolder>();
         for (StackTankHolder holder : holders) {
             element.addTarget(holder.getSplitElement(elementAmount, id, fair));
@@ -135,7 +128,7 @@ public class LiquidBufferElement {
             if (element.currentTransferSize < 0) {
                 element.currentTransferSize = 0;
             }
-        } else {
+        }else{
             element.currentTransferSize = Math.min(currentTransferSize, element.totalTransferSize);
         }
 

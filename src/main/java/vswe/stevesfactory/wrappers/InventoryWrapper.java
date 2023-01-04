@@ -1,5 +1,6 @@
 package vswe.stevesfactory.wrappers;
 
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -74,6 +75,6 @@ public abstract class InventoryWrapper implements IInventory {
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-        return inventory.isItemValidForSlot(i, itemstack);
+       return inventory.isItemValidForSlot(i, itemstack);
     }
 }

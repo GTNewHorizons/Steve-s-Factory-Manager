@@ -17,12 +17,13 @@ import vswe.stevesfactory.components.Point;
 import vswe.stevesfactory.interfaces.ContainerBase;
 import vswe.stevesfactory.interfaces.ContainerManager;
 
+
 public class PacketHandler {
     public static final double BLOCK_UPDATE_RANGE = 128;
 
     public static void sendDataToPlayer(ICrafting crafting, DataWriter dw) {
         if (crafting instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) crafting;
+            EntityPlayerMP player = (EntityPlayerMP)crafting;
 
             dw.sendPlayerPacket(player);
         }
@@ -38,19 +39,22 @@ public class PacketHandler {
         dw.close();
     }
 
+
     public static void sendAllData(Container container, ICrafting crafting, ITileEntityInterface te) {
         DataWriter dw = new DataWriter();
 
-        dw.writeBoolean(true); // use container
+        dw.writeBoolean(true); //use container
         dw.writeByte(container.windowId);
-        dw.writeBoolean(false); // all data
+        dw.writeBoolean(false); //all data
         te.writeAllData(dw);
 
         sendDataToPlayer(crafting, dw);
         dw.close();
     }
 
-    /* public static void readBlockPacket(DataReader data) {
+
+
+   /* public static void readBlockPacket(DataReader data) {
         int x = data.readData(DataBitHelper.WORLD_COORDINATE);
         int y = data.readData(DataBitHelper.WORLD_COORDINATE);
         int z = data.readData(DataBitHelper.WORLD_COORDINATE);
@@ -64,20 +68,23 @@ public class PacketHandler {
     public static DataWriter getWriterForUpdate(Container container) {
         DataWriter dw = new DataWriter();
 
-        dw.writeBoolean(true); // use container
+        dw.writeBoolean(true); //use container
         dw.writeByte(container.windowId);
-        dw.writeBoolean(true); // updated data
+        dw.writeBoolean(true); //updated data
 
         return dw;
     }
 
+
+
+
     private static DataWriter getWriterForSpecificData(Container container) {
         DataWriter dw = new DataWriter();
 
-        dw.writeBoolean(true); // use container
+        dw.writeBoolean(true); //use container
         dw.writeByte(container.windowId);
-        dw.writeBoolean(true); // updated data
-        dw.writeBoolean(false); // not new
+        dw.writeBoolean(true); //updated data
+        dw.writeBoolean(false); //not new
 
         return dw;
     }
@@ -87,11 +94,11 @@ public class PacketHandler {
         Container container = Minecraft.getMinecraft().thePlayer.openContainer;
         if (container != null) {
             DataWriter dw = new DataWriter();
-            dw.writeBoolean(true); // use container
+            dw.writeBoolean(true); //use container
             dw.writeByte(container.windowId);
 
             return dw;
-        } else {
+        }else{
             return null;
         }
     }
@@ -100,33 +107,32 @@ public class PacketHandler {
     public static DataWriter getWriterForServerPacket() {
         DataWriter dw = getBaseWriterForServerPacket();
 
-        dw.writeBoolean(false); // no action
+        dw.writeBoolean(false); //no action
 
         return dw;
     }
-
     @SideOnly(Side.CLIENT)
     public static DataWriter getWriterForServerActionPacket() {
         DataWriter dw = getBaseWriterForServerPacket();
 
-        dw.writeBoolean(true); // action
+        dw.writeBoolean(true); //action
 
         return dw;
     }
 
     private static void createNonComponentPacket(DataWriter dw) {
-        dw.writeBoolean(false); // this is a packet that has nothing to do with a specific FlowComponent
+        dw.writeBoolean(false); //this is a packet that has nothing to do with a specific FlowComponent
     }
 
     private static void createComponentPacket(DataWriter dw, FlowComponent component, ComponentMenu menu) {
-        dw.writeBoolean(true); // this is a packet for a specific FlowComponent
+        dw.writeBoolean(true); //this is a packet for a specific FlowComponent
         dw.writeComponentId(component.getManager(), component.getId());
 
         if (menu != null) {
-            dw.writeBoolean(true); // this is packet for a specific menu
+            dw.writeBoolean(true); //this is packet for a specific menu
             dw.writeData(menu.getId(), DataBitHelper.FLOW_CONTROL_MENU_COUNT);
-        } else {
-            dw.writeBoolean(false); // this is a packet that has nothing to do with a menu
+        }else{
+            dw.writeBoolean(false); //this is a packet that has nothing to do with a menu
         }
     }
 
@@ -143,12 +149,14 @@ public class PacketHandler {
         return dw;
     }
 
-    public static DataWriter getWriterForClientComponentPacket(
-            ContainerManager container, FlowComponent component, ComponentMenu menu) {
+    public static DataWriter getWriterForClientComponentPacket(ContainerManager container, FlowComponent component, ComponentMenu menu) {
         DataWriter dw = PacketHandler.getWriterForSpecificData(container);
         createComponentPacket(dw, component, menu);
         return dw;
     }
+
+
+
 
     public static void writeAllComponentData(DataWriter dw, FlowComponent flowComponent) {
         dw.writeData(flowComponent.getX(), DataBitHelper.FLOW_CONTROL_X);
@@ -157,9 +165,8 @@ public class PacketHandler {
         dw.writeString(flowComponent.getComponentName(), DataBitHelper.NAME_LENGTH);
         if (flowComponent.getParent() != null) {
             dw.writeBoolean(true);
-            dw.writeComponentId(
-                    flowComponent.getManager(), flowComponent.getParent().getId());
-        } else {
+            dw.writeComponentId(flowComponent.getManager(), flowComponent.getParent().getId());
+        }else{
             dw.writeBoolean(false);
         }
         for (ComponentMenu menu : flowComponent.getMenus()) {
@@ -184,6 +191,8 @@ public class PacketHandler {
         flowComponent.getManager().updateVariables();
     }
 
+
+
     public static DataWriter getButtonPacketWriter() {
         DataWriter dw = getWriterForServerPacket();
         createNonComponentPacket(dw);
@@ -193,10 +202,10 @@ public class PacketHandler {
     public static void sendNewFlowComponent(ContainerManager container, FlowComponent component) {
         DataWriter dw = new DataWriter();
 
-        dw.writeBoolean(true); // use container
+        dw.writeBoolean(true); //use container
         dw.writeByte(container.windowId);
-        dw.writeBoolean(true); // updated data
-        dw.writeBoolean(true); // new data;
+        dw.writeBoolean(true); //updated data
+        dw.writeBoolean(true); //new data;
 
         writeAllComponentData(dw, component);
         PacketHandler.sendDataToListeningClients(container, dw);
@@ -208,7 +217,7 @@ public class PacketHandler {
         DataWriter dw = PacketHandler.getWriterForSpecificData(container);
         createNonComponentPacket(dw);
         dw.writeBoolean(false);
-        dw.writeComponentId((TileEntityManager) container.getTileEntity(), idToRemove);
+        dw.writeComponentId((TileEntityManager)container.getTileEntity(), idToRemove);
         sendDataToListeningClients(container, dw);
 
         dw.close();
@@ -216,11 +225,11 @@ public class PacketHandler {
 
     public static void sendBlockPacket(IPacketBlock block, EntityPlayer player, int id) {
         if (block instanceof TileEntity) {
-            TileEntity te = (TileEntity) block;
+            TileEntity te = (TileEntity)block;
             boolean onServer = player == null || !player.worldObj.isRemote;
 
             DataWriter dw = new DataWriter();
-            dw.writeBoolean(false); // no container
+            dw.writeBoolean(false); //no container
             dw.writeData(te.xCoord, DataBitHelper.WORLD_COORDINATE);
             dw.writeData(te.yCoord, DataBitHelper.WORLD_COORDINATE);
             dw.writeData(te.zCoord, DataBitHelper.WORLD_COORDINATE);
@@ -232,15 +241,10 @@ public class PacketHandler {
 
             if (!onServer) {
                 dw.sendServerPacket();
-            } else if (player != null) {
-                dw.sendPlayerPacket((EntityPlayerMP) player);
-            } else {
-                dw.sendPlayerPackets(
-                        te.xCoord + 0.5,
-                        te.yCoord,
-                        te.zCoord,
-                        BLOCK_UPDATE_RANGE,
-                        te.getWorldObj().provider.dimensionId);
+            }else if(player != null) {
+                dw.sendPlayerPacket((EntityPlayerMP)player);
+            }else{
+                dw.sendPlayerPackets(te.xCoord + 0.5, te.yCoord, te.zCoord, BLOCK_UPDATE_RANGE, te.getWorldObj().provider.dimensionId);
             }
 
             dw.close();

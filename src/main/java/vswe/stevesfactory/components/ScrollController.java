@@ -1,14 +1,16 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.ArrayList;
-import java.util.List;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.GuiManager;
 
-public abstract class ScrollController<T> {
+import java.util.ArrayList;
+import java.util.List;
+
+public  abstract class ScrollController<T> {
 
     private int offset;
     private boolean canScroll;
@@ -44,6 +46,7 @@ public abstract class ScrollController<T> {
     private static final int AMOUNT_TEXT_X = 75;
     private static final int AMOUNT_TEXT_Y = 9;
 
+
     private int itemsPerRow = 5;
     private int visibleRows = 2;
     private int startX = 5;
@@ -62,7 +65,7 @@ public abstract class ScrollController<T> {
                 protected void textChanged() {
                     if (getText().length() > 0) {
                         updateSearch();
-                    } else {
+                    }else{
                         result.clear();
                         updateScrolling();
                     }
@@ -75,16 +78,15 @@ public abstract class ScrollController<T> {
         updateSearch();
     }
 
-    protected abstract List<T> updateSearch(String search, boolean all);
 
+    protected abstract List<T> updateSearch(String search, boolean all);
     @SideOnly(Side.CLIENT)
     protected abstract void onClick(T t, int mX, int mY, int button);
-
     @SideOnly(Side.CLIENT)
     protected abstract void draw(GuiManager gui, T t, int x, int y, boolean hover);
-
     @SideOnly(Side.CLIENT)
     protected abstract void drawMouseOver(GuiManager gui, T t, int mX, int mY);
+
 
     public void setX(int val) {
         startX = val;
@@ -98,6 +100,7 @@ public abstract class ScrollController<T> {
         return scrollingUpperLimit + 3;
     }
 
+
     private int getFirstRow() {
         return (scrollingUpperLimit + offset - getScrollingStartY()) / ITEM_SIZE_WITH_MARGIN;
     }
@@ -109,7 +112,7 @@ public abstract class ScrollController<T> {
         for (int row = start; row < start + visibleRows + 1; row++) {
             for (int col = 0; col < itemsPerRow; col++) {
                 int id = row * itemsPerRow + col;
-                if (id >= 0 && id < result.size()) {
+                if (id >= 0 && id < result.size())  {
                     int x = getScrollingStartX() + ITEM_SIZE_WITH_MARGIN * col;
                     int y = getScrollingStartY() + row * ITEM_SIZE_WITH_MARGIN - offset;
                     if (y > scrollingUpperLimit && y + ITEM_SIZE < FlowComponent.getMenuOpenSize()) {
@@ -126,7 +129,7 @@ public abstract class ScrollController<T> {
         if (CollisionHelper.inBounds(TEXT_BOX_X, TEXT_BOX_Y, TEXT_BOX_SIZE_W, TEXT_BOX_SIZE_H, mX, mY)) {
             if (button == 0 || !selected) {
                 selected = !selected;
-            } else if (hasSearchBox) {
+            }else if (hasSearchBox){
                 textBox.setTextAndCursor("");
             }
         }
@@ -139,14 +142,17 @@ public abstract class ScrollController<T> {
             }
         }
 
-        if (inArrowBounds(true, mX, mY)) {
+        if(inArrowBounds(true, mX, mY)) {
             clicked = true;
             dir = 1;
-        } else if (inArrowBounds(false, mX, mY)) {
+        }else if (inArrowBounds(false, mX, mY)){
             clicked = true;
             dir = -1;
         }
     }
+
+
+
 
     public void onRelease(int mX, int mY) {
         clicked = false;
@@ -158,7 +164,7 @@ public abstract class ScrollController<T> {
             textBox.onKeyStroke(gui, c, k);
 
             return true;
-        } else {
+        }else{
             return false;
         }
     }
@@ -168,30 +174,15 @@ public abstract class ScrollController<T> {
         int srcBoxY = selected ? 1 : 0;
 
         if (hasSearchBox) {
-            gui.drawTexture(
-                    TEXT_BOX_X,
-                    TEXT_BOX_Y,
-                    TEXT_BOX_SRC_X,
-                    TEXT_BOX_SRC_Y + srcBoxY * TEXT_BOX_SIZE_H,
-                    TEXT_BOX_SIZE_W,
-                    TEXT_BOX_SIZE_H);
+            gui.drawTexture(TEXT_BOX_X, TEXT_BOX_Y, TEXT_BOX_SRC_X, TEXT_BOX_SRC_Y + srcBoxY * TEXT_BOX_SIZE_H, TEXT_BOX_SIZE_W, TEXT_BOX_SIZE_H);
             gui.drawString(textBox.getText(), TEXT_BOX_X + TEXT_BOX_TEXT_X, TEXT_BOX_Y + TEXT_BOX_TEXT_Y, 0xFFFFFF);
 
             if (selected) {
-                gui.drawCursor(
-                        TEXT_BOX_X + textBox.getCursorPosition(gui) + CURSOR_X,
-                        TEXT_BOX_Y + CURSOR_Y,
-                        CURSOR_Z,
-                        0xFFFFFFFF);
+                gui.drawCursor(TEXT_BOX_X + textBox.getCursorPosition(gui) + CURSOR_X, TEXT_BOX_Y + CURSOR_Y, CURSOR_Z, 0xFFFFFFFF);
             }
 
             if (textBox.getText().length() > 0 || result.size() > 0) {
-                gui.drawString(
-                        Localization.ITEMS_FOUND.toString() + " " + result.size(),
-                        AMOUNT_TEXT_X,
-                        AMOUNT_TEXT_Y,
-                        0.7F,
-                        0x404040);
+                gui.drawString(Localization.ITEMS_FOUND.toString() + " " + result.size(), AMOUNT_TEXT_X, AMOUNT_TEXT_Y, 0.7F, 0x404040);
             }
         }
 
@@ -201,12 +192,7 @@ public abstract class ScrollController<T> {
 
             List<Point> points = getItemCoordinates();
             for (Point point : points) {
-                draw(
-                        gui,
-                        result.get(point.id),
-                        point.x,
-                        point.y,
-                        CollisionHelper.inBounds(point.x, point.y, ITEM_SIZE, ITEM_SIZE, mX, mY));
+                draw(gui, result.get(point.id), point.x, point.y, CollisionHelper.inBounds(point.x, point.y, ITEM_SIZE, ITEM_SIZE, mX, mY));
             }
         }
     }
@@ -214,12 +200,12 @@ public abstract class ScrollController<T> {
     private static final int SCROLL_SPEED = 100;
 
     private float left;
-
     public void update(float partial) {
         if (clicked && canScroll) {
             partial += left;
-            int change = (int) (partial * SCROLL_SPEED);
-            left = partial - (change / (float) SCROLL_SPEED);
+            int change = (int)(partial * SCROLL_SPEED);
+            left = partial - (change / (float)SCROLL_SPEED);
+
 
             moveOffset(change * dir);
         }
@@ -228,11 +214,10 @@ public abstract class ScrollController<T> {
     private void moveOffset(int change) {
         offset += change;
         int min = 0;
-        int max = ((int) (Math.ceil(((float) result.size() / itemsPerRow)) - visibleRows)) * ITEM_SIZE_WITH_MARGIN
-                - (ITEM_SIZE_WITH_MARGIN - ITEM_SIZE);
+        int max = ((int)(Math.ceil(((float)result.size() / itemsPerRow)) - visibleRows)) * ITEM_SIZE_WITH_MARGIN - (ITEM_SIZE_WITH_MARGIN - ITEM_SIZE);
         if (offset < min) {
             offset = min;
-        } else if (offset > max) {
+        }else if(offset > max) {
             offset = max;
         }
     }
@@ -243,13 +228,7 @@ public abstract class ScrollController<T> {
             int srcArrowX = canScroll ? clicked && down == (dir == 1) ? 2 : inArrowBounds(down, mX, mY) ? 1 : 0 : 3;
             int srcArrowY = down ? 1 : 0;
 
-            gui.drawTexture(
-                    ARROW_X,
-                    down ? ARROW_Y_DOWN : ARROW_Y_UP,
-                    ARROW_SRC_X + srcArrowX * ARROW_SIZE_W,
-                    ARROW_SRC_Y + srcArrowY * ARROW_SIZE_H,
-                    ARROW_SIZE_W,
-                    ARROW_SIZE_H);
+            gui.drawTexture(ARROW_X, down ? ARROW_Y_DOWN : ARROW_Y_UP, ARROW_SRC_X + srcArrowX * ARROW_SIZE_W, ARROW_SRC_Y + srcArrowY * ARROW_SIZE_H, ARROW_SIZE_W, ARROW_SIZE_H);
         }
     }
 
@@ -266,6 +245,8 @@ public abstract class ScrollController<T> {
             }
         }
     }
+
+
 
     public void updateScrolling() {
         canScroll = result.size() > itemsPerRow * visibleRows;
@@ -288,10 +269,8 @@ public abstract class ScrollController<T> {
 
     public void updateSearch() {
         if (hasSearchBox) {
-            result = updateSearch(
-                    textBox.getText().toLowerCase(),
-                    textBox.getText().toLowerCase().equals(".all"));
-        } else {
+            result = updateSearch(textBox.getText().toLowerCase(), textBox.getText().toLowerCase().equals(".all"));
+        }else{
             result = updateSearch("", false);
         }
         updateScrolling();
@@ -323,6 +302,7 @@ public abstract class ScrollController<T> {
     public void setDisabledScroll(boolean disabledScroll) {
         this.disabledScroll = disabledScroll;
     }
+
 
     private class Point {
         int id, x, y;

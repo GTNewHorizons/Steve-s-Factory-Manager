@@ -1,5 +1,6 @@
 package vswe.stevesfactory;
 
+
 import net.minecraft.util.StatCollector;
 
 public enum Localization {
@@ -36,7 +37,7 @@ public enum Localization {
     CAMOUFLAGE_SHORT,
     CAMOUFLAGE_LONG,
     SIGN_SHORT,
-    SIGN_LONG,
+    SIGN_LONG ,
 
     CONNECTION_INPUT,
     CONNECTION_OUTPUT,
@@ -334,6 +335,7 @@ public enum Localization {
     ENLARGE_INTERFACES,
     AUTO_MOVE_FIRST,
 
+
     GIVE_PERMISSION,
     REVOKE_PERMISSION,
     ACTIVATE_USER,
@@ -351,7 +353,7 @@ public enum Localization {
     EDITOR_DESCRIPTION_SHORT,
     USER_DESCRIPTION_SHORT,
     EDITOR_DESCRIPTION_LONG,
-    USER_DESCRIPTION_LONG,
+    USER_DESCRIPTION_LONG ,
     PERMISSION_OWNER,
     PERMISSION_EDITOR,
     PERMISSION_USER,
@@ -359,6 +361,8 @@ public enum Localization {
     PERMISSION_CREATIVE,
     PERMISSION_INVENTORY,
     PERMISSION_DENIED;
+
+
 
     private String name;
 

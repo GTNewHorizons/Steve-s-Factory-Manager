@@ -23,6 +23,7 @@ public class ComponentMenuCraftingPriority extends ComponentMenu {
             }
         };
 
+
         radioButtons.add(new RadioButton(RADIO_X, RADIO_Y, Localization.PRIORITY_MOVE_FIRST));
         radioButtons.add(new RadioButton(RADIO_X, RADIO_Y + RADIO_MARGIN, Localization.PRIORITY_CRAFT_FIRST));
     }
@@ -46,7 +47,9 @@ public class ComponentMenuCraftingPriority extends ComponentMenu {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawMouseOver(GuiManager gui, int mX, int mY) {}
+    public void drawMouseOver(GuiManager gui, int mX, int mY) {
+
+    }
 
     @Override
     public void onClick(int mX, int mY, int button) {
@@ -54,10 +57,14 @@ public class ComponentMenuCraftingPriority extends ComponentMenu {
     }
 
     @Override
-    public void onDrag(int mX, int mY, boolean isMenuOpen) {}
+    public void onDrag(int mX, int mY, boolean isMenuOpen) {
+
+    }
 
     @Override
-    public void onRelease(int mX, int mY, boolean isMenuOpen) {}
+    public void onRelease(int mX, int mY, boolean isMenuOpen) {
+
+    }
 
     @Override
     public void writeData(DataWriter dw) {
@@ -71,12 +78,12 @@ public class ComponentMenuCraftingPriority extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        radioButtons.setSelectedOption(((ComponentMenuCraftingPriority) menu).radioButtons.getSelectedOption());
+        radioButtons.setSelectedOption(((ComponentMenuCraftingPriority)menu).radioButtons.getSelectedOption());
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuCraftingPriority newDataPriority = ((ComponentMenuCraftingPriority) newData);
+        ComponentMenuCraftingPriority newDataPriority =  ((ComponentMenuCraftingPriority)newData);
 
         if (radioButtons.getSelectedOption() != newDataPriority.radioButtons.getSelectedOption()) {
             radioButtons.setSelectedOption(newDataPriority.radioButtons.getSelectedOption());
@@ -96,7 +103,7 @@ public class ComponentMenuCraftingPriority extends ComponentMenu {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setByte(NBT_SELECTED, (byte) radioButtons.getSelectedOption());
+        nbtTagCompound.setByte(NBT_SELECTED, (byte)radioButtons.getSelectedOption());
     }
 
     @Override

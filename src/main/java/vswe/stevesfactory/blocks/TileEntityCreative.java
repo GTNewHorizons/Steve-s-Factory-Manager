@@ -1,6 +1,5 @@
 package vswe.stevesfactory.blocks;
 
-import java.util.EnumSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -10,7 +9,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import java.util.EnumSet;
+
+
 public class TileEntityCreative extends TileEntityClusterElement implements IInventory, IFluidHandler {
+
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
@@ -63,7 +66,9 @@ public class TileEntityCreative extends TileEntityClusterElement implements IInv
     }
 
     @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack) {}
+    public void setInventorySlotContents(int i, ItemStack itemstack) {
+
+    }
 
     @Override
     public String getInventoryName() {
@@ -86,10 +91,14 @@ public class TileEntityCreative extends TileEntityClusterElement implements IInv
     }
 
     @Override
-    public void openInventory() {}
+    public void openInventory() {
+
+    }
 
     @Override
-    public void closeInventory() {}
+    public void closeInventory() {
+
+    }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {

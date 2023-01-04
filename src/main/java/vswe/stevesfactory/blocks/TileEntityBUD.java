@@ -1,14 +1,16 @@
 package vswe.stevesfactory.blocks;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityBUD extends TileEntityClusterElement implements ISystemListener, ITriggerNode {
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+
+
+public class TileEntityBUD extends TileEntityClusterElement implements ISystemListener, ITriggerNode{
     private List<TileEntityManager> managerList = new ArrayList<TileEntityManager>();
     private int[] oldData = new int[ForgeDirection.VALID_DIRECTIONS.length];
     private int[] data = new int[ForgeDirection.VALID_DIRECTIONS.length];
@@ -32,8 +34,11 @@ public class TileEntityBUD extends TileEntityClusterElement implements ISystemLi
             managerList.get(i).triggerBUD(this);
         }
 
+
         makeOld();
     }
+
+
 
     @Override
     public int[] getData() {
@@ -54,8 +59,7 @@ public class TileEntityBUD extends TileEntityClusterElement implements ISystemLi
                 int y = direction.offsetY + this.yCoord;
                 int z = direction.offsetZ + this.zCoord;
 
-                data[i] = (Block.getIdFromBlock(worldObj.getBlock(x, y, z)) << 4)
-                        | (worldObj.getBlockMetadata(x, y, z) & 15);
+                data[i] = (Block.getIdFromBlock(worldObj.getBlock(x, y, z)) << 4) | (worldObj.getBlockMetadata(x, y, z) & 15);
             }
         }
     }
@@ -71,6 +75,7 @@ public class TileEntityBUD extends TileEntityClusterElement implements ISystemLi
     public void readContentFromNBT(NBTTagCompound nbtTagCompound) {
         int version = nbtTagCompound.getByte(ModBlocks.NBT_PROTOCOL_VERSION);
 
+
         NBTTagList sidesTag = nbtTagCompound.getTagList(NBT_SIDES, 10);
         for (int i = 0; i < sidesTag.tagCount(); i++) {
 
@@ -79,6 +84,8 @@ public class TileEntityBUD extends TileEntityClusterElement implements ISystemLi
             oldData[i] = data[i] = sideTag.getShort(NBT_DATA);
         }
     }
+
+
 
     @Override
     public void writeContentToNBT(NBTTagCompound nbtTagCompound) {
@@ -92,6 +99,7 @@ public class TileEntityBUD extends TileEntityClusterElement implements ISystemLi
 
             sidesTag.appendTag(sideTag);
         }
+
 
         nbtTagCompound.setTag(NBT_SIDES, sidesTag);
     }

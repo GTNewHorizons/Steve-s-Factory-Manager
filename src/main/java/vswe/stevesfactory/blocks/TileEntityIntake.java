@@ -1,15 +1,17 @@
 package vswe.stevesfactory.blocks;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
+
 
 public class TileEntityIntake extends TileEntityClusterElement implements IInventory {
 
@@ -18,7 +20,7 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
     @Override
     public int getSizeInventory() {
         updateInventory();
-        return items.size() + 1; // always leave an empty slot
+        return items.size() + 1; //always leave an empty slot
     }
 
     @Override
@@ -27,7 +29,7 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
         id--;
         if (id < 0 || !canPickUp(items.get(id))) {
             return null;
-        } else {
+        }else{
             return items.get(id).getEntityItem();
         }
     }
@@ -48,7 +50,7 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
             }
 
             return ret;
-        } else {
+        }else{
             return null;
         }
     }
@@ -59,9 +61,7 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
         id--;
         if (id < 0 || !canPickUp(items.get(id))) {
             if (itemstack != null) {
-                ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[
-                        ModBlocks.blockCableIntake.getSideMeta(getBlockMetadata())
-                                % ForgeDirection.VALID_DIRECTIONS.length];
+                ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[ModBlocks.blockCableIntake.getSideMeta(getBlockMetadata()) % ForgeDirection.VALID_DIRECTIONS.length];
 
                 double posX = xCoord + 0.5 + direction.offsetX * 0.75;
                 double posY = yCoord + 0.5 + direction.offsetY * 0.75;
@@ -77,19 +77,21 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
                 item.motionY = direction.offsetY * 0.2;
                 item.motionZ = direction.offsetZ * 0.2;
 
+
                 item.delayBeforeCanPickup = 40;
                 worldObj.spawnEntityInWorld(item);
 
+
                 if (id < 0) {
                     items.add(item);
-                } else {
+                }else{
                     items.set(id, item);
                 }
             }
-        } else if (itemstack != null) {
+        }else if (itemstack != null){
             items.get(id).setEntityItemStack(itemstack);
-        } else {
-            // seems to be an issue with setting it to null
+        }else{
+            //seems to be an issue with setting it to null
             items.get(id).setEntityItemStack(items.get(id).getEntityItem().copy());
             items.get(id).getEntityItem().stackSize = 0;
             items.get(id).setDead();
@@ -108,7 +110,7 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
 
     private static final int DISTANCE = 3;
 
-    private void updateInventory() {
+    private void  updateInventory() {
         if (items == null) {
             items = new ArrayList<EntityItem>();
 
@@ -120,11 +122,9 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
             int highY = yCoord + 1 + DISTANCE;
             int highZ = zCoord + 1 + DISTANCE;
 
-            items = worldObj.getEntitiesWithinAABB(
-                    EntityItem.class, AxisAlignedBB.getBoundingBox(lowX, lowY, lowZ, highX, highY, highZ));
+            items = worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(lowX, lowY, lowZ, highX, highY, highZ));
 
-            // remove items we can't use right away, this check is done when we interact with items too, to make sure it
-            // hasn't changed
+            //remove items we can't use right away, this check is done when we interact with items too, to make sure it hasn't changed
             for (Iterator<EntityItem> iterator = items.iterator(); iterator.hasNext(); ) {
                 EntityItem next = iterator.next();
                 if (!canPickUp(next)) {
@@ -150,10 +150,14 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
     }
 
     @Override
-    public void openInventory() {}
+    public void openInventory() {
+
+    }
 
     @Override
-    public void closeInventory() {}
+    public void closeInventory() {
+
+    }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
@@ -166,8 +170,7 @@ public class TileEntityIntake extends TileEntityClusterElement implements IInven
     }
 
     private boolean canPickUp(EntityItem item) {
-        return !item.isDead
-                && (item.delayBeforeCanPickup == 0 || ModBlocks.blockCableIntake.isAdvanced(getBlockMetadata()));
+        return !item.isDead && (item.delayBeforeCanPickup == 0 || ModBlocks.blockCableIntake.isAdvanced(getBlockMetadata()));
     }
 
     @Override

@@ -2,7 +2,6 @@ package vswe.stevesfactory.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.List;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
@@ -17,6 +16,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import vswe.stevesfactory.StevesFactoryManager;
 
+import java.util.List;
+
+
 public abstract class BlockCableDirectionAdvanced extends BlockContainer {
     public BlockCableDirectionAdvanced() {
         super(Material.iron);
@@ -27,13 +29,10 @@ public abstract class BlockCableDirectionAdvanced extends BlockContainer {
 
     @SideOnly(Side.CLIENT)
     private IIcon activeIcon;
-
     @SideOnly(Side.CLIENT)
     private IIcon advancedActiveIcon;
-
     @SideOnly(Side.CLIENT)
     private IIcon inactiveIcon;
-
     @SideOnly(Side.CLIENT)
     private IIcon advancedInactiveIcon;
 
@@ -41,22 +40,19 @@ public abstract class BlockCableDirectionAdvanced extends BlockContainer {
     @Override
     public void registerBlockIcons(IIconRegister register) {
         activeIcon = register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":" + getFrontTextureName(false));
-        advancedActiveIcon =
-                register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":" + getFrontTextureName(true));
+        advancedActiveIcon = register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":" +  getFrontTextureName(true));
         inactiveIcon = register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":" + getSideTextureName(false));
-        advancedInactiveIcon =
-                register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":" + getSideTextureName(true));
+        advancedInactiveIcon = register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":" + getSideTextureName(true));
     }
 
     protected abstract String getFrontTextureName(boolean isAdvanced);
-
     protected abstract String getSideTextureName(boolean isAdvanced);
 
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
-        // pretend the meta is 3
-        return getIconFromSideAndMeta(side, addAdvancedMeta(3, meta));
+        //pretend the meta is 3
+        return getIconFromSideAndMeta(side,  addAdvancedMeta(3, meta));
     }
 
     @SideOnly(Side.CLIENT)
@@ -69,9 +65,7 @@ public abstract class BlockCableDirectionAdvanced extends BlockContainer {
 
     @SideOnly(Side.CLIENT)
     private IIcon getIconFromSideAndMeta(int side, int meta) {
-        return side == (getSideMeta(meta) % ForgeDirection.VALID_DIRECTIONS.length)
-                ? isAdvanced(meta) ? advancedActiveIcon : activeIcon
-                : isAdvanced(meta) ? advancedInactiveIcon : inactiveIcon;
+        return side == (getSideMeta(meta) % ForgeDirection.VALID_DIRECTIONS.length) ? isAdvanced(meta) ? advancedActiveIcon :  activeIcon : isAdvanced(meta) ? advancedInactiveIcon : inactiveIcon;
     }
 
     @Override
@@ -112,4 +106,5 @@ public abstract class BlockCableDirectionAdvanced extends BlockContainer {
     public int damageDropped(int meta) {
         return getAdvancedMeta(meta);
     }
+
 }

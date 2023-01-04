@@ -1,8 +1,8 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
@@ -11,6 +11,8 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
+
+import java.util.List;
 
 public class ComponentMenuVariableLoop extends ComponentMenu {
     public ComponentMenuVariableLoop(FlowComponent parent) {
@@ -63,6 +65,7 @@ public class ComponentMenuVariableLoop extends ComponentMenu {
     private static final int DISPLAY_Y_TOP = 5;
     private static final int DISPLAY_Y_BOT = 25;
 
+
     private VariableDisplay listDisplay;
     private VariableDisplay elementDisplay;
     private int selectedList;
@@ -106,12 +109,12 @@ public class ComponentMenuVariableLoop extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -128,13 +131,13 @@ public class ComponentMenuVariableLoop extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        selectedList = ((ComponentMenuVariableLoop) menu).selectedList;
-        selectedElement = ((ComponentMenuVariableLoop) menu).selectedElement;
+        selectedList = ((ComponentMenuVariableLoop)menu).selectedList;
+        selectedElement = ((ComponentMenuVariableLoop)menu).selectedElement;
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuVariableLoop newDataLoop = (ComponentMenuVariableLoop) newData;
+        ComponentMenuVariableLoop newDataLoop = (ComponentMenuVariableLoop)newData;
 
         if (selectedList != newDataLoop.selectedList) {
             selectedList = newDataLoop.selectedList;
@@ -158,8 +161,8 @@ public class ComponentMenuVariableLoop extends ComponentMenu {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setByte(NBT_LIST, (byte) selectedList);
-        nbtTagCompound.setByte(NBT_ELEMENT, (byte) selectedElement);
+        nbtTagCompound.setByte(NBT_LIST, (byte)selectedList);
+        nbtTagCompound.setByte(NBT_ELEMENT, (byte)selectedElement);
     }
 
     @Override
@@ -168,7 +171,7 @@ public class ComponentMenuVariableLoop extends ComponentMenu {
         int val = dr.readData(DataBitHelper.VARIABLE_TYPE);
         if (useList) {
             selectedList = val;
-        } else {
+        }else{
             selectedElement = val;
         }
     }

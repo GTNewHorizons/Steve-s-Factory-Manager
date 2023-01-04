@@ -1,5 +1,6 @@
 package vswe.stevesfactory.components;
 
+
 public class Point {
     private int x, y;
 
@@ -8,7 +9,8 @@ public class Point {
         this.y = y;
     }
 
-    public Point() {}
+    public Point() {
+    }
 
     public int getX() {
         return x;

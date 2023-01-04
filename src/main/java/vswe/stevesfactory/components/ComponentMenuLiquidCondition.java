@@ -1,12 +1,15 @@
 package vswe.stevesfactory.components;
 
-import java.util.List;
+
 import vswe.stevesfactory.Localization;
+
+import java.util.List;
 
 public class ComponentMenuLiquidCondition extends ComponentMenuLiquid implements IConditionStuffMenu {
     public ComponentMenuLiquidCondition(FlowComponent parent) {
         super(parent);
     }
+
 
     @Override
     protected void initRadioButtons() {

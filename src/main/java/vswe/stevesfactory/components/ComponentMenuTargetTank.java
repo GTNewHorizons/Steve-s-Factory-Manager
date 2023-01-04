@@ -1,5 +1,6 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,8 +28,7 @@ public class ComponentMenuTargetTank extends ComponentMenuTarget {
         };
 
         radioButtons.add(new RadioButton(RADIO_BUTTON_X, RADIO_BUTTON_Y, Localization.EMPTY_TANK));
-        radioButtons.add(
-                new RadioButton(RADIO_BUTTON_X, RADIO_BUTTON_Y + RADIO_BUTTON_SPACING, Localization.FILLED_TANK));
+        radioButtons.add(new RadioButton(RADIO_BUTTON_X, RADIO_BUTTON_Y + RADIO_BUTTON_SPACING, Localization.FILLED_TANK));
     }
 
     private static final int RADIO_BUTTON_X = 36;
@@ -43,16 +43,12 @@ public class ComponentMenuTargetTank extends ComponentMenuTarget {
         return new Button(27) {
             @Override
             protected String getLabel() {
-                return useAdvancedSetting(selectedDirectionId)
-                        ? Localization.ADVANCED_MODE.toString()
-                        : Localization.SIMPLE_MODE.toString();
+                return useAdvancedSetting(selectedDirectionId) ? Localization.ADVANCED_MODE.toString() : Localization.SIMPLE_MODE.toString();
             }
 
             @Override
             protected String getMouseOverText() {
-                return useAdvancedSetting(selectedDirectionId)
-                        ? Localization.SIMPLE_MODE_LONG.toString()
-                        : Localization.ADVANCED_MODE_LONG.toString();
+                return useAdvancedSetting(selectedDirectionId) ? Localization.SIMPLE_MODE_LONG.toString() : Localization.ADVANCED_MODE_LONG.toString();
             }
 
             @Override
@@ -87,7 +83,7 @@ public class ComponentMenuTargetTank extends ComponentMenuTarget {
 
     @Override
     protected void copyAdvancedSetting(ComponentMenu menu, int i) {
-        ComponentMenuTargetTank menuTarget = (ComponentMenuTargetTank) menu;
+        ComponentMenuTargetTank menuTarget = (ComponentMenuTargetTank)menu;
         onlyFull[i] = menuTarget.onlyFull[i];
     }
 
@@ -115,10 +111,10 @@ public class ComponentMenuTargetTank extends ComponentMenuTarget {
 
     @Override
     protected void refreshAdvancedComponentData(ContainerManager container, ComponentMenu newData, int i) {
-        ComponentMenuTargetTank newDataTarget = (ComponentMenuTargetTank) newData;
+        ComponentMenuTargetTank newDataTarget = (ComponentMenuTargetTank)newData;
 
         if (onlyFull[i] != newDataTarget.onlyFull[i]) {
-            onlyFull[i] = newDataTarget.onlyFull[i];
+            onlyFull[i] =  newDataTarget.onlyFull[i];
 
             DataWriter dw = getWriterForClientComponentPacket(container);
             dw.writeData(i, DataBitHelper.MENU_TARGET_DIRECTION_ID);
@@ -137,4 +133,6 @@ public class ComponentMenuTargetTank extends ComponentMenuTarget {
     public boolean requireEmpty(int side) {
         return !onlyFull[side];
     }
+
+
 }

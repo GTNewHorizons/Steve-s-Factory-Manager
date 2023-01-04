@@ -1,5 +1,6 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,15 +17,14 @@ public class ComponentMenuInterval extends ComponentMenu {
         super(parent);
 
         textBoxes = new TextBoxNumberList();
-        textBoxes.addTextBox(
-                interval = new TextBoxNumber(TEXT_BOX_X, TEXT_BOX_Y, 3, true) {
-                    @Override
-                    public void onNumberChanged() {
-                        DataWriter dw = getWriterForServerComponentPacket();
-                        dw.writeData(getNumber(), DataBitHelper.MENU_INTERVAL);
-                        PacketHandler.sendDataToServer(dw);
-                    }
-                });
+        textBoxes.addTextBox(interval = new TextBoxNumber(TEXT_BOX_X, TEXT_BOX_Y, 3, true) {
+            @Override
+            public void onNumberChanged() {
+                DataWriter dw = getWriterForServerComponentPacket();
+                dw.writeData(getNumber(), DataBitHelper.MENU_INTERVAL);
+                PacketHandler.sendDataToServer(dw);
+            }
+        });
 
         interval.setNumber(1);
     }
@@ -50,20 +50,16 @@ public class ComponentMenuInterval extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public void draw(GuiManager gui, int mX, int mY) {
-        gui.drawSplitString(
-                Localization.INTERVAL_INFO.toString(),
-                TEXT_MARGIN_X,
-                TEXT_Y,
-                MENU_WIDTH - TEXT_MARGIN_X * 2,
-                0.7F,
-                0x404040);
-        gui.drawString(Localization.SECOND.toString(), TEXT_SECONDS_X, TEXT_SECOND_Y, 0.7F, 0x404040);
+        gui.drawSplitString(Localization.INTERVAL_INFO.toString(), TEXT_MARGIN_X, TEXT_Y, MENU_WIDTH - TEXT_MARGIN_X * 2, 0.7F, 0x404040);
+        gui.drawString(Localization.SECOND.toString(),TEXT_SECONDS_X, TEXT_SECOND_Y, 0.7F, 0x404040);
         textBoxes.draw(gui, mX, mY);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawMouseOver(GuiManager gui, int mX, int mY) {}
+    public void drawMouseOver(GuiManager gui, int mX, int mY) {
+
+    }
 
     @Override
     public void onClick(int mX, int mY, int button) {
@@ -78,12 +74,12 @@ public class ComponentMenuInterval extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        // To change body of implemented methods use File | Settings | File Templates.
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -103,12 +99,12 @@ public class ComponentMenuInterval extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        setInterval(((ComponentMenuInterval) menu).getInterval());
+       setInterval(((ComponentMenuInterval)menu).getInterval());
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuInterval newDataInterval = (ComponentMenuInterval) newData;
+        ComponentMenuInterval newDataInterval = (ComponentMenuInterval)newData;
 
         if (newDataInterval.getInterval() != getInterval()) {
             setInterval(newDataInterval.getInterval());
@@ -117,11 +113,11 @@ public class ComponentMenuInterval extends ComponentMenu {
             dw.writeData(getInterval(), DataBitHelper.MENU_INTERVAL);
             PacketHandler.sendDataToListeningClients(container, dw);
         }
-    }
+}
 
     @Override
     public void readNetworkComponent(DataReader dr) {
-        setInterval(dr.readData(DataBitHelper.MENU_INTERVAL));
+       setInterval(dr.readData(DataBitHelper.MENU_INTERVAL));
     }
 
     public int getInterval() {
@@ -136,11 +132,12 @@ public class ComponentMenuInterval extends ComponentMenu {
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound, int version, boolean pickup) {
-        setInterval(nbtTagCompound.getShort(NBT_INTERVAL));
+       setInterval(nbtTagCompound.getShort(NBT_INTERVAL));
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setShort(NBT_INTERVAL, (short) getInterval());
+        nbtTagCompound.setShort(NBT_INTERVAL, (short)getInterval());
     }
+
 }

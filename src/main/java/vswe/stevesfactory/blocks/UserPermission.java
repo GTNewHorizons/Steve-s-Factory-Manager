@@ -1,5 +1,6 @@
 package vswe.stevesfactory.blocks;
 
+
 public class UserPermission {
     private String name;
     private boolean op;
@@ -8,7 +9,7 @@ public class UserPermission {
     public UserPermission(String name) {
         if (name == null) {
             this.name = "Unknown";
-        } else {
+        } else{
             this.name = name;
         }
     }

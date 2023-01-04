@@ -1,8 +1,9 @@
 package vswe.stevesfactory.components;
 
+
 import vswe.stevesfactory.Localization;
 
-public class ComponentMenuRedstoneSidesNodes extends ComponentMenuRedstoneSidesTrigger {
+public class ComponentMenuRedstoneSidesNodes extends ComponentMenuRedstoneSidesTrigger{
 
     public ComponentMenuRedstoneSidesNodes(FlowComponent parent) {
         super(parent);

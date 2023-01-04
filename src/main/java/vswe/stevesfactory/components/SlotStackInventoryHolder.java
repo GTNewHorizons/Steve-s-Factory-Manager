@@ -1,5 +1,6 @@
 package vswe.stevesfactory.components;
 
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
@@ -20,9 +21,11 @@ public class SlotStackInventoryHolder implements IItemBufferSubElement {
         return itemStack;
     }
 
+
     public IInventory getInventory() {
         return inventory;
     }
+
 
     public int getSlot() {
         return slot;

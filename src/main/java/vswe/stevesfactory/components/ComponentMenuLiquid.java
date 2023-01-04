@@ -1,10 +1,8 @@
 package vswe.stevesfactory.components;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import vswe.stevesfactory.Localization;
@@ -13,42 +11,45 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class ComponentMenuLiquid extends ComponentMenuStuff {
     public ComponentMenuLiquid(FlowComponent parent) {
         super(parent, LiquidSetting.class);
 
-        numberTextBoxes.addTextBox(
-                amountTextBoxBuckets = new TextBoxNumber(10, 50, 3, true) {
-                    @Override
-                    public boolean isVisible() {
-                        return selectedSetting.isLimitedByAmount();
-                    }
+        numberTextBoxes.addTextBox(amountTextBoxBuckets = new TextBoxNumber(10 ,50, 3, true) {
+            @Override
+            public boolean isVisible() {
+                return selectedSetting.isLimitedByAmount();
+            }
 
-                    @Override
-                    public void onNumberChanged() {
-                        sendAmountData();
-                    }
-                });
+            @Override
+            public void onNumberChanged() {
+                sendAmountData();
+            }
+        });
 
-        numberTextBoxes.addTextBox(
-                amountTextBoxMilli = new TextBoxNumber(60, 50, 3, true) {
-                    @Override
-                    public boolean isVisible() {
-                        return selectedSetting.isLimitedByAmount();
-                    }
+        numberTextBoxes.addTextBox(amountTextBoxMilli = new TextBoxNumber(60 ,50, 3, true) {
+            @Override
+            public boolean isVisible() {
+                return selectedSetting.isLimitedByAmount();
+            }
 
-                    @Override
-                    public void onNumberChanged() {
-                        sendAmountData();
-                    }
-                });
+            @Override
+            public void onNumberChanged() {
+                sendAmountData();
+            }
+        });
     }
+
+
 
     private void sendAmountData() {
         selectedSetting.setAmount(amountTextBoxBuckets.getNumber() * 1000 + amountTextBoxMilli.getNumber());
         writeServerData(DataTypeHeader.AMOUNT);
     }
-
     private TextBoxNumber amountTextBoxBuckets;
     private TextBoxNumber amountTextBoxMilli;
 
@@ -56,33 +57,21 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
     @Override
     protected void drawInfoMenuContent(GuiManager gui, int mX, int mY) {
         if (selectedSetting.isLimitedByAmount()) {
-            gui.drawCenteredString(
-                    Localization.BUCKETS.toString(),
-                    amountTextBoxBuckets.getX(),
-                    amountTextBoxBuckets.getY() - 7,
-                    0.7F,
-                    amountTextBoxBuckets.getWidth(),
-                    0x404040);
-            gui.drawCenteredString(
-                    Localization.MILLI_BUCKETS.toString(),
-                    amountTextBoxMilli.getX(),
-                    amountTextBoxMilli.getY() - 7,
-                    0.55F,
-                    amountTextBoxMilli.getWidth(),
-                    0x404040);
+            gui.drawCenteredString(Localization.BUCKETS.toString(), amountTextBoxBuckets.getX(), amountTextBoxBuckets.getY() - 7, 0.7F, amountTextBoxBuckets.getWidth(), 0x404040);
+            gui.drawCenteredString(Localization.MILLI_BUCKETS.toString(), amountTextBoxMilli.getX(), amountTextBoxMilli.getY() - 7, 0.55F, amountTextBoxMilli.getWidth(), 0x404040);
         }
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     protected void drawResultObject(GuiManager gui, Object obj, int x, int y) {
-        gui.drawFluid((Fluid) obj, x, y);
+        gui.drawFluid((Fluid)obj, x, y);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     protected void drawSettingObject(GuiManager gui, Setting setting, int x, int y) {
-        drawResultObject(gui, ((LiquidSetting) setting).getFluid(), x, y);
+        drawResultObject(gui,((LiquidSetting)setting).getFluid(), x, y);
     }
 
     @Override
@@ -94,7 +83,7 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
 
     @Override
     protected List<String> getSettingObjectMouseOver(Setting setting) {
-        return getResultObjectMouseOver(((LiquidSetting) setting).getFluid());
+        return getResultObjectMouseOver(((LiquidSetting)setting).getFluid());
     }
 
     @Override
@@ -111,11 +100,11 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
 
     @Override
     protected void readSpecificHeaderData(DataReader dr, DataTypeHeader header, Setting setting) {
-        LiquidSetting liquidSetting = (LiquidSetting) setting;
+        LiquidSetting liquidSetting = (LiquidSetting)setting;
 
         switch (header) {
             case SET_ITEM:
-                liquidSetting.setLiquidFromId(dr.readData(DataBitHelper.MENU_FLUID_ID));
+            	liquidSetting.setLiquidFromId(dr.readData(DataBitHelper.MENU_FLUID_ID));
                 if (isEditing()) {
                     updateTextBoxes();
                 }
@@ -124,12 +113,14 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
 
     @Override
     protected void writeSpecificHeaderData(DataWriter dw, DataTypeHeader header, Setting setting) {
-        LiquidSetting liquidSetting = (LiquidSetting) setting;
+        LiquidSetting liquidSetting = (LiquidSetting)setting;
         switch (header) {
             case SET_ITEM:
                 dw.writeData(liquidSetting.getLiquidId(), DataBitHelper.MENU_FLUID_ID);
         }
     }
+
+
 
     @Override
     public String getName() {
@@ -137,7 +128,7 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
     }
 
     protected LiquidSetting getSelectedSetting() {
-        return (LiquidSetting) selectedSetting;
+        return (LiquidSetting)selectedSetting;
     }
 
     @SideOnly(Side.CLIENT)
@@ -162,7 +153,7 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
     }
 
     public static String getDisplayName(Fluid fluid) {
-        // different mods store the name in different ways apparently
+        //different mods store the name in different ways apparently
         String name = fluid.getLocalizedName();
         if (name.contains(".")) {
             name = FluidRegistry.getFluidName(fluid);

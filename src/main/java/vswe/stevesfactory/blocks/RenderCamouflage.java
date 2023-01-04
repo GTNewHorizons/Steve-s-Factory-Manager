@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11;
 public class RenderCamouflage implements ISimpleBlockRenderingHandler {
 
     private int id;
-
     public RenderCamouflage() {
         id = RenderingRegistry.getNextAvailableRenderId();
     }
@@ -64,8 +63,7 @@ public class RenderCamouflage implements ISimpleBlockRenderingHandler {
     }
 
     @Override
-    public boolean renderWorldBlock(
-            IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
         Tessellator.instance.setColorOpaque_F(1F, 1F, 1F);
 
         block.setBlockBoundsBasedOnState(world, x, y, z);
@@ -75,14 +73,14 @@ public class RenderCamouflage implements ISimpleBlockRenderingHandler {
         TileEntityCamouflage camouflage = TileEntityCluster.getTileEntity(TileEntityCamouflage.class, world, x, y, z);
 
         if (camouflage != null && camouflage.getCamouflageType().useDoubleRendering()) {
-            BlockCamouflageBase camoBlock = (BlockCamouflageBase) block;
+            BlockCamouflageBase camoBlock = (BlockCamouflageBase)block;
 
-            float maxX = (float) block.getBlockBoundsMaxX();
-            float maxY = (float) block.getBlockBoundsMaxY();
-            float maxZ = (float) block.getBlockBoundsMaxZ();
-            float minX = (float) block.getBlockBoundsMinX();
-            float minY = (float) block.getBlockBoundsMinY();
-            float minZ = (float) block.getBlockBoundsMinZ();
+            float maxX = (float)block.getBlockBoundsMaxX();
+            float maxY = (float)block.getBlockBoundsMaxY();
+            float maxZ = (float)block.getBlockBoundsMaxZ();
+            float minX = (float)block.getBlockBoundsMinX();
+            float minY = (float)block.getBlockBoundsMinY();
+            float minZ = (float)block.getBlockBoundsMinZ();
 
             float f = 0.0015F;
             float f2 = 0.002F;
@@ -109,6 +107,7 @@ public class RenderCamouflage implements ISimpleBlockRenderingHandler {
             block.setBlockBounds(maxX - f, maxY + f2, maxZ + f2, minX + f, minY - f2, minZ - f2);
             renderer.setRenderBoundsFromBlock(block);
             renderer.renderFaceXPos(block, x, y, z, camouflage.getIconWithDefault(world, x, y, z, camoBlock, 4, true));
+
         }
 
         return true;
@@ -123,4 +122,7 @@ public class RenderCamouflage implements ISimpleBlockRenderingHandler {
     public int getRenderId() {
         return id;
     }
+
+
+
 }

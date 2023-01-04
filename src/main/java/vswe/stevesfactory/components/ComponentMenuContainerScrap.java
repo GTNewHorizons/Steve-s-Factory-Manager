@@ -2,10 +2,12 @@ package vswe.stevesfactory.components;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.List;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.ConnectionBlockType;
 import vswe.stevesfactory.interfaces.GuiManager;
+
+import java.util.List;
+
 
 public class ComponentMenuContainerScrap extends ComponentMenuContainer {
     public ComponentMenuContainerScrap(FlowComponent parent) {
@@ -27,13 +29,7 @@ public class ComponentMenuContainerScrap extends ComponentMenuContainer {
         super.draw(gui, mX, mY);
 
         if (scrollController.getResult().isEmpty()) {
-            gui.drawSplitString(
-                    Localization.OVERFLOW_INFO.toString(),
-                    TEXT_MARGIN_X,
-                    TEXT_Y,
-                    MENU_WIDTH - TEXT_MARGIN_X * 2 - 20,
-                    0.7F,
-                    0x404040);
+            gui.drawSplitString(Localization.OVERFLOW_INFO.toString(), TEXT_MARGIN_X, TEXT_Y, MENU_WIDTH - TEXT_MARGIN_X * 2 - 20,  0.7F, 0x404040);
         }
     }
 
@@ -46,7 +42,7 @@ public class ComponentMenuContainerScrap extends ComponentMenuContainer {
 
     @Override
     protected void initRadioButtons() {
-        // no radio buttons
+        //no radio buttons
     }
 
     /*@Override

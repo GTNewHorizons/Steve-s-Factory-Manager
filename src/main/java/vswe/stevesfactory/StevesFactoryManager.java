@@ -34,7 +34,7 @@ public class StevesFactoryManager {
     private static Boolean inDev = null;
 
     public static boolean isDevelopmentEnvironment() {
-        if(inDev == null) {
+        if (inDev == null) {
             inDev = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
         }
         return inDev;
@@ -44,23 +44,17 @@ public class StevesFactoryManager {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         packetHandler = NetworkRegistry.INSTANCE.newEventDrivenChannel(CHANNEL);
-
         FileHelper.setConfigDir(event.getModConfigurationDirectory());
-
         ModBlocks.init();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init();
-
         packetHandler.register(new PacketEventHandler());
-
         ModBlocks.addRecipes();
         //new ChatListener();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-
-
         FMLInterModComms.sendMessage("Waila", "register", "vswe.stevesfactory.waila.Provider.callbackRegister");
     }
 
@@ -68,6 +62,5 @@ public class StevesFactoryManager {
     public void postInit(FMLPostInitializationEvent event) {
         ModItemHelper.init();
     }
-
 
 }

@@ -1,6 +1,5 @@
 package vswe.stevesfactory.components;
 
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.CollisionHelper;
@@ -47,7 +46,13 @@ public abstract class VariableDisplay {
             int srcXArrow = i;
             int srcYArrow = CollisionHelper.inBounds(posX, posY, ARROW_WIDTH, ARROW_HEIGHT, mX, mY) ? 1 : 0;
 
-            gui.drawTexture(posX, posY, ARROW_SRC_X + srcXArrow * ARROW_WIDTH, ARROW_SRC_Y + srcYArrow * ARROW_HEIGHT, ARROW_WIDTH, ARROW_HEIGHT);
+            gui.drawTexture(
+                    posX,
+                    posY,
+                    ARROW_SRC_X + srcXArrow * ARROW_WIDTH,
+                    ARROW_SRC_Y + srcYArrow * ARROW_HEIGHT,
+                    ARROW_WIDTH,
+                    ARROW_HEIGHT);
         }
     }
 
@@ -59,17 +64,16 @@ public abstract class VariableDisplay {
     }
 
     public void onClick(int mX, int mY) {
-        for (int i = -1; i <= 1; i+=2) {
+        for (int i = -1; i <= 1; i += 2) {
             int posX = x + (i == 1 ? ARROW_X_RIGHT : 0);
             int posY = y + ARROW_Y;
-
 
             if (CollisionHelper.inBounds(posX, posY, ARROW_WIDTH, ARROW_HEIGHT, mX, mY)) {
                 int val = getValue();
                 val += i;
                 if (val < 0) {
                     val = VariableColor.values().length - 1;
-                }else if(val == VariableColor.values().length) {
+                } else if (val == VariableColor.values().length) {
                     val = 0;
                 }
                 setValue(val);
@@ -79,9 +83,9 @@ public abstract class VariableDisplay {
         }
     }
 
-
-
     public abstract int getValue();
+
     public abstract void setValue(int val);
+
     public abstract void onUpdate();
 }

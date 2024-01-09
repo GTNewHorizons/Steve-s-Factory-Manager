@@ -1,10 +1,12 @@
 package vswe.stevesfactory.components;
 
+import java.util.List;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -13,14 +15,12 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
-import java.util.List;
-
 public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
 
     public ComponentMenuRedstoneSides(FlowComponent parent) {
         super(parent);
 
-        selection = 0x3F; //All selected
+        selection = 0x3F; // All selected
 
         checkBoxList = new CheckBoxList();
 
@@ -29,6 +29,7 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
         }
 
         radioButtonList = new RadioButtonList() {
+
             @Override
             public void updateSelectedOption(int selectedOption) {
                 setFirstOption(selectedOption == 0);
@@ -57,9 +58,14 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
     private static final int TEXT_Y = 5;
 
     private class CheckBoxSide extends CheckBox {
+
         private int id;
+
         public CheckBoxSide(int id) {
-            super(Localization.getForgeDirectionLocalization(id), CHECKBOX_X + CHECKBOX_SPACING_X * (id % 2), CHECKBOX_Y + CHECKBOX_SPACING_Y * (id / 2));
+            super(
+                    Localization.getForgeDirectionLocalization(id),
+                    CHECKBOX_X + CHECKBOX_SPACING_X * (id % 2),
+                    CHECKBOX_Y + CHECKBOX_SPACING_Y * (id / 2));
 
             this.id = id;
         }
@@ -68,8 +74,8 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
         public void setValue(boolean val) {
             if (val) {
                 selection |= 1 << id;
-            }else{
-                 selection &= ~(1 << id);
+            } else {
+                selection &= ~(1 << id);
             }
         }
 
@@ -80,15 +86,13 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
 
         @Override
         public void onUpdate() {
-           sendServerData(false);
+            sendServerData(false);
         }
     }
 
     private CheckBoxList checkBoxList;
     protected RadioButtonList radioButtonList;
     protected int selection;
-
-
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -104,7 +108,7 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -115,12 +119,12 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -132,12 +136,12 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
     @Override
     public void readData(DataReader dr) {
         setFirstOption(dr.readBoolean());
-       selection = dr.readData(DataBitHelper.MENU_REDSTONE_SETTING);
+        selection = dr.readData(DataBitHelper.MENU_REDSTONE_SETTING);
     }
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuRedstoneSides menuRedstone = (ComponentMenuRedstoneSides)menu;
+        ComponentMenuRedstoneSides menuRedstone = (ComponentMenuRedstoneSides) menu;
 
         selection = menuRedstone.selection;
         setFirstOption(menuRedstone.useFirstOption());
@@ -145,18 +149,18 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuRedstoneSides newDataRedstone = (ComponentMenuRedstoneSides)newData;
+        ComponentMenuRedstoneSides newDataRedstone = (ComponentMenuRedstoneSides) newData;
 
-       if (useFirstOption() != newDataRedstone.useFirstOption()) {
-           setFirstOption(newDataRedstone.useFirstOption());
+        if (useFirstOption() != newDataRedstone.useFirstOption()) {
+            setFirstOption(newDataRedstone.useFirstOption());
 
-           sendClientData(container, true);
-       }
+            sendClientData(container, true);
+        }
 
-       if (selection != newDataRedstone.selection) {
+        if (selection != newDataRedstone.selection) {
             selection = newDataRedstone.selection;
 
-           sendClientData(container, false);
+            sendClientData(container, false);
         }
     }
 
@@ -176,7 +180,7 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
         dw.writeBoolean(syncRequire);
         if (syncRequire) {
             dw.writeBoolean(useFirstOption());
-        }else{
+        } else {
             dw.writeData(selection, DataBitHelper.MENU_REDSTONE_SETTING);
         }
     }
@@ -186,7 +190,7 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound, int version, boolean pickup) {
-        //Forgot to save it in earlier versions
+        // Forgot to save it in earlier versions
         if (version >= 3) {
             selection = nbtTagCompound.getByte(NBT_ACTIVE);
             setFirstOption(nbtTagCompound.getBoolean(NBT_ALL));
@@ -195,7 +199,7 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setByte(NBT_ACTIVE, (byte)selection);
+        nbtTagCompound.setByte(NBT_ACTIVE, (byte) selection);
         nbtTagCompound.setBoolean(NBT_ALL, useFirstOption());
     }
 
@@ -203,14 +207,10 @@ public abstract class ComponentMenuRedstoneSides extends ComponentMenu {
     public void readNetworkComponent(DataReader dr) {
         if (dr.readBoolean()) {
             setFirstOption(dr.readBoolean());
-        }else{
+        } else {
             selection = dr.readData(DataBitHelper.MENU_REDSTONE_SETTING);
         }
     }
-
-
-
-
 
     protected boolean useFirstOption() {
         return radioButtonList.getSelectedOption() == 0;

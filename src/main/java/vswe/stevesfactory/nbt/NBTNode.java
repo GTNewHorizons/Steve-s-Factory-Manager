@@ -1,12 +1,16 @@
 package vswe.stevesfactory.nbt;
 
-
-import net.minecraft.nbt.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagByteArray;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagList;
+
 public class NBTNode {
+
     private static final int END_TAG = 0;
     private static final int BYTE_TAG = 1;
     private static final int SHORT_TAG = 2;
@@ -32,10 +36,6 @@ public class NBTNode {
         open = true;
     }
 
-
-
-
-
     public void updatePosition() {
         updatePosition(0, -1);
     }
@@ -55,7 +55,6 @@ public class NBTNode {
 
         return line;
     }
-
 
     public List<NBTNode> getNodes() {
         return nodes;
@@ -85,16 +84,15 @@ public class NBTNode {
 
         if (tag == null) {
             return "Element";
-        }else{
+        } else {
             String name = ""; // NBTBase.func_150283_g(tag.getId()); TODO
             if (name.equals("UNKNOWN")) {
                 return "Node";
-            }else{
+            } else {
                 return name;
             }
         }
     }
-
 
     public static NBTNode generateNodes(NBTTagCompound compound) {
         NBTNode node = generateNodesFromTag(compound);
@@ -106,7 +104,7 @@ public class NBTNode {
         NBTNode node = new NBTNode(compound);
         node.nodes = new ArrayList<NBTNode>();
         for (Object obj : compound.func_150296_c()) {
-            NBTBase tag = (NBTBase)obj;
+            NBTBase tag = (NBTBase) obj;
 
             if (tag.getId() == END_TAG) break;
 
@@ -115,6 +113,7 @@ public class NBTNode {
 
         return node;
     }
+
     private static NBTNode generateNodesFromList(NBTTagList compound) {
         NBTNode node = new NBTNode(compound);
         node.nodes = new ArrayList<NBTNode>();
@@ -124,6 +123,7 @@ public class NBTNode {
 
         return node;
     }
+
     private static NBTNode generateNodesFromArray(NBTTagByteArray compound) {
         NBTNode node = new NBTNode(compound);
         node.nodes = new ArrayList<NBTNode>();
@@ -135,6 +135,7 @@ public class NBTNode {
 
         return node;
     }
+
     private static NBTNode generateNodesFromArray(NBTTagIntArray compound) {
         NBTNode node = new NBTNode(compound);
         node.nodes = new ArrayList<NBTNode>();
@@ -150,13 +151,13 @@ public class NBTNode {
     private static NBTNode createElementNode(NBTBase tag) {
         switch (tag.getId()) {
             case COMPOUND_TAG:
-                return generateNodesFromTag((NBTTagCompound)tag);
+                return generateNodesFromTag((NBTTagCompound) tag);
             case LIST_TAG:
-                return generateNodesFromList((NBTTagList)tag);
+                return generateNodesFromList((NBTTagList) tag);
             case BYTE_ARRAY_TAG:
                 return generateNodesFromArray((NBTTagByteArray) tag);
             case INT_ARRAY_TAG:
-                return generateNodesFromArray((NBTTagIntArray)tag);
+                return generateNodesFromArray((NBTTagIntArray) tag);
             default:
                 NBTNode node = new NBTNode(tag);
                 node.value = tag.toString() + " [type = " + tag.getId() + "]";

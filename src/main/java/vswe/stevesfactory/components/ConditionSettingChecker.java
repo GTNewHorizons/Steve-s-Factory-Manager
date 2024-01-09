@@ -1,7 +1,7 @@
 package vswe.stevesfactory.components;
 
-
 public class ConditionSettingChecker {
+
     private Setting setting;
     private int amount;
 

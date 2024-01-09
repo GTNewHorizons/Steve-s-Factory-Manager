@@ -1,26 +1,26 @@
 package vswe.stevesfactory.interfaces;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
-import vswe.stevesfactory.StevesFactoryManager;
 import vswe.stevesfactory.animation.AnimationController;
 import vswe.stevesfactory.blocks.TileEntityManager;
 import vswe.stevesfactory.components.FlowComponent;
 import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 @SideOnly(Side.CLIENT)
 public class GuiManager extends GuiBase {
@@ -54,13 +54,13 @@ public class GuiManager extends GuiBase {
         if (usePinkScreen) {
             drawRect(0, 0, width, height, 0xFFEC008C);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        }else if (useBlueScreen) {
+        } else if (useBlueScreen) {
             drawRect(0, 0, width, height, 0xFF000A91);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        }else if (useGreenScreen) {
+        } else if (useGreenScreen) {
             drawRect(0, 0, width, height, 0xFF00FF00);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        }else{
+        } else {
             super.drawWorldBackground(val);
         }
     }
@@ -69,8 +69,6 @@ public class GuiManager extends GuiBase {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-
-
 
         if (!useGreenScreen && !useBlueScreen && !usePinkScreen) {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -96,17 +94,33 @@ public class GuiManager extends GuiBase {
             for (int i = 0; i < manager.buttons.size(); i++) {
                 TileEntityManager.Button button = manager.buttons.get(i);
                 if (button.isVisible()) {
-                    int srcButtonY = CollisionHelper.inBounds(button.getX(), button.getY(), TileEntityManager.BUTTON_SIZE_W, TileEntityManager.BUTTON_SIZE_H, x, y) ? 1 : 0;
+                    int srcButtonY = CollisionHelper.inBounds(
+                            button.getX(),
+                            button.getY(),
+                            TileEntityManager.BUTTON_SIZE_W,
+                            TileEntityManager.BUTTON_SIZE_H,
+                            x,
+                            y) ? 1 : 0;
 
-                    drawTexture(button.getX(), button.getY(), TileEntityManager.BUTTON_SRC_X, TileEntityManager.BUTTON_SRC_Y + srcButtonY * TileEntityManager.BUTTON_SIZE_H, TileEntityManager.BUTTON_SIZE_W, TileEntityManager.BUTTON_SIZE_H);
-                    drawTexture(button.getX() + 1, button.getY() + 1, TileEntityManager.BUTTON_INNER_SRC_X, TileEntityManager.BUTTON_INNER_SRC_Y + i * TileEntityManager.BUTTON_INNER_SIZE_H, TileEntityManager.BUTTON_INNER_SIZE_W, TileEntityManager.BUTTON_INNER_SIZE_H);
+                    drawTexture(
+                            button.getX(),
+                            button.getY(),
+                            TileEntityManager.BUTTON_SRC_X,
+                            TileEntityManager.BUTTON_SRC_Y + srcButtonY * TileEntityManager.BUTTON_SIZE_H,
+                            TileEntityManager.BUTTON_SIZE_W,
+                            TileEntityManager.BUTTON_SIZE_H);
+                    drawTexture(
+                            button.getX() + 1,
+                            button.getY() + 1,
+                            TileEntityManager.BUTTON_INNER_SRC_X,
+                            TileEntityManager.BUTTON_INNER_SRC_Y + i * TileEntityManager.BUTTON_INNER_SIZE_H,
+                            TileEntityManager.BUTTON_INNER_SIZE_W,
+                            TileEntityManager.BUTTON_INNER_SIZE_H);
                 }
             }
         }
 
-
-
-        //update components completely independent on their visibility
+        // update components completely independent on their visibility
         long ticks = Minecraft.getSystemTime();
         float elapsedSeconds = (ticks - this.lastTicks) / 1000F;
         if (controller != null) {
@@ -130,12 +144,18 @@ public class GuiManager extends GuiBase {
                 if (itemBase.isOpen()) {
                     zLevel -= Z_LEVEL_COMPONENT_OPEN_DIFFERENCE;
                     openCount++;
-                }else{
+                } else {
                     zLevel -= Z_LEVEL_COMPONENT_CLOSED_DIFFERENCE;
                 }
                 itemBase.draw(this, x, y, zLevel);
 
-                if (itemBase.isBeingMoved() || CollisionHelper.inBounds(itemBase.getX(), itemBase.getY(), itemBase.getComponentWidth(), itemBase.getComponentHeight(), x, y)) {
+                if (itemBase.isBeingMoved() || CollisionHelper.inBounds(
+                        itemBase.getX(),
+                        itemBase.getY(),
+                        itemBase.getComponentWidth(),
+                        itemBase.getComponentHeight(),
+                        x,
+                        y)) {
                     CollisionHelper.disableInBoundsCheck = true;
                 }
             }
@@ -150,7 +170,13 @@ public class GuiManager extends GuiBase {
 
             if (useButtons) {
                 for (TileEntityManager.Button button : manager.buttons) {
-                    if (button.isVisible() && CollisionHelper.inBounds(button.getX(), button.getY(), TileEntityManager.BUTTON_SIZE_W, TileEntityManager.BUTTON_SIZE_H, x, y)) {
+                    if (button.isVisible() && CollisionHelper.inBounds(
+                            button.getX(),
+                            button.getY(),
+                            TileEntityManager.BUTTON_SIZE_W,
+                            TileEntityManager.BUTTON_SIZE_H,
+                            x,
+                            y)) {
                         drawMouseOver(button.getMouseOver(), x, y);
                     }
                 }
@@ -159,7 +185,13 @@ public class GuiManager extends GuiBase {
             for (FlowComponent itemBase : manager.getZLevelRenderingList()) {
                 if (itemBase.isVisible()) {
                     itemBase.drawMouseOver(this, x, y);
-                    if (itemBase.isBeingMoved() || CollisionHelper.inBounds(itemBase.getX(), itemBase.getY(), itemBase.getComponentWidth(), itemBase.getComponentHeight(), x, y)) {
+                    if (itemBase.isBeingMoved() || CollisionHelper.inBounds(
+                            itemBase.getX(),
+                            itemBase.getY(),
+                            itemBase.getComponentWidth(),
+                            itemBase.getComponentHeight(),
+                            x,
+                            y)) {
                         CollisionHelper.disableInBoundsCheck = true;
                     }
                 }
@@ -174,8 +206,6 @@ public class GuiManager extends GuiBase {
 
     public void handleMouseInput() {
         super.handleMouseInput();
-
-
 
         int scroll = Mouse.getEventDWheel();
         if (scroll != 0) {
@@ -240,7 +270,6 @@ public class GuiManager extends GuiBase {
             }
         }
 
-
         if (useButtons) {
             onClickButtonCheck(x, y, false);
         }
@@ -249,10 +278,16 @@ public class GuiManager extends GuiBase {
     private void onClickButtonCheck(int x, int y, boolean release) {
         for (int i = 0; i < manager.buttons.size(); i++) {
             TileEntityManager.Button guiButton = manager.buttons.get(i);
-            if (guiButton.isVisible() && CollisionHelper.inBounds(guiButton.getX(), guiButton.getY(), TileEntityManager.BUTTON_SIZE_W, TileEntityManager.BUTTON_SIZE_H, x, y) && guiButton.activateOnRelease() == release) {
+            if (guiButton.isVisible() && CollisionHelper.inBounds(
+                    guiButton.getX(),
+                    guiButton.getY(),
+                    TileEntityManager.BUTTON_SIZE_W,
+                    TileEntityManager.BUTTON_SIZE_H,
+                    x,
+                    y) && guiButton.activateOnRelease() == release) {
                 DataWriter dw = PacketHandler.getButtonPacketWriter();
                 dw.writeData(i, DataBitHelper.GUI_BUTTON_ID);
-                if(guiButton.onClick(dw)) {
+                if (guiButton.onClick(dw)) {
                     PacketHandler.sendDataToServer(dw);
                 }
                 break;
@@ -326,38 +361,45 @@ public class GuiManager extends GuiBase {
     private boolean useInfo = true;
     private boolean useMouseOver = true;
 
-    private List<SecretCode> codes = new ArrayList<SecretCode>();{
+    private List<SecretCode> codes = new ArrayList<SecretCode>();
+    {
         codes.add(new SecretCode("animate") {
+
             @Override
             protected void trigger() {
                 controller = new AnimationController(manager, 2);
             }
         });
         codes.add(new SecretCode("animslow") {
+
             @Override
             protected void trigger() {
                 controller = new AnimationController(manager, 1);
             }
         });
         codes.add(new SecretCode("animfast") {
+
             @Override
             protected void trigger() {
                 controller = new AnimationController(manager, 5);
             }
         });
         codes.add(new SecretCode("animrapid") {
+
             @Override
             protected void trigger() {
                 controller = new AnimationController(manager, 20);
             }
         });
         codes.add(new SecretCode("animinstant") {
+
             @Override
             protected void trigger() {
                 controller = new AnimationController(manager, 100);
             }
         });
         codes.add(new SecretCode("green") {
+
             @Override
             protected void trigger() {
                 useGreenScreen = !useGreenScreen;
@@ -366,6 +408,7 @@ public class GuiManager extends GuiBase {
             }
         });
         codes.add(new SecretCode("blue") {
+
             @Override
             protected void trigger() {
                 useBlueScreen = !useBlueScreen;
@@ -374,6 +417,7 @@ public class GuiManager extends GuiBase {
             }
         });
         codes.add(new SecretCode("pink") {
+
             @Override
             protected void trigger() {
                 usePinkScreen = !usePinkScreen;
@@ -382,18 +426,21 @@ public class GuiManager extends GuiBase {
             }
         });
         codes.add(new SecretCode("buttons") {
+
             @Override
             protected void trigger() {
                 useButtons = !useButtons;
             }
         });
         codes.add(new SecretCode("info") {
+
             @Override
             protected void trigger() {
                 useInfo = !useInfo;
             }
         });
         codes.add(new SecretCode("mouse") {
+
             @Override
             protected void trigger() {
                 useMouseOver = !useMouseOver;
@@ -402,6 +449,7 @@ public class GuiManager extends GuiBase {
     }
 
     private abstract class SecretCode {
+
         private final String code;
         private int triggerNumber;
 
@@ -415,11 +463,11 @@ public class GuiManager extends GuiBase {
                     if (triggerNumber + 1 > code.length() - 1) {
                         triggerNumber = 0;
                         trigger();
-                    }else{
+                    } else {
                         triggerNumber++;
                     }
                     return true;
-                }else if (triggerNumber != 0){
+                } else if (triggerNumber != 0) {
                     triggerNumber = 0;
                     keyTyped(c);
                 }
@@ -435,8 +483,7 @@ public class GuiManager extends GuiBase {
     protected void keyTyped(char c, int k) {
         if (hasSpecialRenderer()) {
             getSpecialRenderer().onKeyTyped(this, c, k);
-        }else{
-
+        } else {
 
             if (k == 54 && !doubleShiftFlag) {
                 DataWriter dw = PacketHandler.getWriterForServerActionPacket();
@@ -475,7 +522,6 @@ public class GuiManager extends GuiBase {
 
         super.onGuiClosed();
     }
-
 
     private TileEntityManager manager;
 

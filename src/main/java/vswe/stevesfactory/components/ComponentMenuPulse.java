@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
+import net.minecraft.nbt.NBTTagCompound;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -19,6 +19,7 @@ public class ComponentMenuPulse extends ComponentMenu {
 
         checkBoxes = new CheckBoxList();
         checkBoxes.addCheckBox(new CheckBox(Localization.DO_EMIT_PULSE, CHECK_BOX_X, CHECK_BOX_Y) {
+
             @Override
             public void setValue(boolean val) {
                 usePulse = val;
@@ -36,6 +37,7 @@ public class ComponentMenuPulse extends ComponentMenu {
         });
 
         radioButtons = new RadioButtonList() {
+
             @Override
             public void updateSelectedOption(int selectedOption) {
                 radioButtons.setSelectedOption(selectedOption);
@@ -48,19 +50,23 @@ public class ComponentMenuPulse extends ComponentMenu {
             int x = i % 2;
             int y = i / 2;
 
-
-            radioButtons.add(new RadioButton(RADIO_BUTTON_X + x * RADIO_BUTTON_SPACING_X, RADIO_BUTTON_Y + y * RADIO_BUTTON_SPACING_Y, PULSE_OPTIONS.values()[i].getName()));
+            radioButtons.add(
+                    new RadioButton(
+                            RADIO_BUTTON_X + x * RADIO_BUTTON_SPACING_X,
+                            RADIO_BUTTON_Y + y * RADIO_BUTTON_SPACING_Y,
+                            PULSE_OPTIONS.values()[i].getName()));
         }
-
 
         textBoxes = new TextBoxNumberList();
         textBoxes.addTextBox(secondsTextBox = new TextBoxNumber(TEXT_BOX_X_LEFT, TEXT_BOX_Y, 2, true) {
+
             @Override
             public void onNumberChanged() {
                 sendServerPacket(ComponentSyncType.TEXT_BOX_1);
             }
         });
         textBoxes.addTextBox(ticksTextBox = new TextBoxNumber(TEXT_BOX_X_RIGHT, TEXT_BOX_Y, 2, true) {
+
             @Override
             public int getMaxNumber() {
                 return 19;
@@ -76,6 +82,7 @@ public class ComponentMenuPulse extends ComponentMenu {
     }
 
     public enum PULSE_OPTIONS {
+
         EXTEND_OLD(Localization.EXTEND_OLD),
         KEEP_ALL(Localization.KEEP_ALL),
         KEEP_OLD(Localization.KEEP_OLD),
@@ -96,6 +103,7 @@ public class ComponentMenuPulse extends ComponentMenu {
             return name;
         }
     }
+
     private static final int CHECK_BOX_X = 5;
     private static final int CHECK_BOX_Y = 5;
     private static final int RADIO_BUTTON_X = 5;
@@ -106,7 +114,6 @@ public class ComponentMenuPulse extends ComponentMenu {
     private static final int TEXT_BOX_X_LEFT = 10;
     private static final int TEXT_BOX_X_RIGHT = 70;
     private static final int TEXT_BOX_Y = 25;
-
 
     private CheckBoxList checkBoxes;
     private boolean usePulse;
@@ -128,8 +135,20 @@ public class ComponentMenuPulse extends ComponentMenu {
             radioButtons.draw(gui, mX, mY);
             textBoxes.draw(gui, mX, mY);
 
-            gui.drawCenteredString(Localization.SECONDS.toString(), secondsTextBox.getX(), secondsTextBox.getY() - 7, 0.7F, secondsTextBox.getWidth(), 0x404040);
-            gui.drawCenteredString(Localization.TICKS.toString(), ticksTextBox.getX(), ticksTextBox.getY() - 7, 0.7F, ticksTextBox.getWidth(), 0x404040);
+            gui.drawCenteredString(
+                    Localization.SECONDS.toString(),
+                    secondsTextBox.getX(),
+                    secondsTextBox.getY() - 7,
+                    0.7F,
+                    secondsTextBox.getWidth(),
+                    0x404040);
+            gui.drawCenteredString(
+                    Localization.TICKS.toString(),
+                    ticksTextBox.getX(),
+                    ticksTextBox.getY() - 7,
+                    0.7F,
+                    ticksTextBox.getWidth(),
+                    0x404040);
         }
     }
 
@@ -187,20 +206,20 @@ public class ComponentMenuPulse extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuPulse menuPulse = (ComponentMenuPulse)menu;
+        ComponentMenuPulse menuPulse = (ComponentMenuPulse) menu;
         usePulse = menuPulse.usePulse;
         if (usePulse) {
             radioButtons.setSelectedOption(menuPulse.radioButtons.getSelectedOption());
             secondsTextBox.setNumber(menuPulse.secondsTextBox.getNumber());
             ticksTextBox.setNumber(menuPulse.ticksTextBox.getNumber());
-        }else{
+        } else {
             setDefault();
         }
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuPulse newDataPulse = (ComponentMenuPulse)newData;
+        ComponentMenuPulse newDataPulse = (ComponentMenuPulse) newData;
 
         if (usePulse != newDataPulse.usePulse) {
             usePulse = newDataPulse.usePulse;
@@ -213,7 +232,7 @@ public class ComponentMenuPulse extends ComponentMenu {
             }
         }
 
-        if (radioButtons.getSelectedOption() != newDataPulse.radioButtons.getSelectedOption()){
+        if (radioButtons.getSelectedOption() != newDataPulse.radioButtons.getSelectedOption()) {
             radioButtons.setSelectedOption(newDataPulse.radioButtons.getSelectedOption());
 
             sendClientPacket(container, ComponentSyncType.RADIO_BUTTON);
@@ -274,7 +293,7 @@ public class ComponentMenuPulse extends ComponentMenu {
             radioButtons.setSelectedOption(nbtTagCompound.getByte(NBT_TYPE));
             secondsTextBox.setNumber(nbtTagCompound.getByte(NBT_SECOND));
             ticksTextBox.setNumber(nbtTagCompound.getByte(NBT_TICK));
-        }else{
+        } else {
             setDefault();
         }
     }
@@ -283,9 +302,9 @@ public class ComponentMenuPulse extends ComponentMenu {
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
         nbtTagCompound.setBoolean(NBT_USE_PULSE, usePulse);
         if (usePulse) {
-            nbtTagCompound.setByte(NBT_TYPE, (byte)radioButtons.getSelectedOption());
-            nbtTagCompound.setByte(NBT_SECOND, (byte)secondsTextBox.getNumber());
-            nbtTagCompound.setByte(NBT_TICK, (byte)ticksTextBox.getNumber());
+            nbtTagCompound.setByte(NBT_TYPE, (byte) radioButtons.getSelectedOption());
+            nbtTagCompound.setByte(NBT_SECOND, (byte) secondsTextBox.getNumber());
+            nbtTagCompound.setByte(NBT_TICK, (byte) ticksTextBox.getNumber());
         }
     }
 
@@ -325,7 +344,7 @@ public class ComponentMenuPulse extends ComponentMenu {
         TEXT_BOX_2
     }
 
-    public boolean shouldEmitPulse()  {
+    public boolean shouldEmitPulse() {
         return usePulse;
     }
 

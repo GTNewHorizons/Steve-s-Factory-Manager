@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public class ComponentMenuInventoryCondition extends ComponentMenuInventory {
+
     public ComponentMenuInventoryCondition(FlowComponent parent) {
         super(parent);
     }

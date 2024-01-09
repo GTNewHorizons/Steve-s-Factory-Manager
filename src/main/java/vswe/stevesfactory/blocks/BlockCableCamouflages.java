@@ -1,7 +1,7 @@
 package vswe.stevesfactory.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,13 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.StevesFactoryManager;
 
-import java.util.List;
-
-
 public class BlockCableCamouflages extends BlockCamouflageBase {
-
 
     protected BlockCableCamouflages() {
         super(Material.iron);
@@ -39,9 +38,12 @@ public class BlockCableCamouflages extends BlockCamouflageBase {
     public void registerBlockIcons(IIconRegister register) {
         icons = new IIcon[TileEntityCamouflage.CamouflageType.values().length];
         for (int i = 0; i < icons.length; i++) {
-            icons[i] = register.registerIcon(StevesFactoryManager.RESOURCE_LOCATION + ":" + TileEntityCamouflage.CamouflageType.values()[i].getIcon());
+            icons[i] = register.registerIcon(
+                    StevesFactoryManager.RESOURCE_LOCATION + ":"
+                            + TileEntityCamouflage.CamouflageType.values()[i].getIcon());
         }
     }
+
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {

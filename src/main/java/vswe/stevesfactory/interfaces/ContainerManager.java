@@ -1,21 +1,22 @@
 package vswe.stevesfactory.interfaces;
 
-import com.google.common.collect.Iterables;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.tileentity.TileEntity;
+
+import com.google.common.collect.Iterables;
+
 import vswe.stevesfactory.SFMLogging;
 import vswe.stevesfactory.blocks.ConnectionBlock;
 import vswe.stevesfactory.blocks.TileEntityManager;
 import vswe.stevesfactory.blocks.WorldCoordinate;
 import vswe.stevesfactory.components.FlowComponent;
 import vswe.stevesfactory.network.PacketHandler;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class ContainerManager extends ContainerBase {
 
@@ -36,7 +37,10 @@ public class ContainerManager extends ContainerBase {
         try {
             detectAndSendChangesImpl();
         } catch (Exception e) {
-            SFMLogging.reportIncident(e, "ContainerManager#detectAndSendChanges", Iterables.filter(getCrafters(), EntityPlayerMP.class));
+            SFMLogging.reportIncident(
+                    e,
+                    "ContainerManager#detectAndSendChanges",
+                    Iterables.filter(getCrafters(), EntityPlayerMP.class));
             for (ICrafting crafter : getCrafters()) {
                 if (crafter instanceof EntityPlayerMP) {
                     ((EntityPlayerMP) crafter).closeScreen();
@@ -56,12 +60,11 @@ public class ContainerManager extends ContainerBase {
                 PacketHandler.sendRemovalPacket(this, idToRemove);
             }
 
-
             for (int i = 0; i < manager.getFlowItems().size(); i++) {
                 if (i >= oldComponents.size()) {
                     PacketHandler.sendNewFlowComponent(this, manager.getFlowItems().get(i));
                     oldComponents.add(manager.getFlowItems().get(i).copy());
-                }else{
+                } else {
                     oldComponents.get(i).refreshData(this, manager.getFlowItems().get(i));
                 }
             }
@@ -71,19 +74,22 @@ public class ContainerManager extends ContainerBase {
             if (!hasInventoriesChanged) {
                 for (int i = 0; i < oldInventories.size(); i++) {
                     TileEntity tileEntity = manager.getConnectedInventories().get(i).getTileEntity();
-                    if (oldInventories.get(i).equals(new WorldCoordinate(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord))) {
+                    if (oldInventories.get(i)
+                            .equals(new WorldCoordinate(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord))) {
                         hasInventoriesChanged = true;
                         break;
                     }
                 }
             }
 
-
-
             if (hasInventoriesChanged) {
                 oldInventories.clear();
                 for (ConnectionBlock connection : manager.getConnectedInventories()) {
-                    oldInventories.add(new WorldCoordinate(connection.getTileEntity().xCoord, connection.getTileEntity().yCoord, connection.getTileEntity().zCoord));
+                    oldInventories.add(
+                            new WorldCoordinate(
+                                    connection.getTileEntity().xCoord,
+                                    connection.getTileEntity().yCoord,
+                                    connection.getTileEntity().zCoord));
                 }
                 PacketHandler.sendUpdateInventoryPacket(this);
             }
@@ -102,15 +108,17 @@ public class ContainerManager extends ContainerBase {
         manager.updateInventories();
         oldInventories = new ArrayList<WorldCoordinate>();
         for (ConnectionBlock connection : manager.getConnectedInventories()) {
-            oldInventories.add(new WorldCoordinate(connection.getTileEntity().xCoord, connection.getTileEntity().yCoord, connection.getTileEntity().zCoord));
+            oldInventories.add(
+                    new WorldCoordinate(
+                            connection.getTileEntity().xCoord,
+                            connection.getTileEntity().yCoord,
+                            connection.getTileEntity().zCoord));
         }
         oldIdIndexToRemove = manager.getRemovedIds().size();
     }
 
-
     private List<FlowComponent> oldComponents;
     private List<WorldCoordinate> oldInventories;
     private int oldIdIndexToRemove;
-
 
 }

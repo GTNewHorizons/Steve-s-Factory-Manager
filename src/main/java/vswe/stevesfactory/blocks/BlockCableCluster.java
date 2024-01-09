@@ -1,7 +1,8 @@
 package vswe.stevesfactory.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
@@ -18,21 +19,19 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.StevesFactoryManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class BlockCableCluster extends BlockCamouflageBase {
+
     protected BlockCableCluster() {
         super(Material.iron);
         setCreativeTab(ModBlocks.creativeTab);
         setStepSound(soundTypeMetal);
         setHardness(2F);
     }
-
-
 
     @SideOnly(Side.CLIENT)
     private IIcon sideIcon;
@@ -55,7 +54,7 @@ public class BlockCableCluster extends BlockCamouflageBase {
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
-        //pretend the meta is 3
+        // pretend the meta is 3
         return getIconFromSideAndMeta(side, addAdvancedMeta(3, meta));
     }
 
@@ -87,14 +86,14 @@ public class BlockCableCluster extends BlockCamouflageBase {
             return itemStack;
         }
 
-        return super.getPickBlock(target, world, x, y, z) ;
+        return super.getPickBlock(target, world, x, y, z);
     }
 
     private ItemStack getItemStack(World world, int x, int y, int z, int meta) {
         TileEntity te = world.getTileEntity(x, y, z);
 
-        if (te != null && te instanceof  TileEntityCluster) {
-            TileEntityCluster cluster = (TileEntityCluster)te;
+        if (te != null && te instanceof TileEntityCluster) {
+            TileEntityCluster cluster = (TileEntityCluster) te;
             ItemStack itemStack = new ItemStack(ModBlocks.blockCableCluster, 1, damageDropped(meta));
             NBTTagCompound compound = new NBTTagCompound();
             itemStack.setTagCompound(compound);
@@ -107,15 +106,17 @@ public class BlockCableCluster extends BlockCamouflageBase {
         return null;
     }
 
-
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-        return new ArrayList<ItemStack>(); //TODO Drop items here, not sure how to though since the TE is gone. please help
+        return new ArrayList<ItemStack>(); // TODO Drop items here, not sure how to though since the TE is gone. please
+                                           // help
     }
 
     @SideOnly(Side.CLIENT)
     private IIcon getIconFromSideAndMeta(int side, int meta) {
-        return side == getSideMeta(meta) % ForgeDirection.VALID_DIRECTIONS.length ? isAdvanced(meta) ? frontIconAdv : frontIcon : isAdvanced(meta) ? sideIconAdv : sideIcon;
+        return side == getSideMeta(meta) % ForgeDirection.VALID_DIRECTIONS.length
+                ? isAdvanced(meta) ? frontIconAdv : frontIcon
+                : isAdvanced(meta) ? sideIconAdv : sideIcon;
     }
 
     @Override
@@ -125,15 +126,17 @@ public class BlockCableCluster extends BlockCamouflageBase {
 
     private TileEntityCluster getTe(IBlockAccess world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null && te instanceof  TileEntityCluster) {
-            return (TileEntityCluster)te;
+        if (te != null && te instanceof TileEntityCluster) {
+            return (TileEntityCluster) te;
         }
         return null;
     }
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-        int meta = addAdvancedMeta(BlockPistonBase.determineOrientation(world, x, y, z, entity), itemStack.getItemDamage());
+        int meta = addAdvancedMeta(
+                BlockPistonBase.determineOrientation(world, x, y, z, entity),
+                itemStack.getItemDamage());
         world.setBlockMetadataWithNotify(x, y, z, meta, 2);
 
         TileEntityCluster cluster = getTe(world, x, y, z);
@@ -216,7 +219,8 @@ public class BlockCableCluster extends BlockCamouflageBase {
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
+            float hitY, float hitZ) {
         TileEntityCluster cluster = getTe(world, x, y, z);
 
         if (cluster != null) {
@@ -225,8 +229,6 @@ public class BlockCableCluster extends BlockCamouflageBase {
 
         return false;
     }
-
-
 
     @Override
     public void getSubBlocks(Item item, CreativeTabs tabs, List list) {

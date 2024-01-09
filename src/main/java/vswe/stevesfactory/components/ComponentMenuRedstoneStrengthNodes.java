@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public class ComponentMenuRedstoneStrengthNodes extends ComponentMenuRedstoneStrength {
+
     public ComponentMenuRedstoneStrengthNodes(FlowComponent parent) {
         super(parent);
     }

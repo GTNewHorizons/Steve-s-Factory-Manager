@@ -1,13 +1,13 @@
 package vswe.stevesfactory.components;
 
-
-import net.minecraft.item.ItemStack;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.item.ItemStack;
+
 public class ItemBufferElement implements IItemBufferElement {
+
     private ItemSetting setting;
     private FlowComponent component;
     private boolean useWhiteList;
@@ -21,27 +21,31 @@ public class ItemBufferElement implements IItemBufferElement {
     private boolean fairShare;
     private int shareId;
 
-    public ItemBufferElement(FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder, boolean useWhiteList, SlotStackInventoryHolder target) {
+    public ItemBufferElement(FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder,
+            boolean useWhiteList, SlotStackInventoryHolder target) {
         this(owner, setting, inventoryHolder, useWhiteList);
         addTarget(target);
         sharedBy = 1;
     }
 
-
-    private ItemBufferElement(FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder, boolean useWhiteList) {
+    private ItemBufferElement(FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder,
+            boolean useWhiteList) {
         this.component = owner;
-        this.setting = (ItemSetting)setting;
+        this.setting = (ItemSetting) setting;
         this.inventoryHolder = inventoryHolder;
         this.useWhiteList = useWhiteList;
         holders = new ArrayList<SlotStackInventoryHolder>();
 
     }
 
-    public boolean addTarget(FlowComponent owner, Setting setting,  SlotInventoryHolder inventoryHolder, SlotStackInventoryHolder target) {
-        if (component.getId() == owner.getId() && (this.setting == null || (setting != null && this.setting.getId() == setting.getId())) && (this.inventoryHolder.isShared() || this.inventoryHolder.equals(inventoryHolder))) {
+    public boolean addTarget(FlowComponent owner, Setting setting, SlotInventoryHolder inventoryHolder,
+            SlotStackInventoryHolder target) {
+        if (component.getId() == owner.getId()
+                && (this.setting == null || (setting != null && this.setting.getId() == setting.getId()))
+                && (this.inventoryHolder.isShared() || this.inventoryHolder.equals(inventoryHolder))) {
             addTarget(target);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -62,6 +66,7 @@ public class ItemBufferElement implements IItemBufferElement {
     }
 
     private Iterator<SlotStackInventoryHolder> iterator;
+
     @Override
     public void prepareSubElements() {
         iterator = holders.iterator();
@@ -71,7 +76,7 @@ public class ItemBufferElement implements IItemBufferElement {
     public IItemBufferSubElement getSubElement() {
         if (iterator.hasNext()) {
             return iterator.next();
-        }else{
+        } else {
             return null;
         }
     }
@@ -89,7 +94,7 @@ public class ItemBufferElement implements IItemBufferElement {
     public int retrieveItemCount(int desiredItemCount) {
         if (setting == null || !setting.isLimitedByAmount()) {
             return desiredItemCount;
-        }else{
+        } else {
             int itemsAllowedToBeMoved;
             if (useWhiteList) {
                 int movedItems = totalStackSize - currentStackSize;
@@ -103,10 +108,9 @@ public class ItemBufferElement implements IItemBufferElement {
                         itemsAllowedToBeMoved++;
                     }
                 }
-            }else{
+            } else {
                 itemsAllowedToBeMoved = currentStackSize - setting.getItem().stackSize;
             }
-
 
             return Math.min(itemsAllowedToBeMoved, desiredItemCount);
         }
@@ -117,28 +121,28 @@ public class ItemBufferElement implements IItemBufferElement {
     }
 
     public ItemStack getItemStack() {
-       if (setting != null && setting.getItem() != null) {
-           return setting.getItem();
-       }else{
-           return holders.get(0).getItemStack();
-       }
+        if (setting != null && setting.getItem() != null) {
+            return setting.getItem();
+        } else {
+            return holders.get(0).getItemStack();
+        }
     }
 
     public int getBufferSize(Setting outputSetting) {
         int bufferSize = 0;
-        if (setting != null){
+        if (setting != null) {
             for (SlotStackInventoryHolder holder : holders) {
                 ItemStack item = holder.getItemStack();
-                if (((ItemSetting)setting).isEqualForCommandExecutor(item)) {
+                if (((ItemSetting) setting).isEqualForCommandExecutor(item)) {
                     bufferSize += item.stackSize;
                 }
             }
 
             if (setting.isLimitedByAmount()) {
-            int maxSize;
+                int maxSize;
                 if (useWhiteList) {
                     maxSize = setting.getItem().stackSize;
-                }else{
+                } else {
                     maxSize = totalStackSize - setting.getItem().stackSize;
                 }
                 bufferSize = Math.min(bufferSize, maxSize);
@@ -149,7 +153,11 @@ public class ItemBufferElement implements IItemBufferElement {
 
     public ItemBufferElement getSplitElement(int elementAmount, int id, boolean fair) {
 
-        ItemBufferElement element = new ItemBufferElement(this.component, this.setting, this.inventoryHolder, this.useWhiteList);
+        ItemBufferElement element = new ItemBufferElement(
+                this.component,
+                this.setting,
+                this.inventoryHolder,
+                this.useWhiteList);
         element.holders = new ArrayList<SlotStackInventoryHolder>();
         for (SlotStackInventoryHolder holder : holders) {
             element.addTarget((holder).getSplitElement(elementAmount, id, fair));
@@ -162,7 +170,7 @@ public class ItemBufferElement implements IItemBufferElement {
             if (element.currentStackSize < 0) {
                 element.currentStackSize = 0;
             }
-        }else{
+        } else {
             element.currentStackSize = Math.min(currentStackSize, element.totalStackSize);
         }
 

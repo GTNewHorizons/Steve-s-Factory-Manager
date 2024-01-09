@@ -1,8 +1,9 @@
 package vswe.stevesfactory.components;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -11,12 +12,13 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
-
 public class ComponentMenuCamouflageInside extends ComponentMenuCamouflageAdvanced {
+
     public ComponentMenuCamouflageInside(FlowComponent parent) {
         super(parent);
 
         radioButtons = new RadioButtonList() {
+
             @Override
             public void updateSelectedOption(int selectedOption) {
                 setSelectedOption(selectedOption);
@@ -28,7 +30,11 @@ public class ComponentMenuCamouflageInside extends ComponentMenuCamouflageAdvanc
         };
 
         for (int i = 0; i < InsideSetType.values().length; i++) {
-            radioButtons.add(new RadioButton(RADIO_BUTTON_X, RADIO_BUTTON_Y + i * RADIO_BUTTON_SPACING, InsideSetType.values()[i].name));
+            radioButtons.add(
+                    new RadioButton(
+                            RADIO_BUTTON_X,
+                            RADIO_BUTTON_Y + i * RADIO_BUTTON_SPACING,
+                            InsideSetType.values()[i].name));
         }
     }
 
@@ -61,16 +67,14 @@ public class ComponentMenuCamouflageInside extends ComponentMenuCamouflageAdvanc
         radioButtons.onClick(mX, mY, button);
     }
 
-
-
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -85,12 +89,12 @@ public class ComponentMenuCamouflageInside extends ComponentMenuCamouflageAdvanc
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        radioButtons.setSelectedOption(((ComponentMenuCamouflageInside)menu).radioButtons.getSelectedOption());
+        radioButtons.setSelectedOption(((ComponentMenuCamouflageInside) menu).radioButtons.getSelectedOption());
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuCamouflageInside newDataInside = (ComponentMenuCamouflageInside)newData;
+        ComponentMenuCamouflageInside newDataInside = (ComponentMenuCamouflageInside) newData;
 
         if (radioButtons.getSelectedOption() != newDataInside.radioButtons.getSelectedOption()) {
             radioButtons.setSelectedOption(newDataInside.radioButtons.getSelectedOption());
@@ -110,7 +114,7 @@ public class ComponentMenuCamouflageInside extends ComponentMenuCamouflageAdvanc
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setByte(NBT_SETTING, (byte)radioButtons.getSelectedOption());
+        nbtTagCompound.setByte(NBT_SETTING, (byte) radioButtons.getSelectedOption());
     }
 
     @Override
@@ -122,13 +126,13 @@ public class ComponentMenuCamouflageInside extends ComponentMenuCamouflageAdvanc
         return InsideSetType.values()[radioButtons.getSelectedOption()];
     }
 
-    public enum InsideSetType{
+    public enum InsideSetType {
+
         ONLY_OUTSIDE(Localization.CAMOUFLAGE_ONLY_OUTSIDE),
         ONLY_INSIDE(Localization.CAMOUFLAGE_ONLY_INSIDE),
         OPPOSITE(Localization.CAMOUFLAGE_OPPOSITE_INSIDE),
         SAME(Localization.CAMOUFLAGE_SAME_INSIDE),
         NOTHING(Localization.CAMOUFLAGE_NO_UPDATE);
-
 
         private Localization name;
 

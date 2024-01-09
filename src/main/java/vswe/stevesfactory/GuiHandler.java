@@ -1,13 +1,14 @@
 package vswe.stevesfactory;
 
-import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.common.network.IGuiHandler;
 import vswe.stevesfactory.blocks.ITileEntityInterface;
 
-
 public class GuiHandler implements IGuiHandler {
+
     public GuiHandler() {
 
     }
@@ -17,8 +18,8 @@ public class GuiHandler implements IGuiHandler {
         TileEntity te = world.getTileEntity(x, y, z);
 
         if (te != null && te instanceof ITileEntityInterface) {
-            return ((ITileEntityInterface)te).getContainer(te, player.inventory);
-        }else{
+            return ((ITileEntityInterface) te).getContainer(te, player.inventory);
+        } else {
             return null;
         }
     }
@@ -28,8 +29,8 @@ public class GuiHandler implements IGuiHandler {
         TileEntity te = world.getTileEntity(x, y, z);
 
         if (te != null && te instanceof ITileEntityInterface) {
-            return ((ITileEntityInterface)te).getGui(te, player.inventory);
-        }else{
+            return ((ITileEntityInterface) te).getGui(te, player.inventory);
+        } else {
             return null;
         }
     }

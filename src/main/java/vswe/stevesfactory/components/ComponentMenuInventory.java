@@ -1,12 +1,12 @@
 package vswe.stevesfactory.components;
 
+import java.util.List;
 
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.ConnectionBlockType;
 
-import java.util.List;
-
 public class ComponentMenuInventory extends ComponentMenuContainer {
+
     public ComponentMenuInventory(FlowComponent parent) {
         super(parent, ConnectionBlockType.INVENTORY);
     }

@@ -1,8 +1,5 @@
 package vswe.stevesfactory.blocks;
 
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
@@ -15,10 +12,14 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.StevesFactoryManager;
 
-//This is indeed not a subclass to the cable, you can't relay signals through this block
+// This is indeed not a subclass to the cable, you can't relay signals through this block
 public class BlockCableBreaker extends BlockContainer {
+
     public BlockCableBreaker() {
         super(Material.iron);
         setCreativeTab(ModBlocks.creativeTab);
@@ -38,7 +39,6 @@ public class BlockCableBreaker extends BlockContainer {
     private IIcon frontIIcon;
     @SideOnly(Side.CLIENT)
     private IIcon sideIIcon;
-
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -67,17 +67,15 @@ public class BlockCableBreaker extends BlockContainer {
 
             if (side == meta && side == direction) {
                 return doubleIIcon;
-            }else if(side == meta) {
+            } else if (side == meta) {
                 return frontIIcon;
-            }else if(side == direction) {
+            } else if (side == direction) {
                 return sideIIcon;
             }
         }
 
         return blockIcon;
     }
-
-
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack item) {
@@ -91,7 +89,8 @@ public class BlockCableBreaker extends BlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
+            float hitY, float hitZ) {
         if (player.isSneaking()) {
             side = ForgeDirection.VALID_DIRECTIONS[side].getOpposite().ordinal();
         }
@@ -101,7 +100,6 @@ public class BlockCableBreaker extends BlockContainer {
             breaker.setPlaceDirection(side);
             return true;
         }
-
 
         return false;
     }

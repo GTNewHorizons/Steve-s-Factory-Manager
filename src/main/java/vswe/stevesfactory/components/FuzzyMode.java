@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public enum FuzzyMode {
+
     PRECISE(Localization.DETECTION_PRECISE, true),
     NBT_FUZZY(Localization.DETECTION_NBT_FUZZY, true),
     FUZZY(Localization.DETECTION_FUZZY, false),
@@ -23,7 +23,6 @@ public enum FuzzyMode {
     public String toString() {
         return text.toString();
     }
-
 
     public boolean requiresMetaData() {
         return useMeta;

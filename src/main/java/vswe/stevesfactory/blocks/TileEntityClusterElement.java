@@ -1,17 +1,17 @@
 package vswe.stevesfactory.blocks;
 
+import java.util.EnumSet;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-
-import java.util.EnumSet;
-
 
 public abstract class TileEntityClusterElement extends TileEntity {
 
     private ClusterRegistry registryElement;
     private boolean isPartOfCluster;
     private int meta;
+
     protected TileEntityClusterElement() {
         registryElement = ClusterRegistry.get(this);
     }
@@ -32,7 +32,7 @@ public abstract class TileEntityClusterElement extends TileEntity {
     public int getBlockMetadata() {
         if (isPartOfCluster) {
             return meta;
-        }else{
+        } else {
             return super.getBlockMetadata();
         }
     }
@@ -40,7 +40,7 @@ public abstract class TileEntityClusterElement extends TileEntity {
     public void setMetaData(int meta) {
         if (isPartOfCluster) {
             this.meta = meta;
-        }else{
+        } else {
             worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta, 2);
         }
     }
@@ -58,6 +58,8 @@ public abstract class TileEntityClusterElement extends TileEntity {
     }
 
     protected void readContentFromNBT(NBTTagCompound tagCompound) {}
+
     protected void writeContentToNBT(NBTTagCompound tagCompound) {}
+
     protected abstract EnumSet<ClusterMethodRegistration> getRegistrations();
 }

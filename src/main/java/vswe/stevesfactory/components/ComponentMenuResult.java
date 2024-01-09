@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
+import net.minecraft.nbt.NBTTagCompound;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -20,6 +20,7 @@ public class ComponentMenuResult extends ComponentMenu {
         sets = parent.getType().getSets();
 
         radioButtons = new RadioButtonList() {
+
             @Override
             public void updateSelectedOption(int selectedOption) {
                 DataWriter dw = getWriterForServerComponentPacket();
@@ -38,7 +39,7 @@ public class ComponentMenuResult extends ComponentMenu {
 
                 if (getParent().getType() == ComponentType.VARIABLE) {
                     getParent().getManager().updateVariables();
-                }else if(getParent().getType() == ComponentType.NODE) {
+                } else if (getParent().getType() == ComponentType.NODE) {
                     getParent().setParent(getParent().getParent());
                 }
             }
@@ -69,11 +70,13 @@ public class ComponentMenuResult extends ComponentMenu {
     public String getName() {
         return Localization.CONNECTIONS_MENU.toString();
     }
+
     @SideOnly(Side.CLIENT)
     @Override
     public void draw(GuiManager gui, int mX, int mY) {
         radioButtons.draw(gui, mX, mY);
     }
+
     @SideOnly(Side.CLIENT)
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
@@ -107,12 +110,12 @@ public class ComponentMenuResult extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        radioButtons.setSelectedOption(((ComponentMenuResult)menu).radioButtons.getSelectedOption());
+        radioButtons.setSelectedOption(((ComponentMenuResult) menu).radioButtons.getSelectedOption());
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuResult newDataResult =  ((ComponentMenuResult)newData);
+        ComponentMenuResult newDataResult = ((ComponentMenuResult) newData);
 
         if (radioButtons.getSelectedOption() != newDataResult.radioButtons.getSelectedOption()) {
             radioButtons.setSelectedOption(newDataResult.radioButtons.getSelectedOption());
@@ -136,7 +139,6 @@ public class ComponentMenuResult extends ComponentMenu {
         dw.writeData(val, DataBitHelper.MENU_CONNECTION_TYPE_ID);
     }
 
-
     private static final String NBT_SELECTED = "SelectedOption";
 
     @Override
@@ -146,9 +148,8 @@ public class ComponentMenuResult extends ComponentMenu {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setByte(NBT_SELECTED, (byte)radioButtons.getSelectedOption());
+        nbtTagCompound.setByte(NBT_SELECTED, (byte) radioButtons.getSelectedOption());
     }
-
 
     @Override
     public boolean isVisible() {

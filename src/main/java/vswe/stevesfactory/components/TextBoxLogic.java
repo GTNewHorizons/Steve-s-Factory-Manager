@@ -1,12 +1,13 @@
 package vswe.stevesfactory.components;
 
+import net.minecraft.util.ChatAllowedCharacters;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.util.ChatAllowedCharacters;
 import vswe.stevesfactory.interfaces.GuiManager;
 
-
 public class TextBoxLogic {
+
     private String text;
     private int cursor;
     private int cursorPosition;
@@ -37,7 +38,7 @@ public class TextBoxLogic {
         if (cursor + direction >= 0 && cursor + direction <= text.length()) {
             if (direction > 0) {
                 text = text.substring(0, cursor) + text.substring(cursor + 1);
-            }else{
+            } else {
                 text = text.substring(0, cursor - 1) + text.substring(cursor);
                 moveCursor(gui, direction);
             }
@@ -52,7 +53,6 @@ public class TextBoxLogic {
         updateCursor();
     }
 
-
     protected void textChanged() {}
 
     public String getText() {
@@ -61,7 +61,7 @@ public class TextBoxLogic {
 
     public int getCursorPosition(GuiManager gui) {
         if (updatedCursor) {
-            cursorPosition = (int)(gui.getStringWidth(text.substring(0, cursor)) * mult);
+            cursorPosition = (int) (gui.getStringWidth(text.substring(0, cursor)) * mult);
             updatedCursor = false;
         }
 
@@ -76,13 +76,13 @@ public class TextBoxLogic {
     public void onKeyStroke(GuiManager gui, char c, int k) {
         if (k == 203) {
             moveCursor(gui, -1);
-        }else if(k == 205) {
+        } else if (k == 205) {
             moveCursor(gui, 1);
-        }else if (k == 14) {
+        } else if (k == 14) {
             deleteText(gui, -1);
-        }else if (k == 211) {
+        } else if (k == 211) {
             deleteText(gui, 1);
-        }else if (ChatAllowedCharacters.isAllowedCharacter(c)) {
+        } else if (ChatAllowedCharacters.isAllowedCharacter(c)) {
             addText(gui, Character.toString(c));
         }
     }
@@ -90,13 +90,12 @@ public class TextBoxLogic {
     public void updateCursor() {
         if (cursor < 0) {
             cursor = 0;
-        }else if (cursor > text.length()) {
+        } else if (cursor > text.length()) {
             cursor = text.length();
         }
 
         updatedCursor = true;
     }
-
 
     public void resetCursor() {
         cursor = text.length();

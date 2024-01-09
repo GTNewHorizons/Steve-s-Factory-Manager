@@ -1,7 +1,7 @@
 package vswe.stevesfactory.network;
 
-
 public enum DataBitHelper {
+
     FLOW_CONTROL_COUNT(9),
     FLOW_CONTROL_X(9),
     FLOW_CONTROL_Y(8),
@@ -32,8 +32,7 @@ public enum DataBitHelper {
     WORLD_COORDINATE(32),
     GUI_BUTTON_ID(5),
 
-    MENU_FLUID_ID(32)
-    ,
+    MENU_FLUID_ID(32),
     MENU_LIQUID_AMOUNT(20),
 
     MENU_SPLIT_DATA_ID(2),
@@ -71,11 +70,8 @@ public enum DataBitHelper {
     PLACE_DIRECTION(3),
     BIT_COUNT(5),
 
-
     LINE_ID(2),
     LINE_LENGTH(4);
-
-
 
     private int bitCount;
 

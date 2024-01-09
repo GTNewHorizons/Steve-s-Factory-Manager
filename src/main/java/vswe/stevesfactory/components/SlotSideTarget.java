@@ -1,6 +1,5 @@
 package vswe.stevesfactory.components;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public enum ConnectionOption {
+
     STANDARD_INPUT(Localization.CONNECTION_INPUT, ConnectionType.INPUT),
     STANDARD_OUTPUT(Localization.CONNECTION_OUTPUT, ConnectionType.OUTPUT),
     INTERVAL(Localization.CONNECTION_INTERVAL, ConnectionType.OUTPUT),
@@ -21,9 +21,9 @@ public enum ConnectionOption {
     BUD_LOW(Localization.CONNECTION_WHILE_LOW_BLOCK, ConnectionType.OUTPUT),
     DYNAMIC_INPUT(null, ConnectionType.INPUT),
     DYNAMIC_OUTPUT(null, ConnectionType.OUTPUT);
+
     private Localization name;
     private ConnectionType type;
-
 
     private ConnectionOption(Localization name, ConnectionType type) {
         this.name = name;
@@ -34,25 +34,26 @@ public enum ConnectionOption {
         return type == ConnectionType.INPUT;
     }
 
-
     public ConnectionType getType() {
         return type;
     }
-
 
     public String getName(FlowComponent component, int id) {
 
         if (name != null) {
             return name.toString();
-        }else if (this == DYNAMIC_INPUT){
-            return id < component.getChildrenInputNodes().size() ? component.getChildrenInputNodes().get(id).getName() : "";
-        }else {
-            return id < component.getChildrenOutputNodes().size() ? component.getChildrenOutputNodes().get(id).getName() : "";
+        } else if (this == DYNAMIC_INPUT) {
+            return id < component.getChildrenInputNodes().size() ? component.getChildrenInputNodes().get(id).getName()
+                    : "";
+        } else {
+            return id < component.getChildrenOutputNodes().size() ? component.getChildrenOutputNodes().get(id).getName()
+                    : "";
         }
     }
 
     public boolean isValid(FlowComponent component, int id) {
-        return name != null || (this == DYNAMIC_INPUT ? id < component.getChildrenInputNodes().size() : id < component.getChildrenOutputNodes().size());
+        return name != null || (this == DYNAMIC_INPUT ? id < component.getChildrenInputNodes().size()
+                : id < component.getChildrenOutputNodes().size());
     }
 
     public enum ConnectionType {

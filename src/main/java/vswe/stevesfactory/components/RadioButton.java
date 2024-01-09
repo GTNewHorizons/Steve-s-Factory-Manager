@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public class RadioButton {
+
     private int x;
     private int y;
     private Localization text;

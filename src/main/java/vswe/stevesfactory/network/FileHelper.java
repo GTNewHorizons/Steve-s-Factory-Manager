@@ -1,6 +1,5 @@
 package vswe.stevesfactory.network;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,6 +15,7 @@ public final class FileHelper {
 
     /**
      * Remember to close the readers given from this method
+     * 
      * @param name
      * @return A reader that has to be closed after usage, might be null if reading failed
      */
@@ -24,16 +24,17 @@ public final class FileHelper {
             File file = new File(dir, name + ".dat");
             if (file.exists()) {
                 return new DataReader(new FileInputStream(file));
-            }else{
+            } else {
                 return null;
             }
-        }catch (IOException ignored) {
+        } catch (IOException ignored) {
             return null;
         }
     }
 
     /**
      * Remember to close the writers given from this method
+     * 
      * @param name
      * @return A writer that has to be closed after usage, might be null if writing failed
      */
@@ -41,10 +42,10 @@ public final class FileHelper {
         try {
             File file = new File(dir, name + ".dat");
             if (file.exists()) {
-                //file.delete()
+                // file.delete()
             }
             return new DataWriter(new FileOutputStream(file));
-        }catch (IOException ignored) {
+        } catch (IOException ignored) {
             return null;
         }
     }

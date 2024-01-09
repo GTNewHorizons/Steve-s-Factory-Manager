@@ -1,13 +1,13 @@
 package vswe.stevesfactory.components;
 
-import vswe.stevesfactory.blocks.ConnectionBlockType;
-import vswe.stevesfactory.blocks.TileEntityBUD;
-
 import java.util.EnumSet;
 import java.util.List;
 
+import vswe.stevesfactory.blocks.ConnectionBlockType;
+import vswe.stevesfactory.blocks.TileEntityBUD;
 
 public class TriggerHelperBUD extends TriggerHelper {
+
     public static final int TRIGGER_BUD_BLOCK_ID = 5;
 
     public TriggerHelperBUD() {
@@ -19,9 +19,7 @@ public class TriggerHelperBUD extends TriggerHelper {
         int id = power >>> 4;
         int meta = power & 15;
 
-
-
-        ComponentMenuUpdateBlock updateMenu =  (ComponentMenuUpdateBlock)component.getMenus().get(TRIGGER_BUD_BLOCK_ID);
+        ComponentMenuUpdateBlock updateMenu = (ComponentMenuUpdateBlock) component.getMenus().get(TRIGGER_BUD_BLOCK_ID);
 
         if (updateMenu.useId()) {
             boolean idMatch = id == updateMenu.getBlockId();
@@ -41,7 +39,8 @@ public class TriggerHelperBUD extends TriggerHelper {
                         count++;
                     }
                 }
-                boolean metaMatch = setting.lowerTextBox.getNumber() <= settingMeta && settingMeta <= setting.higherTextBox.getNumber();
+                boolean metaMatch = setting.lowerTextBox.getNumber() <= settingMeta
+                        && settingMeta <= setting.higherTextBox.getNumber();
                 if (setting.inverted == metaMatch) {
                     return false;
                 }
@@ -53,7 +52,8 @@ public class TriggerHelperBUD extends TriggerHelper {
 
     @Override
     public void onTrigger(FlowComponent item, EnumSet<ConnectionOption> valid) {
-        List<SlotInventoryHolder> buds = CommandExecutor.getContainers(item.getManager(), item.getMenus().get(containerId), blockType);
+        List<SlotInventoryHolder> buds = CommandExecutor
+                .getContainers(item.getManager(), item.getMenus().get(containerId), blockType);
 
         if (buds != null) {
             for (SlotInventoryHolder bud : buds) {
@@ -63,18 +63,16 @@ public class TriggerHelperBUD extends TriggerHelper {
             if (isSpecialPulseReceived(item, true)) {
                 valid.add(ConnectionOption.BUD_PULSE_HIGH);
                 valid.add(ConnectionOption.BUD_HIGH);
-            }else if (isTriggerPowered(item, true)) {
+            } else if (isTriggerPowered(item, true)) {
                 valid.add(ConnectionOption.BUD_HIGH);
             }
 
             if (isSpecialPulseReceived(item, false)) {
                 valid.add(ConnectionOption.BUD_PULSE_LOW);
                 valid.add(ConnectionOption.BUD_LOW);
-            }else if (isTriggerPowered(item, false)) {
+            } else if (isTriggerPowered(item, false)) {
                 valid.add(ConnectionOption.BUD_LOW);
             }
-
-
 
             for (SlotInventoryHolder bud : buds) {
                 bud.getBUD().makeOld();
@@ -84,10 +82,11 @@ public class TriggerHelperBUD extends TriggerHelper {
     }
 
     public void triggerBUD(FlowComponent item, TileEntityBUD tileEntityBUD) {
-        List<SlotInventoryHolder> receivers = CommandExecutor.getContainers(item.getManager(), item.getMenus().get(containerId), blockType);
+        List<SlotInventoryHolder> receivers = CommandExecutor
+                .getContainers(item.getManager(), item.getMenus().get(containerId), blockType);
 
         if (receivers != null) {
-            ComponentMenuContainer componentMenuContainer = (ComponentMenuContainer)item.getMenus().get(containerId);
+            ComponentMenuContainer componentMenuContainer = (ComponentMenuContainer) item.getMenus().get(containerId);
 
             TileEntityBUD trigger = componentMenuContainer.getOption() == 0 ? tileEntityBUD : null;
             EnumSet<ConnectionOption> valid = EnumSet.noneOf(ConnectionOption.class);
@@ -97,7 +96,7 @@ public class TriggerHelperBUD extends TriggerHelper {
                 if (isPulseReceived(item, receivers, trigger, true)) {
                     valid.add(ConnectionOption.BUD_PULSE_HIGH);
                 }
-            }else if (isPulseReceived(item, receivers, trigger, false)) {
+            } else if (isPulseReceived(item, receivers, trigger, false)) {
                 valid.add(ConnectionOption.BUD_PULSE_LOW);
             }
 

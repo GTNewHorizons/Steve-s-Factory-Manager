@@ -1,7 +1,9 @@
 package vswe.stevesfactory.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,13 +18,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.interfaces.ContainerRelay;
 import vswe.stevesfactory.interfaces.GuiRelay;
 import vswe.stevesfactory.network.DataBitHelper;
@@ -34,12 +38,8 @@ import vswe.stevesfactory.wrappers.InventoryWrapper;
 import vswe.stevesfactory.wrappers.InventoryWrapperHorse;
 import vswe.stevesfactory.wrappers.InventoryWrapperPlayer;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
-
-public class TileEntityRelay extends TileEntityClusterElement implements IInventory, ISidedInventory, IFluidHandler, ITileEntityInterface {
+public class TileEntityRelay extends TileEntityClusterElement
+        implements IInventory, ISidedInventory, IFluidHandler, ITileEntityInterface {
 
     private static final int MAX_CHAIN_LENGTH = 512;
     private int[] cachedAllSlots;
@@ -48,7 +48,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
     private Entity[] cachedEntities = new Entity[2];
     private InventoryWrapper cachedInventoryWrapper;
 
-    //used by the advanced version
+    // used by the advanced version
     private List<UserPermission> permissions = new ArrayList<UserPermission>();
     private boolean doesListRequireOp = false;
     private String owner = "Unknown";
@@ -96,8 +96,8 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
 
             if (inventory != null) {
                 if (inventory instanceof ISidedInventory) {
-                    return ((ISidedInventory)inventory).getAccessibleSlotsFromSide(var1);
-                }else{
+                    return ((ISidedInventory) inventory).getAccessibleSlotsFromSide(var1);
+                } else {
                     int size = inventory.getSizeInventory();
                     if (cachedAllSlots == null || cachedAllSlots.length != size) {
                         cachedAllSlots = new int[size];
@@ -110,7 +110,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return new int[0];
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -122,14 +122,14 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
 
             if (inventory != null) {
                 if (inventory instanceof ISidedInventory) {
-                    return ((ISidedInventory)inventory).canInsertItem(i, itemstack, j);
-                }else{
+                    return ((ISidedInventory) inventory).canInsertItem(i, itemstack, j);
+                } else {
                     return inventory.isItemValidForSlot(i, itemstack);
                 }
             }
 
             return false;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -141,14 +141,14 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
 
             if (inventory != null) {
                 if (inventory instanceof ISidedInventory) {
-                    return ((ISidedInventory)inventory).canExtractItem(i, itemstack, j);
-                }else{
+                    return ((ISidedInventory) inventory).canExtractItem(i, itemstack, j);
+                } else {
                     return inventory.isItemValidForSlot(i, itemstack);
                 }
             }
 
             return false;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -163,7 +163,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return 0;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -178,7 +178,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return null;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -189,18 +189,18 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             IInventory inventory = getInventory();
 
             if (inventory != null) {
-                return  inventory.decrStackSize(i, j);
+                return inventory.decrStackSize(i, j);
             }
 
             return null;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
 
     @Override
     public ItemStack getStackInSlotOnClosing(int i) {
-        //don't drop the things twice
+        // don't drop the things twice
         return null;
     }
 
@@ -212,7 +212,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             if (inventory != null) {
                 inventory.setInventorySlotContents(i, itemstack);
             }
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -227,7 +227,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return "Unknown";
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -242,7 +242,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return false;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -257,7 +257,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return 0;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -272,11 +272,10 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return false;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
-
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
@@ -288,7 +287,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return false;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -301,7 +300,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             if (inventory != null) {
                 inventory.openInventory();
             }
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -314,7 +313,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             if (inventory != null) {
                 inventory.closeInventory();
             }
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -329,7 +328,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return 0;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -344,7 +343,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return null;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -359,7 +358,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return null;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -374,7 +373,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return false;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -389,7 +388,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return false;
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -404,22 +403,21 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
 
             return new FluidTankInfo[0];
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
 
-
     @Override
     public void markDirty() {
-        //super.onInventoryChanged();
+        // super.onInventoryChanged();
         try {
             IInventory inventory = getInventory();
 
             if (inventory != null) {
                 inventory.markDirty();
             }
-        }finally {
+        } finally {
             unBlockUsage();
         }
     }
@@ -458,12 +456,13 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
                 if (id == 0) {
                     cachedInventoryWrapper = null;
                 }
-            }else{
+            } else {
                 return getEntityContainer(id);
             }
         }
 
-        ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[ModBlocks.blockCableRelay.getSideMeta(getBlockMetadata()) % ForgeDirection.VALID_DIRECTIONS.length];
+        ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[ModBlocks.blockCableRelay
+                .getSideMeta(getBlockMetadata()) % ForgeDirection.VALID_DIRECTIONS.length];
 
         int x = xCoord + direction.offsetX;
         int y = yCoord + direction.offsetY;
@@ -475,14 +474,14 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
 
             if (te != null && type.isInstance(te)) {
                 if (te instanceof TileEntityRelay) {
-                    TileEntityRelay relay = (TileEntityRelay)te;
+                    TileEntityRelay relay = (TileEntityRelay) te;
                     relay.chainLength = chainLength + 1;
                 }
                 return (T) te;
             }
 
-
-            List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
+            List<Entity> entities = world
+                    .getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
             if (entities != null) {
                 double closest = -1;
                 for (Entity entity : entities) {
@@ -500,31 +499,31 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             }
         }
 
-
         return null;
     }
 
     private InventoryWrapper getInventoryWrapper(Entity entity) {
         if (entity instanceof EntityPlayer) {
-            return new InventoryWrapperPlayer((EntityPlayer)entity);
-        }else if(entity instanceof EntityHorse) {
-            return new InventoryWrapperHorse((EntityHorse)entity);
-        }else{
+            return new InventoryWrapperPlayer((EntityPlayer) entity);
+        } else if (entity instanceof EntityHorse) {
+            return new InventoryWrapperHorse((EntityHorse) entity);
+        } else {
             return null;
         }
     }
 
-
     private boolean isEntityValid(Entity entity, Class type, int id) {
-        return type.isInstance(entity) || (id == 0 && ((entity instanceof EntityPlayer && allowPlayerInteraction((EntityPlayer) entity)) || entity instanceof EntityHorse));
+        return type.isInstance(entity)
+                || (id == 0 && ((entity instanceof EntityPlayer && allowPlayerInteraction((EntityPlayer) entity))
+                        || entity instanceof EntityHorse));
     }
 
     private <T> T getEntityContainer(int id) {
         if (id == 0 && cachedInventoryWrapper != null) {
-            return (T)cachedInventoryWrapper;
+            return (T) cachedInventoryWrapper;
         }
 
-        return (T)cachedEntities[id];
+        return (T) cachedEntities[id];
     }
 
     @Override
@@ -552,13 +551,13 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
 
     @Override
     public Container getContainer(TileEntity te, InventoryPlayer inv) {
-        return new ContainerRelay((TileEntityRelay)te, inv);
+        return new ContainerRelay((TileEntityRelay) te, inv);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(TileEntity te, InventoryPlayer inv) {
-        return new GuiRelay((TileEntityRelay)te, inv);
+        return new GuiRelay((TileEntityRelay) te, inv);
     }
 
     @Override
@@ -594,11 +593,9 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
         }
     }
 
-
-
     @Override
     public void readUpdatedData(DataReader dr, EntityPlayer player) {
-        if (!worldObj.isRemote)  {
+        if (!worldObj.isRemote) {
             boolean action = dr.readBoolean();
             if (action) {
 
@@ -610,7 +607,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
         boolean isOp = false;
         if (worldObj.isRemote || username.equals(owner)) {
             isOp = true;
-        }else{
+        } else {
             for (UserPermission permission : permissions) {
                 if (username.equals(permission.getName())) {
                     isOp = permission.isOp();
@@ -636,10 +633,11 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
                     permission.setOp(dr.readBoolean());
                 }
 
-                if (permissions.size() < TileEntityRelay.PERMISSION_MAX_LENGTH && (worldObj.isRemote || permission.getName().equals(username))) {
+                if (permissions.size() < TileEntityRelay.PERMISSION_MAX_LENGTH
+                        && (worldObj.isRemote || permission.getName().equals(username))) {
                     permissions.add(permission);
                 }
-            }else{
+            } else {
                 int id = dr.readData(DataBitHelper.PERMISSION_ID);
 
                 if (id >= 0 && id < permissions.size()) {
@@ -649,7 +647,7 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
                         if (isOp || permission.getName().equals(username)) {
                             permissions.remove(id);
                         }
-                    }else if(isOp){
+                    } else if (isOp) {
 
                         UserPermission permission = permissions.get(id);
                         permission.setActive(dr.readBoolean());
@@ -659,13 +657,11 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
                 }
             }
 
-
-        }else if(isOp){
+        } else if (isOp) {
             creativeMode = dr.readBoolean();
             doesListRequireOp = dr.readBoolean();
         }
     }
-
 
     public void updateData(ContainerRelay container) {
         if (container.oldCreativeMode != isCreativeMode() || container.oldOpList != doesListRequireOp()) {
@@ -673,52 +669,53 @@ public class TileEntityRelay extends TileEntityClusterElement implements IInvent
             container.oldCreativeMode = isCreativeMode();
 
             DataWriter dw = PacketHandler.getWriterForUpdate(container);
-            dw.writeBoolean(false); //no user data
+            dw.writeBoolean(false); // no user data
             dw.writeBoolean(creativeMode);
             dw.writeBoolean(doesListRequireOp);
             PacketHandler.sendDataToListeningClients(container, dw);
         }
 
-        //added
+        // added
         if (permissions.size() > container.oldPermissions.size()) {
             int id = container.oldPermissions.size();
             UserPermission permission = permissions.get(id);
 
             DataWriter dw = PacketHandler.getWriterForUpdate(container);
-            dw.writeBoolean(true); //user data
-            dw.writeBoolean(true); //added
+            dw.writeBoolean(true); // user data
+            dw.writeBoolean(true); // added
             dw.writeString(permission.getName(), DataBitHelper.NAME_LENGTH);
             dw.writeBoolean(permission.isActive());
             dw.writeBoolean(permission.isOp());
             PacketHandler.sendDataToListeningClients(container, dw);
 
             container.oldPermissions.add(permission.copy());
-        //removed
-        }else if (permissions.size() < container.oldPermissions.size()){
+            // removed
+        } else if (permissions.size() < container.oldPermissions.size()) {
             for (int i = 0; i < container.oldPermissions.size(); i++) {
-                if (i >= permissions.size() || !permissions.get(i).getName().equals(container.oldPermissions.get(i).getName())) {
+                if (i >= permissions.size()
+                        || !permissions.get(i).getName().equals(container.oldPermissions.get(i).getName())) {
                     DataWriter dw = PacketHandler.getWriterForUpdate(container);
-                    dw.writeBoolean(true); //user data
-                    dw.writeBoolean(false); //existing
+                    dw.writeBoolean(true); // user data
+                    dw.writeBoolean(false); // existing
                     dw.writeData(i, DataBitHelper.PERMISSION_ID);
-                    dw.writeBoolean(true); //deleted
+                    dw.writeBoolean(true); // deleted
                     PacketHandler.sendDataToListeningClients(container, dw);
                     container.oldPermissions.remove(i);
                     break;
                 }
             }
-        //updated
-        }else{
+            // updated
+        } else {
             for (int i = 0; i < permissions.size(); i++) {
                 UserPermission permission = permissions.get(i);
                 UserPermission oldPermission = container.oldPermissions.get(i);
 
                 if (permission.isOp() != oldPermission.isOp() || permission.isActive() != oldPermission.isActive()) {
                     DataWriter dw = PacketHandler.getWriterForUpdate(container);
-                    dw.writeBoolean(true); //user data
-                    dw.writeBoolean(false); //existing
+                    dw.writeBoolean(true); // user data
+                    dw.writeBoolean(false); // existing
                     dw.writeData(i, DataBitHelper.PERMISSION_ID);
-                    dw.writeBoolean(false); //update
+                    dw.writeBoolean(false); // update
                     dw.writeBoolean(permission.isActive());
                     dw.writeBoolean(permission.isOp());
                     PacketHandler.sendDataToListeningClients(container, dw);

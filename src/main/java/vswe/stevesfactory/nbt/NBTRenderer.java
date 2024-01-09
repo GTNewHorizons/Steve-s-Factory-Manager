@@ -1,25 +1,23 @@
 package vswe.stevesfactory.nbt;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.interfaces.GuiManager;
 import vswe.stevesfactory.interfaces.IInterfaceRenderer;
 
-
 @SideOnly(Side.CLIENT)
 public class NBTRenderer implements IInterfaceRenderer {
 
-
-
-
     private NBTNode root;
+
     public NBTRenderer(NBTTagCompound compound) {
         root = NBTNode.generateNodes(compound);
     }
 
-    //TODO this uses an old texture file that was "removed" during the merge
+    // TODO this uses an old texture file that was "removed" during the merge
     private static final int POS_X = 5;
     private static final int POS_Y = 5;
     private static final int LINE_HEIGHT = 8;
@@ -50,7 +48,13 @@ public class NBTRenderer implements IInterfaceRenderer {
                 int nodeSrcX = CollisionHelper.inBounds(x, y, NODE_SIZE, NODE_SIZE, mX, mY) ? 1 : 0;
                 int nodeSrcY = node.isOpen() ? 1 : 0;
 
-                gui.drawTexture(x, y, NODE_SRC_X + nodeSrcX * NODE_SIZE, NODE_SRC_Y + nodeSrcY * NODE_SIZE, NODE_SIZE, NODE_SIZE);
+                gui.drawTexture(
+                        x,
+                        y,
+                        NODE_SRC_X + nodeSrcX * NODE_SIZE,
+                        NODE_SRC_Y + nodeSrcY * NODE_SIZE,
+                        NODE_SIZE,
+                        NODE_SIZE);
             }
 
             if (node.isOpen()) {
@@ -61,17 +65,16 @@ public class NBTRenderer implements IInterfaceRenderer {
         }
     }
 
-
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onClick(GuiManager gui, int mX, int mY, int button) {
         if (button == 1) {
             gui.getManager().specialRenderer = null;
-        }else{
+        } else {
             onNodeClick(root, mX, mY);
         }
     }
@@ -79,7 +82,6 @@ public class NBTRenderer implements IInterfaceRenderer {
     private boolean onNodeClick(NBTNode node, int mX, int mY) {
         int x = POS_X + INDENT_WIDTH * node.getCachedDepth();
         int y = POS_Y + LINE_HEIGHT * node.getCachedLine();
-
 
         if (node.getNodes() != null) {
             if (node.getCachedDepth() >= 0) {
@@ -89,7 +91,6 @@ public class NBTRenderer implements IInterfaceRenderer {
                     return true;
                 }
             }
-
 
             if (node.isOpen()) {
                 for (NBTNode child : node.getNodes()) {
@@ -103,21 +104,21 @@ public class NBTRenderer implements IInterfaceRenderer {
 
     @Override
     public void onDrag(GuiManager gui, int mX, int mY) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(GuiManager gui, int mX, int mY) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onKeyTyped(GuiManager gui, char c, int k) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onScroll(int scroll) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 }

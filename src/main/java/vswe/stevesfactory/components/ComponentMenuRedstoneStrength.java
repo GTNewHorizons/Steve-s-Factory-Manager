@@ -1,8 +1,11 @@
 package vswe.stevesfactory.components;
 
+import java.util.List;
+
+import net.minecraft.nbt.NBTTagCompound;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -11,10 +14,8 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
-import java.util.List;
-
-
 public class ComponentMenuRedstoneStrength extends ComponentMenu {
+
     public ComponentMenuRedstoneStrength(FlowComponent parent) {
         super(parent);
 
@@ -39,6 +40,7 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
 
         textBoxes = new TextBoxNumberList();
         textBoxes.addTextBox(lowTextBox = new TextBoxNumber(TEXT_BOX_X_LEFT, TEXT_BOX_Y, 2, true) {
+
             @Override
             public void onNumberChanged() {
                 sendServerData(0);
@@ -51,6 +53,7 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
         });
 
         textBoxes.addTextBox(highTextBox = new TextBoxNumber(TEXT_BOX_X_RIGHT, TEXT_BOX_Y, 2, true) {
+
             @Override
             public void onNumberChanged() {
                 sendServerData(1);
@@ -94,7 +97,13 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public void draw(GuiManager gui, int mX, int mY) {
-        gui.drawSplitString(Localization.REDSTONE_STRENGTH_INFO.toString(), TEXT_MARGIN_X, TEXT_Y, MENU_WIDTH - 2 * TEXT_MARGIN_X, 0.7F, 0x404040);
+        gui.drawSplitString(
+                Localization.REDSTONE_STRENGTH_INFO.toString(),
+                TEXT_MARGIN_X,
+                TEXT_Y,
+                MENU_WIDTH - 2 * TEXT_MARGIN_X,
+                0.7F,
+                0x404040);
         gui.drawString(Localization.THROUGH.toString(), TEXT_BOX_TEXT_X, TEXT_BOX_TEXT_Y, 0.7F, 0x404040);
 
         checkBoxes.draw(gui, mX, mY);
@@ -104,7 +113,7 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -121,12 +130,12 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -145,7 +154,7 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuRedstoneStrength menuStrength = (ComponentMenuRedstoneStrength)menu;
+        ComponentMenuRedstoneStrength menuStrength = (ComponentMenuRedstoneStrength) menu;
 
         lowTextBox.setNumber(menuStrength.lowTextBox.getNumber());
         highTextBox.setNumber(menuStrength.highTextBox.getNumber());
@@ -154,7 +163,7 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuRedstoneStrength newDataStrength = (ComponentMenuRedstoneStrength)newData;
+        ComponentMenuRedstoneStrength newDataStrength = (ComponentMenuRedstoneStrength) newData;
 
         if (lowTextBox.getNumber() != newDataStrength.lowTextBox.getNumber()) {
             lowTextBox.setNumber(newDataStrength.lowTextBox.getNumber());
@@ -195,7 +204,7 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
             dw.writeBoolean(isHigh);
             TextBoxNumber textBox = isHigh ? highTextBox : lowTextBox;
             dw.writeData(textBox.getNumber(), DataBitHelper.MENU_REDSTONE_ANALOG);
-        }else{
+        } else {
             dw.writeBoolean(inverted);
         }
     }
@@ -213,8 +222,8 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setByte(NBT_LOW, (byte)lowTextBox.getNumber());
-        nbtTagCompound.setByte(NBT_HIGH, (byte)highTextBox.getNumber());
+        nbtTagCompound.setByte(NBT_LOW, (byte) lowTextBox.getNumber());
+        nbtTagCompound.setByte(NBT_HIGH, (byte) highTextBox.getNumber());
         nbtTagCompound.setBoolean(NBT_INVERTED, inverted);
     }
 
@@ -228,11 +237,10 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
         if (dr.readBoolean()) {
             TextBoxNumber textBox = dr.readBoolean() ? highTextBox : lowTextBox;
             textBox.setNumber(dr.readData(DataBitHelper.MENU_REDSTONE_ANALOG));
-        }else{
+        } else {
             inverted = dr.readBoolean();
         }
     }
-
 
     public boolean isInverted() {
         return inverted;
@@ -242,7 +250,7 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
         return lowTextBox.getNumber();
     }
 
-    public  int getHigh() {
+    public int getHigh() {
         return highTextBox.getNumber();
     }
 
@@ -250,7 +258,7 @@ public class ComponentMenuRedstoneStrength extends ComponentMenu {
     public void addErrors(List<String> errors) {
         if (getLow() > getHigh()) {
             errors.add(Localization.INVALID_REDSTONE_RANGE_ERROR.toString());
-        }else if(getLow() == 0 && getHigh() == 15) {
+        } else if (getLow() == 0 && getHigh() == 15) {
             errors.add(Localization.REDUNDANT_REDSTONE_RANGE_ERROR.toString());
         }
     }

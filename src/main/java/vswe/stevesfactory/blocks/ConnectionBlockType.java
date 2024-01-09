@@ -3,9 +3,11 @@ package vswe.stevesfactory.blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidHandler;
+
 import vswe.stevesfactory.Localization;
 
 public enum ConnectionBlockType {
+
     INVENTORY(Localization.TYPE_INVENTORY, IInventory.class, false),
     TANK(Localization.TYPE_TANK, IFluidHandler.class, false),
     EMITTER(Localization.TYPE_EMITTER, TileEntityOutput.class, false),
@@ -30,7 +32,7 @@ public enum ConnectionBlockType {
     }
 
     public <T> T getObject(TileEntity tileEntity) {
-        return (T)tileEntity;
+        return (T) tileEntity;
     }
 
     public boolean isGroup() {

@@ -1,14 +1,15 @@
 package vswe.stevesfactory.components;
 
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.gui.GuiScreen;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class Connection {
+
     private int componentId;
     private int connectionId;
     private List<Point> nodes;
@@ -69,7 +70,6 @@ public class Connection {
     public List<Point> getNodes() {
         return nodes;
     }
-
 
     public Point getSelectedNode() {
         return selectedNode;

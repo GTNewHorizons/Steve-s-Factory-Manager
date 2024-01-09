@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
+import net.minecraft.nbt.NBTTagCompound;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -13,12 +13,14 @@ import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
 public class ComponentMenuRedstoneOutput extends ComponentMenu {
+
     public ComponentMenuRedstoneOutput(FlowComponent parent) {
         super(parent);
 
         textBoxes = new TextBoxNumberList();
 
         textBoxes.addTextBox(textBox = new TextBoxNumber(TEXT_BOX_X, TEXT_BOX_Y, 2, true) {
+
             @Override
             public int getMaxNumber() {
                 return 15;
@@ -27,7 +29,7 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
             @Override
             public void onNumberChanged() {
                 DataWriter dw = getWriterForServerComponentPacket();
-                dw.writeBoolean(true); //header
+                dw.writeBoolean(true); // header
                 dw.writeData(getNumber(), DataBitHelper.MENU_REDSTONE_ANALOG);
                 PacketHandler.sendDataToServer(dw);
             }
@@ -35,11 +37,12 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
         textBox.setNumber(15);
 
         radioButtons = new RadioButtonList() {
+
             @Override
             public void updateSelectedOption(int selectedOption) {
                 setSelectedOption(selectedOption);
                 DataWriter dw = getWriterForServerComponentPacket();
-                dw.writeBoolean(false); //header
+                dw.writeBoolean(false); // header
                 dw.writeData(selectedOption, DataBitHelper.MENU_REDSTONE_OUTPUT_TYPE);
                 PacketHandler.sendDataToServer(dw);
             }
@@ -51,7 +54,6 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
 
             int x = RADIO_BUTTON_X + ix * RADIO_SPACING_X;
             int y = RADIO_BUTTON_Y + iy * RADIO_SPACING_Y;
-
 
             radioButtons.add(new RadioButton(x, y, Settings.values()[i].getName()));
         }
@@ -66,6 +68,7 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
     }
 
     public static enum Settings {
+
         FIXED(Localization.FIXED),
         TOGGLE(Localization.TOGGLE),
         MAX(Localization.MAX),
@@ -89,7 +92,6 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
         public String toString() {
             return name.toString();
         }
-
 
     }
 
@@ -115,7 +117,7 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
         if (useStrengthSetting()) {
             gui.drawString(Localization.REDSTONE_STRENGTH.toString(), TEXT_X, TEXT_Y, 0.7F, 0x404040);
             textBoxes.draw(gui, mX, mY);
-        }else{
+        } else {
             gui.drawString(Localization.DIGITAL_TOGGLE.toString(), TEXT_X, TEXT_Y, 0.7F, 0x404040);
         }
         radioButtons.draw(gui, mX, mY);
@@ -124,7 +126,7 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
     @SideOnly(Side.CLIENT)
     @Override
     public void drawMouseOver(GuiManager gui, int mX, int mY) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @SideOnly(Side.CLIENT)
@@ -132,7 +134,7 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
     public boolean onKeyStroke(GuiManager gui, char c, int k) {
         if (useStrengthSetting()) {
             return textBoxes.onKeyStroke(gui, c, k);
-        }else{
+        } else {
             return super.onKeyStroke(gui, c, k);
         }
     }
@@ -147,12 +149,12 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -169,7 +171,7 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        ComponentMenuRedstoneOutput menuOutput = (ComponentMenuRedstoneOutput)menu;
+        ComponentMenuRedstoneOutput menuOutput = (ComponentMenuRedstoneOutput) menu;
 
         textBox.setNumber(menuOutput.textBox.getNumber());
         radioButtons.setSelectedOption(menuOutput.radioButtons.getSelectedOption());
@@ -177,22 +179,22 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuRedstoneOutput newDataOutput = (ComponentMenuRedstoneOutput)newData;
+        ComponentMenuRedstoneOutput newDataOutput = (ComponentMenuRedstoneOutput) newData;
 
         if (textBox.getNumber() != newDataOutput.textBox.getNumber()) {
             textBox.setNumber(newDataOutput.textBox.getNumber());
 
             DataWriter dw = getWriterForClientComponentPacket(container);
-            dw.writeBoolean(true); //header
+            dw.writeBoolean(true); // header
             dw.writeData(textBox.getNumber(), DataBitHelper.MENU_REDSTONE_ANALOG);
             PacketHandler.sendDataToListeningClients(container, dw);
         }
 
-        if (radioButtons.getSelectedOption() != newDataOutput.radioButtons.getSelectedOption())  {
+        if (radioButtons.getSelectedOption() != newDataOutput.radioButtons.getSelectedOption()) {
             radioButtons.setSelectedOption(newDataOutput.radioButtons.getSelectedOption());
 
             DataWriter dw = getWriterForClientComponentPacket(container);
-            dw.writeBoolean(false); //header
+            dw.writeBoolean(false); // header
             dw.writeData(radioButtons.getSelectedOption(), DataBitHelper.MENU_REDSTONE_OUTPUT_TYPE);
             PacketHandler.sendDataToListeningClients(container, dw);
         }
@@ -209,8 +211,8 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setByte(NBT_NUMBER, (byte)textBox.getNumber());
-        nbtTagCompound.setByte(NBT_TYPE, (byte)radioButtons.getSelectedOption());
+        nbtTagCompound.setByte(NBT_NUMBER, (byte) textBox.getNumber());
+        nbtTagCompound.setByte(NBT_TYPE, (byte) radioButtons.getSelectedOption());
     }
 
     @Override
@@ -218,7 +220,7 @@ public class ComponentMenuRedstoneOutput extends ComponentMenu {
         boolean isNumber = dr.readBoolean();
         if (isNumber) {
             textBox.setNumber(dr.readData(DataBitHelper.MENU_REDSTONE_ANALOG));
-        }else{
+        } else {
             int type = dr.readData(DataBitHelper.MENU_REDSTONE_OUTPUT_TYPE);
             radioButtons.setSelectedOption(type);
         }

@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public class ComponentMenuListOrderVariable extends ComponentMenuListOrder {
+
     public ComponentMenuListOrderVariable(FlowComponent parent) {
         super(parent);
     }

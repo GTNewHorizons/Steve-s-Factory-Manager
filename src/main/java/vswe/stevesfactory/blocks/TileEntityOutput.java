@@ -1,22 +1,26 @@
 package vswe.stevesfactory.blocks;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.components.ComponentMenuPulse;
 import vswe.stevesfactory.components.ComponentMenuRedstoneOutput;
 import vswe.stevesfactory.components.ComponentMenuRedstoneSidesEmitter;
-import vswe.stevesfactory.network.*;
-
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
+import vswe.stevesfactory.network.DataBitHelper;
+import vswe.stevesfactory.network.DataReader;
+import vswe.stevesfactory.network.DataWriter;
+import vswe.stevesfactory.network.IPacketBlock;
+import vswe.stevesfactory.network.PacketHandler;
 
 public class TileEntityOutput extends TileEntityClusterElement implements IPacketBlock, IRedstoneNode {
 
@@ -44,7 +48,6 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
         return strong[side];
     }
 
-
     public boolean hasStrongSignalAtOppositeSide(int side) {
         return strong[getOpposite(side)];
     }
@@ -61,8 +64,8 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
         return ForgeDirection.getOrientation(side).getOpposite().ordinal();
     }
 
-
-    public void updateState(ComponentMenuRedstoneSidesEmitter sides, ComponentMenuRedstoneOutput output, ComponentMenuPulse pulse) {
+    public void updateState(ComponentMenuRedstoneSidesEmitter sides, ComponentMenuRedstoneOutput output,
+            ComponentMenuPulse pulse) {
         boolean updateClient = false;
         for (int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++) {
             if (sides.isSideRequired(i)) {
@@ -72,27 +75,30 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
                 updateSideState(i, output);
                 updatedStrong[i] = sides.useStrongSignal();
 
-
-                /*if (((updatedStrength[i] > 0) != (oldStrength > 0)) || (oldStrong != updatedStrong[i])) {
-                    updateClient = true;
-                }*/
+                /*
+                 * if (((updatedStrength[i] > 0) != (oldStrength > 0)) || (oldStrong != updatedStrong[i])) {
+                 * updateClient = true; }
+                 */
                 boolean updateBlocks = oldStrength != updatedStrength[i] || oldStrong != updatedStrong[i];
                 if (updateBlocks) {
                     updateClient = true;
                 }
-
-
-
 
                 if (updateBlocks) {
                     addBlockScheduledForUpdate(i);
                 }
 
                 if (pulse.shouldEmitPulse()) {
-                    PulseTimer timer = new PulseTimer(oldStrength, oldStrong, pulse.getPulseTime() + 1); //add one to counter the first tick (which is the same tick as we add it)
+                    PulseTimer timer = new PulseTimer(oldStrength, oldStrong, pulse.getPulseTime() + 1); // add one to
+                                                                                                         // counter the
+                                                                                                         // first tick
+                                                                                                         // (which is
+                                                                                                         // the same
+                                                                                                         // tick as we
+                                                                                                         // add it)
                     List<PulseTimer> timers = pulseTimers[i];
 
-                    if (timers.size() < 200) { //to block a huge amount of pulses at the same time
+                    if (timers.size() < 200) { // to block a huge amount of pulses at the same time
                         switch (pulse.getSelectedPulseOverride()) {
                             case EXTEND_OLD:
                                 if (timers.size() > 0) {
@@ -104,7 +110,7 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
 
                                     PulseTimer oldTimer = timers.get(0);
                                     oldTimer.ticks = Math.max(oldTimer.ticks, timer.ticks);
-                                }else{
+                                } else {
                                     timers.add(timer);
                                 }
                                 break;
@@ -122,8 +128,6 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
                         }
                     }
                 }
-
-
 
             }
         }
@@ -145,7 +149,6 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
             scheduledToUpdate.add(coordinate);
         }
     }
-
 
     private void updateSideState(int side, ComponentMenuRedstoneOutput output) {
         int strength = updatedStrength[side];
@@ -179,10 +182,8 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
                 break;
         }
 
-
         updatedStrength[side] = strength;
     }
-
 
     private void notifyUpdate(int x, int y, int z, boolean spread) {
         if (worldObj.getBlock(x, y, z) != ModBlocks.blockCable && (x != xCoord || y != yCoord || z != zCoord)) {
@@ -191,15 +192,13 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
             if (spread) {
                 notifyUpdate(x - 1, y, z, false);
                 notifyUpdate(x + 1, y, z, false);
-                notifyUpdate(x,         y - 1,      z,      false);
-                notifyUpdate(x,         y + 1,      z,      false);
-                notifyUpdate(x,         y,          z - 1,  false);
-                notifyUpdate(x,         y,          z + 1,  false);
+                notifyUpdate(x, y - 1, z, false);
+                notifyUpdate(x, y + 1, z, false);
+                notifyUpdate(x, y, z - 1, false);
+                notifyUpdate(x, y, z + 1, false);
             }
         }
     }
-
-
 
     private static final String NBT_SIDES = "Sides";
     private static final String NBT_STRENGTH = "Strength";
@@ -210,7 +209,6 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
     @Override
     public void readContentFromNBT(NBTTagCompound nbtTagCompound) {
         int version = nbtTagCompound.getByte(ModBlocks.NBT_PROTOCOL_VERSION);
-
 
         NBTTagList sidesTag = nbtTagCompound.getTagList(NBT_SIDES, 10);
         for (int i = 0; i < sidesTag.tagCount(); i++) {
@@ -226,12 +224,14 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
             for (int j = 0; j < pulsesTag.tagCount(); j++) {
                 NBTTagCompound pulseTag = pulsesTag.getCompoundTagAt(j);
 
-                timers.add(new PulseTimer(pulseTag.getByte(NBT_STRENGTH), pulseTag.getBoolean(NBT_STRONG), pulseTag.getShort(NBT_TICK)));
+                timers.add(
+                        new PulseTimer(
+                                pulseTag.getByte(NBT_STRENGTH),
+                                pulseTag.getBoolean(NBT_STRONG),
+                                pulseTag.getShort(NBT_TICK)));
             }
         }
     }
-
-
 
     @Override
     public void writeContentToNBT(NBTTagCompound nbtTagCompound) {
@@ -241,7 +241,7 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
         for (int i = 0; i < strengths.length; i++) {
             NBTTagCompound sideTag = new NBTTagCompound();
 
-            sideTag.setByte(NBT_STRENGTH, (byte)updatedStrength[i]);
+            sideTag.setByte(NBT_STRENGTH, (byte) updatedStrength[i]);
             sideTag.setBoolean(NBT_STRONG, updatedStrong[i]);
 
             NBTTagList pulsesTag = new NBTTagList();
@@ -249,9 +249,9 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
 
             for (PulseTimer timer : timers) {
                 NBTTagCompound pulseTag = new NBTTagCompound();
-                pulseTag.setByte(NBT_STRENGTH, (byte)timer.strength);
+                pulseTag.setByte(NBT_STRENGTH, (byte) timer.strength);
                 pulseTag.setBoolean(NBT_STRONG, timer.strong);
-                pulseTag.setShort(NBT_TICK, (short)timer.ticks);
+                pulseTag.setShort(NBT_TICK, (short) timer.ticks);
                 pulsesTag.appendTag(pulseTag);
             }
             sideTag.setTag(NBT_PULSES, pulsesTag);
@@ -259,10 +259,8 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
             sidesTag.appendTag(sideTag);
         }
 
-
         nbtTagCompound.setTag(NBT_SIDES, sidesTag);
     }
-
 
     @Override
     public void writeData(DataWriter dw, EntityPlayer player, boolean onServer, int id) {
@@ -275,23 +273,23 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
                     dw.writeBoolean(updatedStrong[i]);
                 }
             }
-        }else{
-            //nothing to write, empty packet
+        } else {
+            // nothing to write, empty packet
         }
     }
 
     @Override
     public void readData(DataReader dr, EntityPlayer player, boolean onServer, int id) {
         if (onServer) {
-            //respond by sending the data to the client that required it
+            // respond by sending the data to the client that required it
             PacketHandler.sendBlockPacket(this, player, 0);
-        }else{
+        } else {
             for (int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++) {
                 boolean isOn = dr.readBoolean();
                 if (isOn) {
                     strengths[i] = dr.readData(DataBitHelper.MENU_REDSTONE_ANALOG);
                     strong[i] = dr.readBoolean();
-                }else {
+                } else {
                     strengths[i] = 0;
                 }
             }
@@ -299,10 +297,9 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
         }
     }
 
-
     @Override
     public int infoBitLength(boolean onServer) {
-        return 0; //won't use the id
+        return 0; // won't use the id
     }
 
     private List<PulseTimer>[] pulseTimers;
@@ -311,24 +308,24 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
 
     @Override
     public void updateEntity() {
-       if (worldObj.isRemote) {
-           keepClientDataUpdated();
-       }else{
-           updatePulses();
+        if (worldObj.isRemote) {
+            keepClientDataUpdated();
+        } else {
+            updatePulses();
 
-           if (hasUpdatedThisTick) {
-               hasUpdatedThisTick = false;
-               List<WorldCoordinate> coordinates = new ArrayList<WorldCoordinate>(scheduledToUpdate);
-               scheduledToUpdate.clear();
-               for (int i = 0; i < strengths.length; i++) {
-                   strengths[i] = updatedStrength[i];
-                   strong[i] = updatedStrong[i];
-               }
-               for (WorldCoordinate coordinate : coordinates) {
-                   notifyUpdate(coordinate.getX(), coordinate.getY(), coordinate.getZ(), true);
-               }
-           }
-       }
+            if (hasUpdatedThisTick) {
+                hasUpdatedThisTick = false;
+                List<WorldCoordinate> coordinates = new ArrayList<WorldCoordinate>(scheduledToUpdate);
+                scheduledToUpdate.clear();
+                for (int i = 0; i < strengths.length; i++) {
+                    strengths[i] = updatedStrength[i];
+                    strong[i] = updatedStrong[i];
+                }
+                for (WorldCoordinate coordinate : coordinates) {
+                    notifyUpdate(coordinate.getX(), coordinate.getY(), coordinate.getZ(), true);
+                }
+            }
+        }
     }
 
     private void updatePulses() {
@@ -370,10 +367,11 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
 
         if (distance > Math.pow(PacketHandler.BLOCK_UPDATE_RANGE, 2)) {
             hasUpdatedData = false;
-        }else if(!hasUpdatedData && distance < Math.pow(PacketHandler.BLOCK_UPDATE_RANGE - UPDATE_BUFFER_DISTANCE, 2)) {
-            hasUpdatedData = true;
-            PacketHandler.sendBlockPacket(this, Minecraft.getMinecraft().thePlayer, 0);
-        }
+        } else
+            if (!hasUpdatedData && distance < Math.pow(PacketHandler.BLOCK_UPDATE_RANGE - UPDATE_BUFFER_DISTANCE, 2)) {
+                hasUpdatedData = true;
+                PacketHandler.sendBlockPacket(this, Minecraft.getMinecraft().thePlayer, 0);
+            }
     }
 
     @Override
@@ -383,10 +381,15 @@ public class TileEntityOutput extends TileEntityClusterElement implements IPacke
 
     @Override
     protected EnumSet<ClusterMethodRegistration> getRegistrations() {
-        return EnumSet.of(ClusterMethodRegistration.CAN_CONNECT_REDSTONE, ClusterMethodRegistration.SHOULD_CHECK_WEAK_POWER, ClusterMethodRegistration.IS_PROVIDING_WEAK_POWER, ClusterMethodRegistration.IS_PROVIDING_STRONG_POWER);
+        return EnumSet.of(
+                ClusterMethodRegistration.CAN_CONNECT_REDSTONE,
+                ClusterMethodRegistration.SHOULD_CHECK_WEAK_POWER,
+                ClusterMethodRegistration.IS_PROVIDING_WEAK_POWER,
+                ClusterMethodRegistration.IS_PROVIDING_STRONG_POWER);
     }
 
     private class PulseTimer {
+
         private int strength;
         private boolean strong;
         private int ticks;

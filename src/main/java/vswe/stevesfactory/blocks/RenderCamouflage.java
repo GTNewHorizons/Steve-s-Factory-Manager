@@ -1,19 +1,22 @@
 package vswe.stevesfactory.blocks;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
+
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderCamouflage implements ISimpleBlockRenderingHandler {
 
     private int id;
+
     public RenderCamouflage() {
         id = RenderingRegistry.getNextAvailableRenderId();
     }
@@ -63,7 +66,8 @@ public class RenderCamouflage implements ISimpleBlockRenderingHandler {
     }
 
     @Override
-    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
+            RenderBlocks renderer) {
         Tessellator.instance.setColorOpaque_F(1F, 1F, 1F);
 
         block.setBlockBoundsBasedOnState(world, x, y, z);
@@ -73,14 +77,14 @@ public class RenderCamouflage implements ISimpleBlockRenderingHandler {
         TileEntityCamouflage camouflage = TileEntityCluster.getTileEntity(TileEntityCamouflage.class, world, x, y, z);
 
         if (camouflage != null && camouflage.getCamouflageType().useDoubleRendering()) {
-            BlockCamouflageBase camoBlock = (BlockCamouflageBase)block;
+            BlockCamouflageBase camoBlock = (BlockCamouflageBase) block;
 
-            float maxX = (float)block.getBlockBoundsMaxX();
-            float maxY = (float)block.getBlockBoundsMaxY();
-            float maxZ = (float)block.getBlockBoundsMaxZ();
-            float minX = (float)block.getBlockBoundsMinX();
-            float minY = (float)block.getBlockBoundsMinY();
-            float minZ = (float)block.getBlockBoundsMinZ();
+            float maxX = (float) block.getBlockBoundsMaxX();
+            float maxY = (float) block.getBlockBoundsMaxY();
+            float maxZ = (float) block.getBlockBoundsMaxZ();
+            float minX = (float) block.getBlockBoundsMinX();
+            float minY = (float) block.getBlockBoundsMinY();
+            float minZ = (float) block.getBlockBoundsMinZ();
 
             float f = 0.0015F;
             float f2 = 0.002F;
@@ -122,7 +126,5 @@ public class RenderCamouflage implements ISimpleBlockRenderingHandler {
     public int getRenderId() {
         return id;
     }
-
-
 
 }

@@ -1,12 +1,16 @@
 package vswe.stevesfactory.components;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.RegistryNamespaced;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
@@ -15,18 +19,14 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public class ComponentMenuItem extends ComponentMenuStuff {
 
-
-    protected  ComponentMenuItem(FlowComponent parent, Class<? extends Setting> settingClass) {
+    protected ComponentMenuItem(FlowComponent parent, Class<? extends Setting> settingClass) {
         super(parent, settingClass);
 
         if (settings.get(0).isAmountSpecific()) {
-            numberTextBoxes.addTextBox(amountTextBox = new TextBoxNumber(80 ,24, 3, true) {
+            numberTextBoxes.addTextBox(amountTextBox = new TextBoxNumber(80, 24, 3, true) {
+
                 @Override
                 public boolean isVisible() {
                     return selectedSetting.isLimitedByAmount();
@@ -41,9 +41,11 @@ public class ComponentMenuItem extends ComponentMenuStuff {
         }
 
         numberTextBoxes.addTextBox(damageValueTextBox = new TextBoxNumber(70, 52, 5, true) {
+
             @Override
             public boolean isVisible() {
-                return getSelectedSetting().canChangeMetaData() && getSelectedSetting().getFuzzyMode().requiresMetaData();
+                return getSelectedSetting().canChangeMetaData()
+                        && getSelectedSetting().getFuzzyMode().requiresMetaData();
             }
 
             @Override
@@ -53,22 +55,13 @@ public class ComponentMenuItem extends ComponentMenuStuff {
             }
         });
 
-        /*checkBoxes.addCheckBox(new CheckBox("Is detection fuzzy?", 5, 40) {
-            @Override
-            public void setValue(boolean val) {
-                getSelectedSetting().setFuzzyMode(val ? FuzzyMode.FUZZY : FuzzyMode.PRECISE);
-            }
-
-            @Override
-            public boolean getValue() {
-                return getSelectedSetting().getFuzzyMode() == FuzzyMode.FUZZY;
-            }
-
-            @Override
-            public void onUpdate() {
-                writeServerData(DataTypeHeader.USE_FUZZY);
-            }
-        });*/
+        /*
+         * checkBoxes.addCheckBox(new CheckBox("Is detection fuzzy?", 5, 40) {
+         * @Override public void setValue(boolean val) { getSelectedSetting().setFuzzyMode(val ? FuzzyMode.FUZZY :
+         * FuzzyMode.PRECISE); }
+         * @Override public boolean getValue() { return getSelectedSetting().getFuzzyMode() == FuzzyMode.FUZZY; }
+         * @Override public void onUpdate() { writeServerData(DataTypeHeader.USE_FUZZY); } });
+         */
     }
 
     public ComponentMenuItem(FlowComponent parent) {
@@ -87,12 +80,11 @@ public class ComponentMenuItem extends ComponentMenuStuff {
     private static final int ARROW_Y = 37;
     private static final int ARROW_TEXT_Y = 40;
 
-
     private TextBoxNumber damageValueTextBox;
     private TextBoxNumber amountTextBox;
 
     protected ItemSetting getSelectedSetting() {
-        return (ItemSetting)selectedSetting;
+        return (ItemSetting) selectedSetting;
     }
 
     @Override
@@ -114,33 +106,45 @@ public class ComponentMenuItem extends ComponentMenuStuff {
             int srcXArrow = i;
             int srcYArrow = CollisionHelper.inBounds(x, y, ARROW_WIDTH, ARROW_HEIGHT, mX, mY) ? 1 : 0;
 
-            gui.drawTexture(x, y, ARROW_SRC_X + srcXArrow * ARROW_WIDTH, ARROW_SRC_Y + srcYArrow * ARROW_HEIGHT, ARROW_WIDTH, ARROW_HEIGHT);
+            gui.drawTexture(
+                    x,
+                    y,
+                    ARROW_SRC_X + srcXArrow * ARROW_WIDTH,
+                    ARROW_SRC_Y + srcYArrow * ARROW_HEIGHT,
+                    ARROW_WIDTH,
+                    ARROW_HEIGHT);
         }
-        gui.drawCenteredString(getSelectedSetting().getFuzzyMode().toString(), ARROW_X_LEFT, ARROW_TEXT_Y, 0.7F, ARROW_X_RIGHT - ARROW_X_LEFT + ARROW_WIDTH, 0x404040);
+        gui.drawCenteredString(
+                getSelectedSetting().getFuzzyMode().toString(),
+                ARROW_X_LEFT,
+                ARROW_TEXT_Y,
+                0.7F,
+                ARROW_X_RIGHT - ARROW_X_LEFT + ARROW_WIDTH,
+                0x404040);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     protected void drawResultObject(GuiManager gui, Object obj, int x, int y) {
-        gui.drawItemStack((ItemStack)obj, x, y);
+        gui.drawItemStack((ItemStack) obj, x, y);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     protected void drawSettingObject(GuiManager gui, Setting setting, int x, int y) {
-        drawResultObject(gui,((ItemSetting)setting).getItem(), x, y);
+        drawResultObject(gui, ((ItemSetting) setting).getItem(), x, y);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     protected List<String> getResultObjectMouseOver(Object o) {
-        return getToolTip((ItemStack)o);
+        return getToolTip((ItemStack) o);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     protected List<String> getSettingObjectMouseOver(Setting setting) {
-        return getResultObjectMouseOver(((ItemSetting)setting).getItem());
+        return getResultObjectMouseOver(((ItemSetting) setting).getItem());
     }
 
     @Override
@@ -155,8 +159,8 @@ public class ComponentMenuItem extends ComponentMenuStuff {
     public void refreshData(ContainerManager container, ComponentMenu newData) {
         super.refreshData(container, newData);
         for (int i = 0; i < settings.size(); i++) {
-            ItemSetting setting = (ItemSetting)settings.get(i);
-            ItemSetting newSetting = (ItemSetting)((ComponentMenuStuff)newData).settings.get(i);
+            ItemSetting setting = (ItemSetting) settings.get(i);
+            ItemSetting newSetting = (ItemSetting) ((ComponentMenuStuff) newData).settings.get(i);
             if (newSetting.getFuzzyMode() != setting.getFuzzyMode()) {
                 setting.setFuzzyMode(newSetting.getFuzzyMode());
                 writeClientData(container, DataTypeHeader.USE_FUZZY, setting);
@@ -179,12 +183,12 @@ public class ComponentMenuItem extends ComponentMenuStuff {
 
     @Override
     protected void readSpecificHeaderData(DataReader dr, DataTypeHeader header, Setting setting) {
-        ItemSetting itemSetting = (ItemSetting)setting;
+        ItemSetting itemSetting = (ItemSetting) setting;
 
         switch (header) {
             case SET_ITEM:
                 int id = dr.readData(DataBitHelper.MENU_ITEM_ID);
-                int dmg =  dr.readData(DataBitHelper.MENU_ITEM_META);
+                int dmg = dr.readData(DataBitHelper.MENU_ITEM_META);
 
                 itemSetting.setItem(new ItemStack(Item.getItemById(id), 1, dmg));
                 itemSetting.getItem().setTagCompound(dr.readNBT());
@@ -211,7 +215,7 @@ public class ComponentMenuItem extends ComponentMenuStuff {
 
     @Override
     protected void writeSpecificHeaderData(DataWriter dw, DataTypeHeader header, Setting setting) {
-        ItemSetting itemSetting = (ItemSetting)setting;
+        ItemSetting itemSetting = (ItemSetting) setting;
         switch (header) {
             case SET_ITEM:
                 dw.writeData(Item.getIdFromItem(itemSetting.getItem().getItem()), DataBitHelper.MENU_ITEM_ID);
@@ -241,7 +245,7 @@ public class ComponentMenuItem extends ComponentMenuStuff {
                     item.stackSize = 1;
                     boolean exists = false;
                     for (Object other : ret) {
-                        if (ItemStack.areItemStacksEqual(item, (ItemStack)other)) {
+                        if (ItemStack.areItemStacksEqual(item, (ItemStack) other)) {
                             exists = true;
                             break;
                         }
@@ -252,10 +256,10 @@ public class ComponentMenuItem extends ComponentMenuStuff {
                     }
                 }
             }
-        }else{
+        } else {
             Iterator itemTypeIterator = Item.itemRegistry.iterator();
-            while (itemTypeIterator.hasNext()){
-                Item item = (Item)itemTypeIterator.next();
+            while (itemTypeIterator.hasNext()) {
+                Item item = (Item) itemTypeIterator.next();
 
                 if (item != null && item.getCreativeTab() != null) {
                     item.getSubItems(item, null, ret);
@@ -270,10 +274,12 @@ public class ComponentMenuItem extends ComponentMenuStuff {
                     ItemStack itemStack = itemIterator.next();
                     List<String> description;
 
-                    //if it encounters some weird items
+                    // if it encounters some weird items
                     try {
-                        description = itemStack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
-                    }catch (Throwable ex) {
+                        description = itemStack.getTooltip(
+                                Minecraft.getMinecraft().thePlayer,
+                                Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+                    } catch (Throwable ex) {
                         itemIterator.remove();
                         continue;
                     }
@@ -303,11 +309,13 @@ public class ComponentMenuItem extends ComponentMenuStuff {
     @SideOnly(Side.CLIENT)
     public static List<String> getToolTip(ItemStack itemStack) {
         try {
-            return itemStack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
-        }catch (Exception ex) {
+            return itemStack.getTooltip(
+                    Minecraft.getMinecraft().thePlayer,
+                    Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+        } catch (Exception ex) {
             if (itemStack.getItemDamage() == 0) {
                 return new ArrayList<String>();
-            }else{
+            } else {
                 ItemStack newItem = itemStack.copy();
                 newItem.setItemDamage(0);
                 return getToolTip(newItem);
@@ -319,10 +327,10 @@ public class ComponentMenuItem extends ComponentMenuStuff {
     public static String getDisplayName(ItemStack itemStack) {
         try {
             return itemStack.getDisplayName();
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             if (itemStack.getItemDamage() == 0) {
                 return "";
-            }else{
+            } else {
                 ItemStack newItem = itemStack.copy();
                 newItem.setItemDamage(0);
                 return getDisplayName(newItem);
@@ -335,19 +343,17 @@ public class ComponentMenuItem extends ComponentMenuStuff {
         super.onClick(mX, mY, button);
 
         if (isEditing()) {
-            if(this instanceof ComponentMenuCrafting && ((ComponentMenuCrafting) this).isEditingResult())
-                return;
-            for (int i = -1; i <= 1; i+=2) {
+            if (this instanceof ComponentMenuCrafting && ((ComponentMenuCrafting) this).isEditingResult()) return;
+            for (int i = -1; i <= 1; i += 2) {
                 int x = i == 1 ? ARROW_X_RIGHT : ARROW_X_LEFT;
                 int y = ARROW_Y;
-
 
                 if (CollisionHelper.inBounds(x, y, ARROW_WIDTH, ARROW_HEIGHT, mX, mY)) {
                     int id = getSelectedSetting().getFuzzyMode().ordinal();
                     id += i;
                     if (id < 0) {
                         id = FuzzyMode.values().length - 1;
-                    }else if(id == FuzzyMode.values().length) {
+                    } else if (id == FuzzyMode.values().length) {
                         id = 0;
                     }
                     getSelectedSetting().setFuzzyMode(FuzzyMode.values()[id]);
@@ -356,9 +362,11 @@ public class ComponentMenuItem extends ComponentMenuStuff {
                 }
             }
 
-            /*if (CollisionHelper.inBounds(EDIT_ITEM_X, EDIT_ITEM_Y, ITEM_SIZE, ITEM_SIZE, mX, mY) && getSelectedSetting().getItem().hasTagCompound()) {
-                getParent().getManager().specialRenderer = new NBTRenderer(getSelectedSetting().getItem().getTagCompound());
-            }*/
+            /*
+             * if (CollisionHelper.inBounds(EDIT_ITEM_X, EDIT_ITEM_Y, ITEM_SIZE, ITEM_SIZE, mX, mY) &&
+             * getSelectedSetting().getItem().hasTagCompound()) { getParent().getManager().specialRenderer = new
+             * NBTRenderer(getSelectedSetting().getItem().getTagCompound()); }
+             */
         }
     }
 }

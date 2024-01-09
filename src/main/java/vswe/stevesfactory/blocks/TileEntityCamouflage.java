@@ -1,7 +1,8 @@
 package vswe.stevesfactory.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.EnumSet;
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
@@ -14,13 +15,16 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.components.ComponentMenuCamouflageInside;
 import vswe.stevesfactory.components.ComponentMenuCamouflageShape;
-import vswe.stevesfactory.network.*;
-
-import java.util.EnumSet;
-import java.util.Random;
-
+import vswe.stevesfactory.network.DataBitHelper;
+import vswe.stevesfactory.network.DataReader;
+import vswe.stevesfactory.network.DataWriter;
+import vswe.stevesfactory.network.IPacketBlock;
+import vswe.stevesfactory.network.PacketHandler;
 
 public class TileEntityCamouflage extends TileEntityClusterElement implements IPacketBlock {
 
@@ -28,7 +32,7 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
         if (getCamouflageType().useSpecialShape()) {
             if (!useCollision) {
                 return false;
-            }else{
+            } else {
                 for (int i = 0; i < bounds.length; i++) {
                     if (bounds[i] != (i % 2 == 0 ? 0 : 32)) {
                         return false;
@@ -48,44 +52,53 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
                 Block block = Block.getBlockById(ids[sideHit]);
                 if (block != null) {
                     float f = 0.1F;
-                    double x = (double)xCoord + rand.nextDouble() * (camoBlock.getBlockBoundsMaxX() - camoBlock.getBlockBoundsMinX() - (double)(f * 2.0F)) + (double)f + camoBlock.getBlockBoundsMinX();
-                    double y = (double)yCoord + rand.nextDouble() * (camoBlock.getBlockBoundsMaxY() - camoBlock.getBlockBoundsMinY() - (double)(f * 2.0F)) + (double)f + camoBlock.getBlockBoundsMinY();
-                    double z = (double)zCoord + rand.nextDouble() * (camoBlock.getBlockBoundsMaxZ() - camoBlock.getBlockBoundsMinZ() - (double)(f * 2.0F)) + (double)f + camoBlock.getBlockBoundsMinZ();
+                    double x = (double) xCoord + rand.nextDouble()
+                            * (camoBlock.getBlockBoundsMaxX() - camoBlock.getBlockBoundsMinX() - (double) (f * 2.0F))
+                            + (double) f
+                            + camoBlock.getBlockBoundsMinX();
+                    double y = (double) yCoord + rand.nextDouble()
+                            * (camoBlock.getBlockBoundsMaxY() - camoBlock.getBlockBoundsMinY() - (double) (f * 2.0F))
+                            + (double) f
+                            + camoBlock.getBlockBoundsMinY();
+                    double z = (double) zCoord + rand.nextDouble()
+                            * (camoBlock.getBlockBoundsMaxZ() - camoBlock.getBlockBoundsMinZ() - (double) (f * 2.0F))
+                            + (double) f
+                            + camoBlock.getBlockBoundsMinZ();
 
                     switch (sideHit) {
                         case 0:
-                            y = (double)yCoord + camoBlock.getBlockBoundsMinY() - (double)f;
+                            y = (double) yCoord + camoBlock.getBlockBoundsMinY() - (double) f;
                             break;
                         case 1:
-                            y = (double)yCoord + camoBlock.getBlockBoundsMaxY() + (double)f;
+                            y = (double) yCoord + camoBlock.getBlockBoundsMaxY() + (double) f;
                             break;
                         case 2:
-                            z = (double)zCoord + camoBlock.getBlockBoundsMinZ() - (double)f;
+                            z = (double) zCoord + camoBlock.getBlockBoundsMinZ() - (double) f;
                             break;
                         case 3:
-                            z = (double)zCoord + camoBlock.getBlockBoundsMaxZ() + (double)f;
+                            z = (double) zCoord + camoBlock.getBlockBoundsMaxZ() + (double) f;
                             break;
                         case 4:
-                            x = (double)xCoord + camoBlock.getBlockBoundsMinX() - (double)f;
+                            x = (double) xCoord + camoBlock.getBlockBoundsMinX() - (double) f;
                             break;
                         case 5:
-                            x = (double)xCoord + camoBlock.getBlockBoundsMaxX() + (double)f;
+                            x = (double) xCoord + camoBlock.getBlockBoundsMaxX() + (double) f;
                             break;
                     }
 
-
-
-                    effectRenderer.addEffect((new EntityDiggingFX(this.worldObj, x, y, z, 0.0D, 0.0D, 0.0D, block, metas[sideHit])).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
+                    effectRenderer.addEffect(
+                            (new EntityDiggingFX(this.worldObj, x, y, z, 0.0D, 0.0D, 0.0D, block, metas[sideHit]))
+                                    .multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
                     return true;
                 }
             }
-        }catch (Exception ignored) {}
+        } catch (Exception ignored) {}
 
         return false;
     }
 
-
     public enum CamouflageType {
+
         NORMAL("BlockCableCamouflage", "cable_camo", false, false),
         INSIDE("BlockCableInsideCamouflage", "cable_camo_inside", true, false),
         SHAPE("BlockCableShapeCamouflage", "cable_camo_shape", true, true);
@@ -124,7 +137,13 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
     }
 
     public void setBlockBounds(BlockCamouflageBase blockCamouflageBase) {
-        blockCamouflageBase.setBlockBounds(bounds[0] / 32F, bounds[2] / 32F, bounds[4] / 32F, bounds[1] / 32F, bounds[3] / 32F, bounds[5] / 32F);
+        blockCamouflageBase.setBlockBounds(
+                bounds[0] / 32F,
+                bounds[2] / 32F,
+                bounds[4] / 32F,
+                bounds[1] / 32F,
+                bounds[3] / 32F,
+                bounds[5] / 32F);
     }
 
     public boolean isUseCollision() {
@@ -137,7 +156,7 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
 
     private boolean useCollision = true;
     private boolean fullCollision = false;
-    private int[] bounds = {0, 32, 0, 32, 0, 32};
+    private int[] bounds = { 0, 32, 0, 32, 0, 32 };
     private int[] ids = new int[ForgeDirection.VALID_DIRECTIONS.length * 2];
     private int[] metas = new int[ForgeDirection.VALID_DIRECTIONS.length * 2];
 
@@ -160,7 +179,7 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
                 }
             }
 
-            for (int i = 0; i < bounds.length; i+=2) {
+            for (int i = 0; i < bounds.length; i += 2) {
                 if (bounds[i] > bounds[i + 1]) {
                     int tmp = bounds[i + 1];
                     bounds[i + 1] = bounds[i];
@@ -202,16 +221,16 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
         int oldId = ids[side];
         int oldMeta = metas[side];
 
-        if (item == null){
+        if (item == null) {
             ids[side] = 0;
             metas[side] = 0;
-        }else if(item.getItem() != null && item.getItem() instanceof ItemBlock) {
-            Block block = ((ItemBlock)item.getItem()).field_150939_a;
+        } else if (item.getItem() != null && item.getItem() instanceof ItemBlock) {
+            Block block = ((ItemBlock) item.getItem()).field_150939_a;
             if (block != null) {
                 ids[side] = Block.getIdFromBlock(block);
                 metas[side] = item.getItem().getMetadata(item.getItemDamage());
                 validateSide(side);
-            }else{
+            } else {
                 ids[side] = 0;
                 metas[side] = 0;
             }
@@ -245,50 +264,51 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
             for (int i = 0; i < getSideCount(); i++) {
                 if (ids[i] == 0) {
                     dw.writeBoolean(false);
-                }else{
+                } else {
                     dw.writeBoolean(true);
                     dw.writeData(ids[i], DataBitHelper.BLOCK_ID);
                     dw.writeData(metas[i], DataBitHelper.BLOCK_META);
                 }
             }
-            if (getCamouflageType().useSpecialShape()){
+            if (getCamouflageType().useSpecialShape()) {
                 dw.writeBoolean(useCollision);
                 if (useCollision) {
                     dw.writeBoolean(fullCollision);
                 }
                 for (int bound : bounds) {
-                    //This is done since 0 and 32 are the most common values and the final bit would only be used by 32 anyways
-                    //0 -> 01
-                    //32 -> 11
-                    //1 to 31 ->  bin(bound) << 1
+                    // This is done since 0 and 32 are the most common values and the final bit would only be used by 32
+                    // anyways
+                    // 0 -> 01
+                    // 32 -> 11
+                    // 1 to 31 -> bin(bound) << 1
 
                     if (bound == 0) {
                         dw.writeBoolean(true);
                         dw.writeBoolean(false);
-                    }else if(bound == 32) {
+                    } else if (bound == 32) {
                         dw.writeBoolean(true);
                         dw.writeBoolean(true);
-                    }else{
+                    } else {
                         dw.writeData(bound << 1, DataBitHelper.CAMOUFLAGE_BOUNDS.getBitCount());
                     }
                 }
             }
-        }else{
-            //nothing to write, empty packet
+        } else {
+            // nothing to write, empty packet
         }
     }
 
     @Override
     public void readData(DataReader dr, EntityPlayer player, boolean onServer, int id) {
         if (onServer) {
-            //respond by sending the data to the client that required it
+            // respond by sending the data to the client that required it
             PacketHandler.sendBlockPacket(this, player, 0);
-        }else{
+        } else {
             for (int i = 0; i < getSideCount(); i++) {
                 if (!dr.readBoolean()) {
                     ids[i] = 0;
                     metas[i] = 0;
-                }else{
+                } else {
                     ids[i] = dr.readData(DataBitHelper.BLOCK_ID);
                     metas[i] = dr.readData(DataBitHelper.BLOCK_META);
                     validateSide(i);
@@ -298,19 +318,20 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
                 useCollision = dr.readBoolean();
                 if (useCollision) {
                     fullCollision = dr.readBoolean();
-                }else{
+                } else {
                     fullCollision = false;
                 }
 
                 for (int i = 0; i < bounds.length; i++) {
-                    //This is done since 0 and 32 are the most common values and the final bit would only be used by 32 anyways
-                    //0 -> 01
-                    //32 -> 11
-                    //1 to 31 ->  bin(bound) << 1
+                    // This is done since 0 and 32 are the most common values and the final bit would only be used by 32
+                    // anyways
+                    // 0 -> 01
+                    // 32 -> 11
+                    // 1 to 31 -> bin(bound) << 1
 
                     if (dr.readBoolean()) {
                         bounds[i] = dr.readBoolean() ? 32 : 0;
-                    }else{
+                    } else {
                         bounds[i] = dr.readData(DataBitHelper.CAMOUFLAGE_BOUNDS.getBitCount() - 1);
                     }
                 }
@@ -338,7 +359,7 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
     public void updateEntity() {
         if (worldObj.isRemote) {
             keepClientDataUpdated();
-        }else{
+        } else {
             if (isServerDirty) {
                 isServerDirty = false;
                 PacketHandler.sendBlockPacket(this, null, 0);
@@ -352,10 +373,11 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
 
         if (distance > Math.pow(PacketHandler.BLOCK_UPDATE_RANGE, 2)) {
             hasClientUpdatedData = false;
-        }else if(!hasClientUpdatedData && distance < Math.pow(PacketHandler.BLOCK_UPDATE_RANGE - UPDATE_BUFFER_DISTANCE, 2)) {
-            hasClientUpdatedData = true;
-            PacketHandler.sendBlockPacket(this, Minecraft.getMinecraft().thePlayer, 0);
-        }
+        } else if (!hasClientUpdatedData
+                && distance < Math.pow(PacketHandler.BLOCK_UPDATE_RANGE - UPDATE_BUFFER_DISTANCE, 2)) {
+                    hasClientUpdatedData = true;
+                    PacketHandler.sendBlockPacket(this, Minecraft.getMinecraft().thePlayer, 0);
+                }
     }
 
     private static final String NBT_SIDES = "Sides";
@@ -377,7 +399,7 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
             NBTTagCompound element = new NBTTagCompound();
 
             element.setShort(NBT_ID, (short) ids[i]);
-            element.setByte(NBT_META, (byte)metas[i]);
+            element.setByte(NBT_META, (byte) metas[i]);
 
             list.appendTag(element);
         }
@@ -387,14 +409,13 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
             tagCompound.setBoolean(NBT_COLLISION, useCollision);
             tagCompound.setBoolean(NBT_FULL, fullCollision);
 
-            tagCompound.setByte(NBT_MIN_X, (byte)bounds[0]);
+            tagCompound.setByte(NBT_MIN_X, (byte) bounds[0]);
             tagCompound.setByte(NBT_MAX_X, (byte) bounds[1]);
             tagCompound.setByte(NBT_MIN_Y, (byte) bounds[2]);
             tagCompound.setByte(NBT_MAX_Y, (byte) bounds[3]);
             tagCompound.setByte(NBT_MIN_Z, (byte) bounds[4]);
             tagCompound.setByte(NBT_MAX_Z, (byte) bounds[5]);
         }
-
 
     }
 
@@ -435,16 +456,23 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
                 if (icon != null) {
                     return icon;
                 }
-            }catch (Exception ignored) {}
+            } catch (Exception ignored) {}
         }
         return null;
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getIconWithDefault(IBlockAccess world, int x, int y, int z, BlockCamouflageBase block, int side, boolean inside) {
+    public IIcon getIconWithDefault(IBlockAccess world, int x, int y, int z, BlockCamouflageBase block, int side,
+            boolean inside) {
         IIcon icon = getIcon(side, inside);
         if (icon == null) {
-            icon = block.getDefaultIcon(side, world.getBlockMetadata(x, y, z), getBlockMetadata()); //here we actually want to fetch the meta data of the block, rather then getting the tile entity version
+            icon = block.getDefaultIcon(side, world.getBlockMetadata(x, y, z), getBlockMetadata()); // here we actually
+                                                                                                    // want to fetch the
+                                                                                                    // meta data of the
+                                                                                                    // block, rather
+                                                                                                    // then getting the
+                                                                                                    // tile entity
+                                                                                                    // version
         }
 
         return icon;

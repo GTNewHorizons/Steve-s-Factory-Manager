@@ -1,18 +1,18 @@
 package vswe.stevesfactory.components;
 
-import vswe.stevesfactory.Localization;
-
 import java.util.List;
 
+import vswe.stevesfactory.Localization;
 
 public class ComponentMenuCamouflageSides extends ComponentMenuRedstoneSides {
+
     public ComponentMenuCamouflageSides(FlowComponent parent) {
         super(parent);
     }
 
     @Override
     protected void initRadioButtons() {
-        //no options
+        // no options
     }
 
     @Override
@@ -30,13 +30,11 @@ public class ComponentMenuCamouflageSides extends ComponentMenuRedstoneSides {
         return Localization.CAMOUFLAGE_SIDES_NAME.toString();
     }
 
-
     @Override
     public void addErrors(List<String> errors) {
         if (isVisible() && selection == 0) {
             errors.add(Localization.NO_SIDES_ERROR.toString());
         }
     }
-
 
 }

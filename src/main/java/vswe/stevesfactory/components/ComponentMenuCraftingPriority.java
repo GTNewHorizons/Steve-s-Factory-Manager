@@ -1,8 +1,9 @@
 package vswe.stevesfactory.components;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -11,10 +12,12 @@ import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
 public class ComponentMenuCraftingPriority extends ComponentMenu {
+
     public ComponentMenuCraftingPriority(FlowComponent parent) {
         super(parent);
 
         radioButtons = new RadioButtonList() {
+
             @Override
             public void updateSelectedOption(int selectedOption) {
                 DataWriter dw = getWriterForServerComponentPacket();
@@ -22,7 +25,6 @@ public class ComponentMenuCraftingPriority extends ComponentMenu {
                 PacketHandler.sendDataToServer(dw);
             }
         };
-
 
         radioButtons.add(new RadioButton(RADIO_X, RADIO_Y, Localization.PRIORITY_MOVE_FIRST));
         radioButtons.add(new RadioButton(RADIO_X, RADIO_Y + RADIO_MARGIN, Localization.PRIORITY_CRAFT_FIRST));
@@ -78,12 +80,12 @@ public class ComponentMenuCraftingPriority extends ComponentMenu {
 
     @Override
     public void copyFrom(ComponentMenu menu) {
-        radioButtons.setSelectedOption(((ComponentMenuCraftingPriority)menu).radioButtons.getSelectedOption());
+        radioButtons.setSelectedOption(((ComponentMenuCraftingPriority) menu).radioButtons.getSelectedOption());
     }
 
     @Override
     public void refreshData(ContainerManager container, ComponentMenu newData) {
-        ComponentMenuCraftingPriority newDataPriority =  ((ComponentMenuCraftingPriority)newData);
+        ComponentMenuCraftingPriority newDataPriority = ((ComponentMenuCraftingPriority) newData);
 
         if (radioButtons.getSelectedOption() != newDataPriority.radioButtons.getSelectedOption()) {
             radioButtons.setSelectedOption(newDataPriority.radioButtons.getSelectedOption());
@@ -103,7 +105,7 @@ public class ComponentMenuCraftingPriority extends ComponentMenu {
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
-        nbtTagCompound.setByte(NBT_SELECTED, (byte)radioButtons.getSelectedOption());
+        nbtTagCompound.setByte(NBT_SELECTED, (byte) radioButtons.getSelectedOption());
     }
 
     @Override

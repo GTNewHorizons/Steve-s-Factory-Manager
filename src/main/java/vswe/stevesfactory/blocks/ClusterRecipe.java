@@ -1,5 +1,7 @@
 package vswe.stevesfactory.blocks;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
@@ -7,9 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClusterRecipe implements IRecipe {
 
@@ -19,15 +18,14 @@ public class ClusterRecipe implements IRecipe {
     public boolean matches(InventoryCrafting inventorycrafting, World world) {
         output = null;
 
-
         ItemStack cluster = null;
         for (int i = 0; i < inventorycrafting.getSizeInventory(); i++) {
             ItemStack item = inventorycrafting.getStackInSlot(i);
 
             if (item != null && Block.getBlockFromItem(item.getItem()) == ModBlocks.blockCableCluster) {
                 if (cluster != null) {
-                    return false; //multiple clusters
-                }else{
+                    return false; // multiple clusters
+                } else {
                     cluster = item;
                 }
             }
@@ -40,7 +38,7 @@ public class ClusterRecipe implements IRecipe {
             if (compound != null && compound.hasKey(ItemCluster.NBT_CABLE)) {
                 byte[] typeIds = compound.getCompoundTag(ItemCluster.NBT_CABLE).getByteArray(ItemCluster.NBT_TYPES);
                 for (byte typeId : typeIds) {
-                    types.add((int)typeId);
+                    types.add((int) typeId);
                 }
             }
 
@@ -52,7 +50,7 @@ public class ClusterRecipe implements IRecipe {
                     for (int j = 0; j < ClusterRegistry.getRegistryList().size(); j++) {
                         if (item.isItemEqual(ClusterRegistry.getRegistryList().get(j).getItemStack())) {
                             if (ClusterRegistry.getRegistryList().get(j).isChainPresentIn(types)) {
-                                return false; //duplicate item
+                                return false; // duplicate item
                             }
                             types.add(j);
                             validItem = true;
@@ -61,18 +59,18 @@ public class ClusterRecipe implements IRecipe {
                         }
                     }
                     if (!validItem) {
-                        return false; //invalid item
+                        return false; // invalid item
                     }
                 }
             }
 
             byte[] typeIds = new byte[types.size()];
             for (int i = 0; i < types.size(); i++) {
-                typeIds[i] = (byte)(int)types.get(i);
+                typeIds[i] = (byte) (int) types.get(i);
             }
 
             if (!foundClusterComponent) {
-                return false; //nothing added
+                return false; // nothing added
             }
 
             output = new ItemStack(ModBlocks.blockCableCluster, 1, cluster.getItemDamage());

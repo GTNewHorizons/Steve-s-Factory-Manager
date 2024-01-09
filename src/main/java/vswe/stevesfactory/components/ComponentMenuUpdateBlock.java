@@ -1,12 +1,12 @@
 package vswe.stevesfactory.components;
 
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -16,6 +16,7 @@ import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
 
 public class ComponentMenuUpdateBlock extends ComponentMenuItem {
+
     public ComponentMenuUpdateBlock(FlowComponent parent) {
         super(parent);
 
@@ -30,8 +31,8 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
         scrollControllerSelected.setItemUpperLimit(-2);
         scrollControllerSelected.setX(ID_START_X + ID_TEXT_BOX + 10);
 
-
         checkBoxes.addCheckBox(new CheckBox(Localization.USE_ID, ID_START_X, ID_START_Y + CHECKBOX_OFFSET) {
+
             @Override
             public void setValue(boolean val) {
                 useId = val;
@@ -48,134 +49,149 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
             }
         });
 
-        /*textBoxes.addTextBox(textBoxId = new TextBoxNumber(ID_START_X + ID_TEXT_BOX, ID_START_Y, 4, true) {
-            @Override
-            public int getMaxNumber() {
-                return 4095;
-            }
+        /*
+         * textBoxes.addTextBox(textBoxId = new TextBoxNumber(ID_START_X + ID_TEXT_BOX, ID_START_Y, 4, true) {
+         * @Override public int getMaxNumber() { return 4095; }
+         * @Override public void onNumberChanged() { sendServerData(0, 1); }
+         * @Override public boolean isVisible() { return useId; } });
+         */
 
-            @Override
-            public void onNumberChanged() {
-                sendServerData(0, 1);
-            }
+        checkBoxes.addCheckBox(
+                new CheckBox(Localization.INVERT, ID_START_X + META_INVERTED_OFFSET, ID_START_Y + CHECKBOX_OFFSET) {
 
-            @Override
-            public boolean isVisible() {
-                return useId;
-            }
-        });*/
+                    @Override
+                    public void setValue(boolean val) {
+                        idInverted = val;
+                    }
 
-        checkBoxes.addCheckBox(new CheckBox(Localization.INVERT, ID_START_X + META_INVERTED_OFFSET, ID_START_Y + CHECKBOX_OFFSET) {
-            @Override
-            public void setValue(boolean val) {
-                idInverted = val;
-            }
+                    @Override
+                    public boolean getValue() {
+                        return idInverted;
+                    }
 
-            @Override
-            public boolean getValue() {
-                return idInverted;
-            }
+                    @Override
+                    public void onUpdate() {
+                        sendServerData(0, 2);
+                    }
 
-            @Override
-            public void onUpdate() {
-                sendServerData(0, 2);
-            }
-
-            @Override
-            public boolean isVisible() {
-                return useId;
-            }
-        });
+                    @Override
+                    public boolean isVisible() {
+                        return useId;
+                    }
+                });
 
         for (int i = 0; i < META_SETTINGS; i++) {
             final int setting = i;
             settings[setting] = new MetaSetting();
             for (int j = 0; j < settings[setting].bits.length; j++) {
                 final int bit = j;
-                checkBoxes.addCheckBox(new CheckBox(null, META_START_X + (settings[setting].bits.length - (bit + 1)) * CheckBoxList.CHECK_BOX_SIZE, META_START_Y + CHECKBOX_OFFSET + setting * META_SPACING) {
-                    @Override
-                    public void setValue(boolean val) {
-                        settings[setting].bits[bit] = val;
-                        if (!val) {
-                            settings[setting].lowerTextBox.setNumber(settings[setting].lowerTextBox.getNumber());
-                            settings[setting].higherTextBox.setNumber(settings[setting].higherTextBox.getNumber());
-                        }
-                    }
+                checkBoxes.addCheckBox(
+                        new CheckBox(
+                                null,
+                                META_START_X
+                                        + (settings[setting].bits.length - (bit + 1)) * CheckBoxList.CHECK_BOX_SIZE,
+                                META_START_Y + CHECKBOX_OFFSET + setting * META_SPACING) {
 
-                    @Override
-                    public boolean getValue() {
-                        return settings[setting].bits[bit];
-                    }
+                            @Override
+                            public void setValue(boolean val) {
+                                settings[setting].bits[bit] = val;
+                                if (!val) {
+                                    settings[setting].lowerTextBox
+                                            .setNumber(settings[setting].lowerTextBox.getNumber());
+                                    settings[setting].higherTextBox
+                                            .setNumber(settings[setting].higherTextBox.getNumber());
+                                }
+                            }
 
-                    @Override
-                    public void onUpdate() {
-                        sendServerData(setting + 1, bit);
-                    }
-                });
+                            @Override
+                            public boolean getValue() {
+                                return settings[setting].bits[bit];
+                            }
+
+                            @Override
+                            public void onUpdate() {
+                                sendServerData(setting + 1, bit);
+                            }
+                        });
 
                 settings[setting].bits[bit] = setting == 0;
             }
 
-            textBoxes.addTextBox(settings[setting].lowerTextBox = new TextBoxNumber(META_START_X + META_TEXT_BOX_OFFSET_1, META_START_Y + setting * META_SPACING, 2, false) {
-                @Override
-                public int getMaxNumber() {
-                    return settings[setting].getMaxNumber();
-                }
+            textBoxes.addTextBox(
+                    settings[setting].lowerTextBox = new TextBoxNumber(
+                            META_START_X + META_TEXT_BOX_OFFSET_1,
+                            META_START_Y + setting * META_SPACING,
+                            2,
+                            false) {
 
-                @Override
-                public void onNumberChanged() {
-                    sendServerData(setting + 1, 4);
-                }
+                        @Override
+                        public int getMaxNumber() {
+                            return settings[setting].getMaxNumber();
+                        }
 
-                @Override
-                public boolean isVisible() {
-                    return settings[setting].inUse();
-                }
-            });
+                        @Override
+                        public void onNumberChanged() {
+                            sendServerData(setting + 1, 4);
+                        }
 
-            textBoxes.addTextBox(settings[setting].higherTextBox = new TextBoxNumber(META_START_X + META_TEXT_BOX_OFFSET_2, META_START_Y + setting * META_SPACING, 2, false) {
-                @Override
-                public int getMaxNumber() {
-                    return settings[setting].getMaxNumber();
-                }
+                        @Override
+                        public boolean isVisible() {
+                            return settings[setting].inUse();
+                        }
+                    });
 
-                @Override
-                public void onNumberChanged() {
-                    sendServerData(setting + 1, 5);
-                }
+            textBoxes.addTextBox(
+                    settings[setting].higherTextBox = new TextBoxNumber(
+                            META_START_X + META_TEXT_BOX_OFFSET_2,
+                            META_START_Y + setting * META_SPACING,
+                            2,
+                            false) {
 
-                @Override
-                public boolean isVisible() {
-                    return settings[setting].inUse();
-                }
-            });
+                        @Override
+                        public int getMaxNumber() {
+                            return settings[setting].getMaxNumber();
+                        }
 
-            checkBoxes.addCheckBox(new CheckBox(Localization.INVERT, META_START_X + META_INVERTED_OFFSET, META_START_Y + CHECKBOX_OFFSET + setting * META_SPACING) {
-                @Override
-                public void setValue(boolean val) {
-                    settings[setting].inverted = val;
-                }
+                        @Override
+                        public void onNumberChanged() {
+                            sendServerData(setting + 1, 5);
+                        }
 
-                @Override
-                public boolean getValue() {
-                    return settings[setting].inverted;
-                }
+                        @Override
+                        public boolean isVisible() {
+                            return settings[setting].inUse();
+                        }
+                    });
 
-                @Override
-                public void onUpdate() {
-                    sendServerData(setting + 1, 6);
-                }
+            checkBoxes.addCheckBox(
+                    new CheckBox(
+                            Localization.INVERT,
+                            META_START_X + META_INVERTED_OFFSET,
+                            META_START_Y + CHECKBOX_OFFSET + setting * META_SPACING) {
 
-                @Override
-                public boolean isVisible() {
-                    return settings[setting].inUse();
-                }
-            });
+                        @Override
+                        public void setValue(boolean val) {
+                            settings[setting].inverted = val;
+                        }
+
+                        @Override
+                        public boolean getValue() {
+                            return settings[setting].inverted;
+                        }
+
+                        @Override
+                        public void onUpdate() {
+                            sendServerData(setting + 1, 6);
+                        }
+
+                        @Override
+                        public boolean isVisible() {
+                            return settings[setting].inUse();
+                        }
+                    });
 
             settings[setting].higherTextBox.setNumber(15);
         }
-
-
 
     }
 
@@ -185,6 +201,7 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
     }
 
     public class MetaSetting {
+
         public boolean[] bits = new boolean[META_BITS];
         public TextBoxNumber lowerTextBox;
         public TextBoxNumber higherTextBox;
@@ -206,13 +223,12 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
         }
 
         public int getMaxNumber() {
-            return (int)Math.pow(2, selectedBits()) - 1;
+            return (int) Math.pow(2, selectedBits()) - 1;
         }
     }
 
     private TextBoxNumberList textBoxes;
     private CheckBoxList checkBoxes;
-
 
     private static final int ID_START_X = 1;
     private static final int ID_START_Y = 1;
@@ -236,7 +252,7 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
     }
 
     public int getBlockId() {
-        ItemSetting itemSetting = (ItemSetting)getSettings().get(0);
+        ItemSetting itemSetting = (ItemSetting) getSettings().get(0);
         return itemSetting.getItem() == null ? 0 : Item.getIdFromItem(itemSetting.getItem().getItem());
     }
 
@@ -251,7 +267,6 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
     private boolean useId;
     private boolean idInverted;
     private MetaSetting[] settings;
-
 
     @Override
     public String getName() {
@@ -268,7 +283,7 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
             if (useId) {
                 super.draw(gui, mX, mY);
             }
-        }else{
+        } else {
             super.draw(gui, mX, mY);
         }
     }
@@ -289,7 +304,7 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
             if (useId) {
                 super.onClick(mX, mY, button);
             }
-        }else{
+        } else {
             super.onClick(mX, mY, button);
         }
     }
@@ -299,19 +314,19 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
     public boolean onKeyStroke(GuiManager gui, char c, int k) {
         if (!isEditing() && !isSearching()) {
             return textBoxes.onKeyStroke(gui, c, k);
-        }else{
+        } else {
             return super.onKeyStroke(gui, c, k);
         }
     }
 
     @Override
     public void onDrag(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void onRelease(int mX, int mY, boolean isMenuOpen) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -338,7 +353,6 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
         useId = dr.readBoolean();
         idInverted = dr.readBoolean();
 
-
         for (MetaSetting setting : settings) {
             for (int i = 0; i < setting.bits.length; i++) {
                 setting.bits[i] = dr.readBoolean();
@@ -353,7 +367,7 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
     public void copyFrom(ComponentMenu menu) {
         super.copyFrom(menu);
 
-        ComponentMenuUpdateBlock menuUpdate = (ComponentMenuUpdateBlock)menu;
+        ComponentMenuUpdateBlock menuUpdate = (ComponentMenuUpdateBlock) menu;
         useId = menuUpdate.useId;
         idInverted = menuUpdate.idInverted;
 
@@ -371,7 +385,7 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
     public void refreshData(ContainerManager container, ComponentMenu newData) {
         super.refreshData(container, newData);
 
-        ComponentMenuUpdateBlock newDataUpdate = (ComponentMenuUpdateBlock)newData;
+        ComponentMenuUpdateBlock newDataUpdate = (ComponentMenuUpdateBlock) newData;
 
         if (useId != newDataUpdate.useId) {
             useId = newDataUpdate.useId;
@@ -426,8 +440,8 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
     public void readFromNBT(NBTTagCompound nbtTagCompound, int version, boolean pickup) {
         if (version >= 11) {
             super.readFromNBT(nbtTagCompound, version, pickup);
-        }else{
-            ItemSetting setting = (ItemSetting)getSettings().get(0);
+        } else {
+            ItemSetting setting = (ItemSetting) getSettings().get(0);
             setting.setItem(new ItemStack(Item.getItemById(nbtTagCompound.getShort(NBT_ID))));
         }
         useId = nbtTagCompound.getBoolean(NBT_USE_ID);
@@ -466,15 +480,14 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
                 }
             }
             settingTag.setByte(NBT_BITS, bits);
-            settingTag.setByte(NBT_LOW, (byte)setting.lowerTextBox.getNumber());
-            settingTag.setByte(NBT_HIGH, (byte)setting.higherTextBox.getNumber());
+            settingTag.setByte(NBT_LOW, (byte) setting.lowerTextBox.getNumber());
+            settingTag.setByte(NBT_HIGH, (byte) setting.higherTextBox.getNumber());
             settingTag.setBoolean(NBT_INVERTED, setting.inverted);
 
             list.appendTag(settingTag);
         }
         nbtTagCompound.setTag(NBT_SETTINGS, list);
     }
-
 
     private void sendClientData(ContainerManager container, int id, int subId) {
         DataWriter dw = getWriterForClientComponentPacket(container);
@@ -502,10 +515,10 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
                 int subId = dr.readData(DataBitHelper.BUD_SYNC_SUB_TYPE_SHORT);
                 if (subId == 0) {
                     useId = dr.readBoolean();
-                }else if(subId == 2) {
+                } else if (subId == 2) {
                     idInverted = dr.readBoolean();
                 }
-            }else{
+            } else {
                 id--;
                 MetaSetting setting = settings[id];
                 int subId = dr.readData(DataBitHelper.BUD_SYNC_SUB_TYPE_LONG);
@@ -515,55 +528,53 @@ public class ComponentMenuUpdateBlock extends ComponentMenuItem {
                         setting.lowerTextBox.setNumber(setting.lowerTextBox.getNumber());
                         setting.higherTextBox.setNumber(setting.higherTextBox.getNumber());
                     }
-                }else if(subId == 4) {
+                } else if (subId == 4) {
                     setting.lowerTextBox.setNumber(dr.readData(DataBitHelper.BLOCK_META));
-                }else if(subId == 5) {
+                } else if (subId == 5) {
                     setting.higherTextBox.setNumber(dr.readData(DataBitHelper.BLOCK_META));
-                }else if(subId == 6) {
+                } else if (subId == 6) {
                     setting.inverted = dr.readBoolean();
                 }
             }
-        }else{
+        } else {
             super.readNonSettingData(dr);
         }
     }
 
     private void writeData(DataWriter dw, int id, int subId) {
-        dw.writeBoolean(false); //no setting specific
-        dw.writeBoolean(true); //other data
+        dw.writeBoolean(false); // no setting specific
+        dw.writeBoolean(true); // other data
         dw.writeData(id, DataBitHelper.BUD_SYNC_TYPE);
         dw.writeData(subId, id == 0 ? DataBitHelper.BUD_SYNC_SUB_TYPE_SHORT : DataBitHelper.BUD_SYNC_SUB_TYPE_LONG);
 
         if (id == 0) {
             if (subId == 0) {
                 dw.writeBoolean(useId);
-            }else if(subId == 2) {
+            } else if (subId == 2) {
                 dw.writeBoolean(idInverted);
             }
-        }else{
+        } else {
             id--;
             MetaSetting setting = settings[id];
             if (subId < 4) {
                 dw.writeBoolean(setting.bits[subId]);
-            }else if(subId == 4) {
+            } else if (subId == 4) {
                 dw.writeData(setting.lowerTextBox.getNumber(), DataBitHelper.BLOCK_META);
-            }else if(subId == 5) {
+            } else if (subId == 5) {
                 dw.writeData(setting.higherTextBox.getNumber(), DataBitHelper.BLOCK_META);
-            }else if(subId == 6) {
+            } else if (subId == 6) {
                 dw.writeBoolean(setting.inverted);
             }
         }
     }
-
 
     @Override
     public boolean isVisible() {
         return getParent().getConnectionSet() == ConnectionSet.BUD;
     }
 
-
     @Override
     protected void initRadioButtons() {
-        //no radio buttons
+        // no radio buttons
     }
 }

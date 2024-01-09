@@ -1,8 +1,12 @@
 package vswe.stevesfactory.settings;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.TileEntityManager;
@@ -11,9 +15,6 @@ import vswe.stevesfactory.components.CheckBoxList;
 import vswe.stevesfactory.components.ComponentType;
 import vswe.stevesfactory.interfaces.GuiManager;
 import vswe.stevesfactory.interfaces.IInterfaceRenderer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class SettingsScreen implements IInterfaceRenderer {
@@ -26,6 +27,7 @@ public class SettingsScreen implements IInterfaceRenderer {
 
         buttons = new ArrayList<Button>();
         buttons.add(new Button(493, 5, Localization.GO_BACK, 231, 12 * ComponentType.values().length + 1) {
+
             @Override
             protected void onClick() {
                 manager.specialRenderer = null;
@@ -39,7 +41,9 @@ public class SettingsScreen implements IInterfaceRenderer {
     private static final int MARGIN_X = 30;
     private static final int START_Y = 20;
     private static final int MAX_Y = 250;
+
     private abstract class CheckBoxSetting extends CheckBox {
+
         private CheckBoxSetting(Localization name) {
             super(name, getXAndGenerateY(name), currentY);
 
@@ -56,7 +60,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         String str = name.toString();
 
         List<String> lines = cachedGui.getLinesFromText(str, CHECK_BOX_WIDTH);
-        int height = (int)((lines.size() + 1) * cachedGui.getFontHeight() * 0.7F);
+        int height = (int) ((lines.size() + 1) * cachedGui.getFontHeight() * 0.7F);
         offsetY = height;
 
         if (currentY + height > MAX_Y) {
@@ -68,12 +72,13 @@ public class SettingsScreen implements IInterfaceRenderer {
     }
 
     private CheckBoxList checkBoxes;
-    private  String cachedString;
+    private String cachedString;
     private Localization localization = Localization.CLOSE_GROUP_LABEL;
     private int currentX;
     private int currentY;
     private int offsetY;
     private GuiManager cachedGui;
+
     private void addCheckboxes(GuiManager gui) {
         cachedGui = gui;
         cachedString = localization.toString();
@@ -82,6 +87,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         currentY = START_Y;
         offsetY = 0;
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.CLOSE_GROUP_LABEL) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setAutoCloseGroup(val);
@@ -94,6 +100,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         });
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.OPEN_MENU_LARGE_HIT_BOX) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setLargeOpenHitBox(val);
@@ -106,6 +113,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         });
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.OPEN_MENU_LARGE_HIT_BOX_MENU) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setLargeOpenHitBoxMenu(val);
@@ -118,6 +126,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         });
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.OPEN_GROUP_QUICK) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setQuickGroupOpen(val);
@@ -130,6 +139,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         });
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.SHOW_COMMAND_TYPE) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setCommandTypes(val);
@@ -142,6 +152,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         });
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.AUTO_SIDE) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setAutoSide(val);
@@ -154,6 +165,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         });
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.AUTO_BLACK_LIST) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setAutoBlacklist(val);
@@ -166,6 +178,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         });
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.ENLARGE_INTERFACES) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setEnlargeInterfaces(val);
@@ -178,6 +191,7 @@ public class SettingsScreen implements IInterfaceRenderer {
         });
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.AUTO_MOVE_FIRST) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setPriorityMoveFirst(val);
@@ -189,12 +203,12 @@ public class SettingsScreen implements IInterfaceRenderer {
             }
         });
 
-
         currentX = START_SETTINGS_X;
         currentY = START_Y;
         offsetY = 0;
 
         checkBoxes.addCheckBox(new CheckBoxSetting(Localization.LIMITLESS) {
+
             @Override
             public void setValue(boolean val) {
                 Settings.setLimitless(manager, val);
@@ -266,12 +280,13 @@ public class SettingsScreen implements IInterfaceRenderer {
 
     }
 
-
     private static final int BUTTON_SRC_X = 242;
     private static final int BUTTON_SRC_Y = 0;
     private static final int BUTTON_SIZE = 14;
     private static final int BUTTON_SIZE_INNER = 12;
+
     private abstract class Button {
+
         private int x;
         private int y;
         private Localization name;

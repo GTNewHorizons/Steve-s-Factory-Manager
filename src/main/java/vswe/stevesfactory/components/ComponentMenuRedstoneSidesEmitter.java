@@ -1,9 +1,9 @@
 package vswe.stevesfactory.components;
 
-
 import vswe.stevesfactory.Localization;
 
 public class ComponentMenuRedstoneSidesEmitter extends ComponentMenuRedstoneSides {
+
     public ComponentMenuRedstoneSidesEmitter(FlowComponent parent) {
         super(parent);
     }

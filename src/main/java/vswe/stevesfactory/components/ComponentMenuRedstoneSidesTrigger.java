@@ -1,11 +1,11 @@
 package vswe.stevesfactory.components;
 
+import java.util.List;
 
 import vswe.stevesfactory.Localization;
 
-import java.util.List;
-
 public class ComponentMenuRedstoneSidesTrigger extends ComponentMenuRedstoneSides {
+
     public ComponentMenuRedstoneSidesTrigger(FlowComponent parent) {
         super(parent);
     }
@@ -20,7 +20,7 @@ public class ComponentMenuRedstoneSidesTrigger extends ComponentMenuRedstoneSide
     protected String getMessage() {
         if (isBUD()) {
             return Localization.UPDATE_SIDES_INFO.toString();
-        }else{
+        } else {
             return Localization.REDSTONE_SIDES_INFO.toString();
         }
     }
@@ -36,7 +36,8 @@ public class ComponentMenuRedstoneSidesTrigger extends ComponentMenuRedstoneSide
 
     @Override
     public String getName() {
-        return isBUD() ? Localization.UPDATE_SIDES_MENU.toString() : Localization.REDSTONE_SIDES_MENU_TRIGGER.toString();
+        return isBUD() ? Localization.UPDATE_SIDES_MENU.toString()
+                : Localization.REDSTONE_SIDES_MENU_TRIGGER.toString();
     }
 
     private boolean isBUD() {

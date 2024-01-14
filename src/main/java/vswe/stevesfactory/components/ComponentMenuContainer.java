@@ -1,11 +1,12 @@
 package vswe.stevesfactory.components;
 
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import stevesaddons.compat.StevesHooks;
@@ -34,8 +36,6 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
-
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public abstract class ComponentMenuContainer extends ComponentMenu {
 
@@ -134,11 +134,14 @@ public abstract class ComponentMenuContainer extends ComponentMenu {
                         ConnectionBlock block = (ConnectionBlock) element;
                         if (noFilter) {
                             continue;
-                        } else if (all || (Loader.isModLoaded(STEVES_ADDONS) && StevesHooks.containerAdvancedSearch(block, search)) || block.getName(cachedInterface).toLowerCase().contains(search)) {
-                            if (filter.matches(getParent().getManager(), selectedInventories, block)) {
-                                continue;
-                            }
-                        }
+                        } else if (all
+                                || (Loader.isModLoaded(STEVES_ADDONS)
+                                        && StevesHooks.containerAdvancedSearch(block, search))
+                                || block.getName(cachedInterface).toLowerCase().contains(search)) {
+                                    if (filter.matches(getParent().getManager(), selectedInventories, block)) {
+                                        continue;
+                                    }
+                                }
                     }
 
                     iterator.remove();

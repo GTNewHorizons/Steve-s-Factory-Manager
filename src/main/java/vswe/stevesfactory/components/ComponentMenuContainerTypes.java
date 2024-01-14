@@ -1,12 +1,14 @@
 package vswe.stevesfactory.components;
 
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.nbt.NBTTagCompound;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.Localization;
@@ -17,8 +19,6 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
-
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public class ComponentMenuContainerTypes extends ComponentMenu {
 
@@ -153,7 +153,8 @@ public class ComponentMenuContainerTypes extends ComponentMenu {
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound, int version, boolean pickup) {
 
-        short data = (Loader.isModLoaded(STEVES_ADDONS)) ? nbtTagCompound.getShort(NBT_CHECKED) : nbtTagCompound.getByte(NBT_CHECKED);
+        short data = (Loader.isModLoaded(STEVES_ADDONS)) ? nbtTagCompound.getShort(NBT_CHECKED)
+                : nbtTagCompound.getByte(NBT_CHECKED);
         for (int i = 0; i < checked.length; i++) {
             checked[i] = ((data >> i) & 1) != 0;
         }
@@ -168,10 +169,8 @@ public class ComponentMenuContainerTypes extends ComponentMenu {
             }
         }
 
-        if (Loader.isModLoaded(STEVES_ADDONS))
-            nbtTagCompound.setShort(NBT_CHECKED, data);
-        else
-            nbtTagCompound.setByte(NBT_CHECKED, (byte) data);
+        if (Loader.isModLoaded(STEVES_ADDONS)) nbtTagCompound.setShort(NBT_CHECKED, data);
+        else nbtTagCompound.setByte(NBT_CHECKED, (byte) data);
     }
 
     @Override

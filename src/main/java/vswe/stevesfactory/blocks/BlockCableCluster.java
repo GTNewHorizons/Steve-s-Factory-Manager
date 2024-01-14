@@ -1,9 +1,10 @@
 package vswe.stevesfactory.blocks;
 
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
@@ -21,11 +22,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.StevesFactoryManager;
-
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public class BlockCableCluster extends BlockCamouflageBase {
 
@@ -125,8 +125,7 @@ public class BlockCableCluster extends BlockCamouflageBase {
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
 
-        if (Loader.isModLoaded(STEVES_ADDONS))
-            return new TileEntityRFCluster();
+        if (Loader.isModLoaded(STEVES_ADDONS)) return new TileEntityRFCluster();
         return new TileEntityCluster();
     }
 

@@ -16,7 +16,7 @@ import vswe.stevesfactory.network.FileHelper;
 import vswe.stevesfactory.network.PacketEventHandler;
 import vswe.stevesfactory.proxy.CommonProxy;
 
-@Mod(modid = "StevesFactoryManager", name = "Steve's Factory Manager", version = "GRADLETOKEN_VERSION")
+@Mod(modid = "StevesFactoryManager", name = "Steve's Factory Manager", version = Tags.VERSION)
 public class StevesFactoryManager {
 
     public static final String RESOURCE_LOCATION = "stevesfactory";

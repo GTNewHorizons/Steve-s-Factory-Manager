@@ -1,8 +1,8 @@
 package vswe.stevesfactory.network;
 
-import cpw.mods.fml.common.Loader;
-
 import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+
+import cpw.mods.fml.common.Loader;
 
 public enum DataBitHelper {
 

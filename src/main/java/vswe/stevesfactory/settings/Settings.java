@@ -1,5 +1,7 @@
 package vswe.stevesfactory.settings;
 
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -8,8 +10,6 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.FileHelper;
 import vswe.stevesfactory.network.PacketHandler;
-
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public final class Settings {
 

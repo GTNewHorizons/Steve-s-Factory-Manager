@@ -1,12 +1,13 @@
 package vswe.stevesfactory.blocks;
 
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import stevesaddons.compat.StevesHooks;
@@ -50,8 +52,6 @@ import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.IComponentNetworkReader;
 import vswe.stevesfactory.network.PacketHandler;
 import vswe.stevesfactory.settings.Settings;
-
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public class TileEntityManager extends TileEntity implements ITileEntityInterface {
 
@@ -440,8 +440,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         justSentServerComponentRemovalPacket = false;
         if (!worldObj.isRemote) {
 
-            if (Loader.isModLoaded(STEVES_ADDONS))
-                StevesHooks.tickTriggers(this);
+            if (Loader.isModLoaded(STEVES_ADDONS)) StevesHooks.tickTriggers(this);
 
             if (timer >= 20) {
                 timer = 0;
@@ -497,8 +496,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
 
         if (Loader.isModLoaded(STEVES_ADDONS))
             new CommandExecutorRF(this).executeTriggerCommand(component, validTriggerOutputs);
-        else
-            new CommandExecutor(this).executeTriggerCommand(component, validTriggerOutputs);
+        else new CommandExecutor(this).executeTriggerCommand(component, validTriggerOutputs);
     }
 
     public void triggerRedstone(TileEntityInput inputTrigger) {
@@ -549,8 +547,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(TileEntity te, InventoryPlayer inv) {
-        if (Loader.isModLoaded(STEVES_ADDONS))
-            return new GuiRFManager((TileEntityManager) te, inv);
+        if (Loader.isModLoaded(STEVES_ADDONS)) return new GuiRFManager((TileEntityManager) te, inv);
         return new GuiManager((TileEntityManager) te, inv);
     }
 

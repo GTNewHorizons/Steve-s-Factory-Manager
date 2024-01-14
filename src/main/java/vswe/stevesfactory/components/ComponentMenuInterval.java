@@ -1,9 +1,11 @@
 package vswe.stevesfactory.components;
 
+import cpw.mods.fml.common.Loader;
 import net.minecraft.nbt.NBTTagCompound;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import stevesaddons.helpers.StevesEnum;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -11,6 +13,8 @@ import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.PacketHandler;
+
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public class ComponentMenuInterval extends ComponentMenu {
 
@@ -146,6 +150,14 @@ public class ComponentMenuInterval extends ComponentMenu {
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
         nbtTagCompound.setShort(NBT_INTERVAL, (short) getInterval());
+    }
+
+    @Override
+    public boolean isVisible() {
+        if (Loader.isModLoaded(STEVES_ADDONS))
+            return this.getParent().getConnectionSet() != StevesEnum.DELAYED;
+        else
+            return super.isVisible();
     }
 
 }

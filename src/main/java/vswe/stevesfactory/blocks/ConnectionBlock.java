@@ -2,16 +2,20 @@ package vswe.stevesfactory.blocks;
 
 import java.util.EnumSet;
 
+import cpw.mods.fml.common.Loader;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.tileentity.TileEntity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import stevesaddons.compat.StevesHooks;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.components.ComponentMenuContainer;
 import vswe.stevesfactory.components.IContainerSelection;
 import vswe.stevesfactory.components.Variable;
 import vswe.stevesfactory.interfaces.GuiManager;
+
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public class ConnectionBlock implements IContainerSelection {
 
@@ -71,6 +75,9 @@ public class ConnectionBlock implements IContainerSelection {
     @Override
     public String getDescription(GuiManager gui) {
         String str = gui.getBlockName(tileEntity);
+
+        if (Loader.isModLoaded(STEVES_ADDONS))
+            str = StevesHooks.fixToolTip(str, this.tileEntity);
 
         str += getVariableTag(gui);
 

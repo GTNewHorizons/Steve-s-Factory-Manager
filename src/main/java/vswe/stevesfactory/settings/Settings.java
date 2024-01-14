@@ -1,5 +1,6 @@
 package vswe.stevesfactory.settings;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.blocks.TileEntityManager;
@@ -7,6 +8,8 @@ import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
 import vswe.stevesfactory.network.FileHelper;
 import vswe.stevesfactory.network.PacketHandler;
+
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public final class Settings {
 
@@ -57,12 +60,12 @@ public final class Settings {
 
     private static void loadDefault() {
         autoCloseGroup = false;
-        largeOpenHitBox = false;
-        largeOpenHitBoxMenu = false;
+        largeOpenHitBox = Loader.isModLoaded(STEVES_ADDONS);
+        largeOpenHitBoxMenu = Loader.isModLoaded(STEVES_ADDONS);
         quickGroupOpen = false;
         commandTypes = false;
-        autoSide = false;
-        autoBlacklist = false;
+        autoSide = Loader.isModLoaded(STEVES_ADDONS);
+        autoBlacklist = Loader.isModLoaded(STEVES_ADDONS);
         enlargeInterfaces = false;
     }
 

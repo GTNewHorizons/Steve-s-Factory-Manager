@@ -80,10 +80,10 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
         }
     }
 
-    private class Pair {
+    public class Pair {
 
         private ClusterRegistry registry;
-        private TileEntityClusterElement te;
+        public TileEntityClusterElement te;
 
         private Pair(ClusterRegistry registry, TileEntityClusterElement te) {
             this.registry = registry;
@@ -119,7 +119,7 @@ public class TileEntityCluster extends TileEntity implements ITileEntityInterfac
         PacketHandler.sendBlockPacket(this, Minecraft.getMinecraft().thePlayer, 1);
     }
 
-    private List<Pair> getRegistrations(ClusterMethodRegistration method) {
+    public List<Pair> getRegistrations(ClusterMethodRegistration method) {
         return methodRegistration.get(method);
     }
 

@@ -3,16 +3,20 @@ package vswe.stevesfactory.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.Loader;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
+import stevesaddons.compat.StevesHooks;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
+
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public class ItemSetting extends Setting {
 
@@ -138,6 +142,9 @@ public class ItemSetting extends Setting {
         } else {
             item.setTagCompound(null);
         }
+
+        if (Loader.isModLoaded(STEVES_ADDONS))
+            this.item = StevesHooks.fixLoadingStack(this.item);
     }
 
     @Override

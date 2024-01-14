@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import cpw.mods.fml.common.Loader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import stevesaddons.compat.StevesHooks;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
@@ -18,6 +20,8 @@ import vswe.stevesfactory.interfaces.GuiManager;
 import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
 import vswe.stevesfactory.network.DataWriter;
+
+import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
 
 public class ComponentMenuItem extends ComponentMenuStuff {
 
@@ -233,6 +237,10 @@ public class ComponentMenuItem extends ComponentMenuStuff {
     @SideOnly(Side.CLIENT)
     @Override
     protected List updateSearch(String search, boolean showAll) {
+
+        if (Loader.isModLoaded(STEVES_ADDONS))
+            return StevesHooks.updateItemSearch(this, search, showAll);
+
         List ret = new ArrayList();
 
         if (search.equals(".inv")) {

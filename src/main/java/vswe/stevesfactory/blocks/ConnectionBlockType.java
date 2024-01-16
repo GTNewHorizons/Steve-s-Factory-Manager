@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import cpw.mods.fml.common.Loader;
-import stevesaddons.compat.StevesHooks;
+import stevesaddons.asm.StevesHooks;
 import vswe.stevesfactory.Localization;
 
 public enum ConnectionBlockType {

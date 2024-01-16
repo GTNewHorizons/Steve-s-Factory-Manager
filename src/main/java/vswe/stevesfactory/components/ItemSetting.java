@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
 import cpw.mods.fml.common.Loader;
-import stevesaddons.compat.StevesHooks;
+import stevesaddons.asm.StevesHooks;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;

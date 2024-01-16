@@ -2,5 +2,5 @@
 
 dependencies {
     compileOnly('com.github.GTNewHorizons:waila:1.7.0:api')
-    compileOnly('com.github.GTNewHorizons:StevesAddons:0.12.0:dev') { transitive = false }
+    compileOnly('com.github.GTNewHorizons:StevesAddons:0.12.1:dev') { transitive = false }
 }

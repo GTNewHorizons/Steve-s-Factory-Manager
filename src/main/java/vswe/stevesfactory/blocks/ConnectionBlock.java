@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import stevesaddons.compat.StevesHooks;
+import stevesaddons.asm.StevesHooks;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.components.ComponentMenuContainer;
 import vswe.stevesfactory.components.IContainerSelection;

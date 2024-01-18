@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import stevesaddons.compat.StevesHooks;
+import stevesaddons.asm.StevesHooks;
 import stevesaddons.interfaces.GuiRFManager;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.components.CommandExecutor;

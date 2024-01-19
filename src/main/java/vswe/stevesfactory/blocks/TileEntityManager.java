@@ -1,6 +1,7 @@
 package vswe.stevesfactory.blocks;
 
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -16,14 +17,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import stevesaddons.asm.StevesHooks;
-import stevesaddons.interfaces.GuiRFManager;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.components.CommandExecutor;
-import vswe.stevesfactory.components.CommandExecutorRF;
 import vswe.stevesfactory.components.ComponentMenu;
 import vswe.stevesfactory.components.ComponentMenuContainer;
 import vswe.stevesfactory.components.ComponentMenuCraftingPriority;
@@ -117,8 +114,8 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             }
         });
 
-        if (Loader.isModLoaded(STEVES_ADDONS)) {
-            StevesHooks.addCopyButton(this);
+        if (HAS_ADDONS) {
+            ADDONS_HOOKS.addCopyButton(this);
         }
 
         buttons.add(new Button(Localization.PREFERENCES) {
@@ -440,7 +437,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         justSentServerComponentRemovalPacket = false;
         if (!worldObj.isRemote) {
 
-            if (Loader.isModLoaded(STEVES_ADDONS)) StevesHooks.tickTriggers(this);
+            if (HAS_ADDONS) ADDONS_HOOKS.tickTriggers(this);
 
             if (timer >= 20) {
                 timer = 0;
@@ -494,8 +491,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             }
         }
 
-        if (Loader.isModLoaded(STEVES_ADDONS))
-            new CommandExecutorRF(this).executeTriggerCommand(component, validTriggerOutputs);
+        if (HAS_ADDONS) ADDONS_HOOKS.executeTriggerCommand(this, component, validTriggerOutputs);
         else new CommandExecutor(this).executeTriggerCommand(component, validTriggerOutputs);
     }
 
@@ -547,7 +543,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(TileEntity te, InventoryPlayer inv) {
-        if (Loader.isModLoaded(STEVES_ADDONS)) return new GuiRFManager((TileEntityManager) te, inv);
+        if (HAS_ADDONS) return ADDONS_HOOKS.getGui(te, inv);
         return new GuiManager((TileEntityManager) te, inv);
     }
 

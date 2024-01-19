@@ -1,6 +1,7 @@
 package vswe.stevesfactory.components;
 
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,10 +12,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import stevesaddons.asm.StevesHooks;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
@@ -238,7 +237,7 @@ public class ComponentMenuItem extends ComponentMenuStuff {
     @Override
     protected List updateSearch(String search, boolean showAll) {
 
-        if (Loader.isModLoaded(STEVES_ADDONS)) return StevesHooks.updateItemSearch(this, search, showAll);
+        if (HAS_ADDONS) return ADDONS_HOOKS.updateItemSearch(this, search, showAll);
 
         List ret = new ArrayList();
 

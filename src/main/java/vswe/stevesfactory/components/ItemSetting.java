@@ -1,6 +1,7 @@
 package vswe.stevesfactory.components;
 
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
-import cpw.mods.fml.common.Loader;
-import stevesaddons.asm.StevesHooks;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.network.DataBitHelper;
 import vswe.stevesfactory.network.DataReader;
@@ -143,7 +142,7 @@ public class ItemSetting extends Setting {
             item.setTagCompound(null);
         }
 
-        if (Loader.isModLoaded(STEVES_ADDONS)) this.item = StevesHooks.fixLoadingStack(this.item);
+        if (HAS_ADDONS) this.item = ADDONS_HOOKS.fixLoadingStack(this.item);
     }
 
     @Override

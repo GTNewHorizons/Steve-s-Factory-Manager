@@ -1,6 +1,7 @@
 package vswe.stevesfactory.components;
 
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -18,10 +19,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import stevesaddons.asm.StevesHooks;
 import vswe.stevesfactory.CollisionHelper;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.blocks.ConnectionBlock;
@@ -134,9 +133,7 @@ public abstract class ComponentMenuContainer extends ComponentMenu {
                         ConnectionBlock block = (ConnectionBlock) element;
                         if (noFilter) {
                             continue;
-                        } else if (all
-                                || (Loader.isModLoaded(STEVES_ADDONS)
-                                        && StevesHooks.containerAdvancedSearch(block, search))
+                        } else if (all || (HAS_ADDONS && ADDONS_HOOKS.containerAdvancedSearch(block, search))
                                 || block.getName(cachedInterface).toLowerCase().contains(search)) {
                                     if (filter.matches(getParent().getManager(), selectedInventories, block)) {
                                         continue;

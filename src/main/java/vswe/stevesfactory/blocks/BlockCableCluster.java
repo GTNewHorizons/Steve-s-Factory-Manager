@@ -1,7 +1,7 @@
 package vswe.stevesfactory.blocks;
 
-import static vswe.stevesfactory.Compat.getTERFC;
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.StevesFactoryManager;
@@ -126,7 +125,7 @@ public class BlockCableCluster extends BlockCamouflageBase {
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
 
-        if (Loader.isModLoaded(STEVES_ADDONS)) return getTERFC();
+        if (HAS_ADDONS) return ADDONS_HOOKS.getTERFC();
 
         return new TileEntityCluster();
     }

@@ -1,8 +1,6 @@
 package vswe.stevesfactory.network;
 
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
-
-import cpw.mods.fml.common.Loader;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 public enum DataBitHelper {
 
@@ -55,7 +53,7 @@ public enum DataBitHelper {
     NBT_LENGTH(15),
     FUZZY_MODE(3),
 
-    CONTAINER_TYPE((Loader.isModLoaded(STEVES_ADDONS)) ? 4 : 3),
+    CONTAINER_TYPE(HAS_ADDONS ? 4 : 3),
     CONTAINER_MODE(3),
     VARIABLE_TYPE(4),
     ORDER_TYPES(2),

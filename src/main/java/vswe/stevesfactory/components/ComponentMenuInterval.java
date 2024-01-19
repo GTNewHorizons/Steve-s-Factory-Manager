@@ -1,13 +1,12 @@
 package vswe.stevesfactory.components;
 
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import stevesaddons.helpers.StevesEnum;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -154,7 +153,7 @@ public class ComponentMenuInterval extends ComponentMenu {
 
     @Override
     public boolean isVisible() {
-        if (Loader.isModLoaded(STEVES_ADDONS)) return this.getParent().getConnectionSet() != StevesEnum.DELAYED;
+        if (HAS_ADDONS) return ADDONS_HOOKS.isNotDelayed(this.getParent().getConnectionSet());
         else return super.isVisible();
     }
 

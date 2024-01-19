@@ -1,16 +1,15 @@
 package vswe.stevesfactory.blocks;
 
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 import java.util.EnumSet;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.tileentity.TileEntity;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import stevesaddons.asm.StevesHooks;
 import vswe.stevesfactory.Localization;
 import vswe.stevesfactory.components.ComponentMenuContainer;
 import vswe.stevesfactory.components.IContainerSelection;
@@ -76,7 +75,7 @@ public class ConnectionBlock implements IContainerSelection {
     public String getDescription(GuiManager gui) {
         String str = gui.getBlockName(tileEntity);
 
-        if (Loader.isModLoaded(STEVES_ADDONS)) str = StevesHooks.fixToolTip(str, this.tileEntity);
+        if (HAS_ADDONS) str = ADDONS_HOOKS.fixToolTip(str, this.tileEntity);
 
         str += getVariableTag(gui);
 

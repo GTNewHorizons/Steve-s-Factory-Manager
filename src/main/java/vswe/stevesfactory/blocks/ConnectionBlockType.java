@@ -1,13 +1,12 @@
 package vswe.stevesfactory.blocks;
 
-import static vswe.stevesfactory.util.ModUtils.STEVES_ADDONS;
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import cpw.mods.fml.common.Loader;
-import stevesaddons.asm.StevesHooks;
 import vswe.stevesfactory.Localization;
 
 public enum ConnectionBlockType {
@@ -33,7 +32,7 @@ public enum ConnectionBlockType {
 
     public boolean isInstance(TileEntity tileEntity) {
 
-        if (Loader.isModLoaded(STEVES_ADDONS)) return StevesHooks.instanceOf(this.clazz, tileEntity);
+        if (HAS_ADDONS) return ADDONS_HOOKS.instanceOf(this.clazz, tileEntity);
 
         return clazz.isInstance(tileEntity);
     }

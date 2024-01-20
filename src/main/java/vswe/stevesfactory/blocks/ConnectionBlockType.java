@@ -1,5 +1,8 @@
 package vswe.stevesfactory.blocks;
 
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -28,6 +31,9 @@ public enum ConnectionBlockType {
     }
 
     public boolean isInstance(TileEntity tileEntity) {
+
+        if (HAS_ADDONS) return ADDONS_HOOKS.instanceOf(this.clazz, tileEntity);
+
         return clazz.isInstance(tileEntity);
     }
 

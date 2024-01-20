@@ -1,5 +1,8 @@
 package vswe.stevesfactory.blocks;
 
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,6 +124,9 @@ public class BlockCableCluster extends BlockCamouflageBase {
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
+
+        if (HAS_ADDONS) return ADDONS_HOOKS.getTERFC();
+
         return new TileEntityCluster();
     }
 

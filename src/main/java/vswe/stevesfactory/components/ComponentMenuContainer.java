@@ -1,5 +1,8 @@
 package vswe.stevesfactory.components;
 
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -130,11 +133,12 @@ public abstract class ComponentMenuContainer extends ComponentMenu {
                         ConnectionBlock block = (ConnectionBlock) element;
                         if (noFilter) {
                             continue;
-                        } else if (all || block.getName(cachedInterface).toLowerCase().contains(search)) {
-                            if (filter.matches(getParent().getManager(), selectedInventories, block)) {
-                                continue;
-                            }
-                        }
+                        } else if (all || (HAS_ADDONS && ADDONS_HOOKS.containerAdvancedSearch(block, search))
+                                || block.getName(cachedInterface).toLowerCase().contains(search)) {
+                                    if (filter.matches(getParent().getManager(), selectedInventories, block)) {
+                                        continue;
+                                    }
+                                }
                     }
 
                     iterator.remove();

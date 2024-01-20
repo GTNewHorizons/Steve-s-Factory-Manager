@@ -1,5 +1,8 @@
 package vswe.stevesfactory.components;
 
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -233,6 +236,9 @@ public class ComponentMenuItem extends ComponentMenuStuff {
     @SideOnly(Side.CLIENT)
     @Override
     protected List updateSearch(String search, boolean showAll) {
+
+        if (HAS_ADDONS) return ADDONS_HOOKS.updateItemSearch(this, search, showAll);
+
         List ret = new ArrayList();
 
         if (search.equals(".inv")) {

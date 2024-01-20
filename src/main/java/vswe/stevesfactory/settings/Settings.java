@@ -1,5 +1,7 @@
 package vswe.stevesfactory.settings;
 
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.blocks.TileEntityManager;
@@ -57,12 +59,12 @@ public final class Settings {
 
     private static void loadDefault() {
         autoCloseGroup = false;
-        largeOpenHitBox = false;
-        largeOpenHitBoxMenu = false;
+        largeOpenHitBox = HAS_ADDONS;
+        largeOpenHitBoxMenu = HAS_ADDONS;
         quickGroupOpen = false;
         commandTypes = false;
-        autoSide = false;
-        autoBlacklist = false;
+        autoSide = HAS_ADDONS;
+        autoBlacklist = HAS_ADDONS;
         enlargeInterfaces = false;
     }
 

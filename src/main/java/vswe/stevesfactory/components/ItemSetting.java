@@ -1,5 +1,8 @@
 package vswe.stevesfactory.components;
 
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,6 +141,8 @@ public class ItemSetting extends Setting {
         } else {
             item.setTagCompound(null);
         }
+
+        if (HAS_ADDONS) this.item = ADDONS_HOOKS.fixLoadingStack(this.item);
     }
 
     @Override

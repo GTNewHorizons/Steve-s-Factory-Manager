@@ -1,5 +1,8 @@
 package vswe.stevesfactory.blocks;
 
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -110,6 +113,10 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                 return true;
             }
         });
+
+        if (HAS_ADDONS) {
+            ADDONS_HOOKS.addCopyButton(this);
+        }
 
         buttons.add(new Button(Localization.PREFERENCES) {
 
@@ -430,6 +437,8 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
         justSentServerComponentRemovalPacket = false;
         if (!worldObj.isRemote) {
 
+            if (HAS_ADDONS) ADDONS_HOOKS.tickTriggers(this);
+
             if (timer >= 20) {
                 timer = 0;
 
@@ -482,7 +491,8 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
             }
         }
 
-        new CommandExecutor(this).executeTriggerCommand(component, validTriggerOutputs);
+        if (HAS_ADDONS) ADDONS_HOOKS.executeTriggerCommand(this, component, validTriggerOutputs);
+        else new CommandExecutor(this).executeTriggerCommand(component, validTriggerOutputs);
     }
 
     public void triggerRedstone(TileEntityInput inputTrigger) {
@@ -533,6 +543,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(TileEntity te, InventoryPlayer inv) {
+        if (HAS_ADDONS) return ADDONS_HOOKS.getGui(te, inv);
         return new GuiManager((TileEntityManager) te, inv);
     }
 

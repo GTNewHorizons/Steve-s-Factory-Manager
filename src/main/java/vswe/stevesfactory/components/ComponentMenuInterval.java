@@ -1,5 +1,8 @@
 package vswe.stevesfactory.components;
 
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 import cpw.mods.fml.relauncher.Side;
@@ -146,6 +149,12 @@ public class ComponentMenuInterval extends ComponentMenu {
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound, boolean pickup) {
         nbtTagCompound.setShort(NBT_INTERVAL, (short) getInterval());
+    }
+
+    @Override
+    public boolean isVisible() {
+        if (HAS_ADDONS) return ADDONS_HOOKS.isNotDelayed(this.getParent().getConnectionSet());
+        else return super.isVisible();
     }
 
 }

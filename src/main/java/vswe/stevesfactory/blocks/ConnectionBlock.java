@@ -1,5 +1,8 @@
 package vswe.stevesfactory.blocks;
 
+import static vswe.stevesfactory.compat.Compat.ADDONS_HOOKS;
+import static vswe.stevesfactory.compat.Compat.HAS_ADDONS;
+
 import java.util.EnumSet;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -71,6 +74,8 @@ public class ConnectionBlock implements IContainerSelection {
     @Override
     public String getDescription(GuiManager gui) {
         String str = gui.getBlockName(tileEntity);
+
+        if (HAS_ADDONS) str = ADDONS_HOOKS.fixToolTip(str, this.tileEntity);
 
         str += getVariableTag(gui);
 

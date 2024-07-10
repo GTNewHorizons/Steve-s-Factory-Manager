@@ -108,8 +108,6 @@ public abstract class BlockCableDirectionAdvanced extends BlockContainer {
         return addAdvancedMeta(0, meta);
     }
 
-
-
     @Override
     public int damageDropped(int meta) {
         return getAdvancedMeta(meta);

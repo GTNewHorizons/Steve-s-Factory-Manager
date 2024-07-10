@@ -2,4 +2,5 @@
 
 dependencies {
     compileOnly('com.github.GTNewHorizons:waila:1.7.0:api')
+    compileOnly('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
 }

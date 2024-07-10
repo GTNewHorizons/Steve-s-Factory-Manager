@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import cpw.mods.fml.common.Optional;
+import ic2.api.tile.IWrenchable;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,8 +40,9 @@ import vswe.stevesfactory.wrappers.InventoryWrapper;
 import vswe.stevesfactory.wrappers.InventoryWrapperHorse;
 import vswe.stevesfactory.wrappers.InventoryWrapperPlayer;
 
+@Optional.Interface(iface = "ic2.api.tile.IWrenchable", modid = "ic2")
 public class TileEntityRelay extends TileEntityClusterElement
-        implements IInventory, ISidedInventory, IFluidHandler, ITileEntityInterface {
+        implements IInventory, ISidedInventory, IFluidHandler, ITileEntityInterface, IWrenchable {
 
     private static final int MAX_CHAIN_LENGTH = 512;
     private int[] cachedAllSlots;
@@ -780,5 +783,37 @@ public class TileEntityRelay extends TileEntityClusterElement
     @Override
     protected EnumSet<ClusterMethodRegistration> getRegistrations() {
         return EnumSet.of(ClusterMethodRegistration.ON_BLOCK_PLACED_BY, ClusterMethodRegistration.ON_BLOCK_ACTIVATED);
+    }
+
+    @Optional.Method(modid = "ic2")
+    @Override
+    public boolean wrenchCanSetFacing(EntityPlayer entityPlayer, int i) {
+        return false;
+    }
+    @Optional.Method(modid = "ic2")
+    @Override
+    public short getFacing() {
+        return (short) BlockCableDirectionAdvanced.getSideMeta(this.meta);
+    }
+    @Optional.Method(modid = "ic2")
+    @Override
+    public void setFacing(short i) {
+        int advancedMeta = BlockCableDirectionAdvanced.getAdvancedMeta(this.meta);
+        this.meta = BlockCableDirectionAdvanced.addAdvancedMeta(i, advancedMeta);
+    }
+    @Optional.Method(modid = "ic2")
+    @Override
+    public boolean wrenchCanRemove(EntityPlayer entityPlayer) {
+        return false;
+    }
+    @Optional.Method(modid = "ic2")
+    @Override
+    public float getWrenchDropRate() {
+        return 0;
+    }
+    @Optional.Method(modid = "ic2")
+    @Override
+    public ItemStack getWrenchDrop(EntityPlayer entityPlayer) {
+        return null;
     }
 }

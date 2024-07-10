@@ -96,17 +96,19 @@ public abstract class BlockCableDirectionAdvanced extends BlockContainer {
         return (meta & 8) != 0;
     }
 
-    public int getSideMeta(int meta) {
+    public static int getSideMeta(int meta) {
         return meta & 7;
     }
 
-    private int addAdvancedMeta(int meta, int advancedMeta) {
+    public static int addAdvancedMeta(int meta, int advancedMeta) {
         return meta | (advancedMeta & 8);
     }
 
-    private int getAdvancedMeta(int meta) {
+    public static int getAdvancedMeta(int meta) {
         return addAdvancedMeta(0, meta);
     }
+
+
 
     @Override
     public int damageDropped(int meta) {

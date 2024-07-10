@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import cpw.mods.fml.common.Optional;
-import ic2.api.tile.IWrenchable;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -27,8 +25,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ic2.api.tile.IWrenchable;
 import vswe.stevesfactory.interfaces.ContainerRelay;
 import vswe.stevesfactory.interfaces.GuiRelay;
 import vswe.stevesfactory.network.DataBitHelper;
@@ -787,14 +787,16 @@ public class TileEntityRelay extends TileEntityClusterElement
 
     @Optional.Method(modid = "IC2")
     @Override
-    public boolean wrenchCanSetFacing(EntityPlayer entityPlayer, int i) {
-        return false;
+    public boolean wrenchCanSetFacing(EntityPlayer entityPlayer, int facing) {
+        return this.getFacing() != facing;
     }
+
     @Optional.Method(modid = "IC2")
     @Override
     public short getFacing() {
         return (short) BlockCableDirectionAdvanced.getSideMeta(this.getBlockMetadata());
     }
+
     @Optional.Method(modid = "IC2")
     @Override
     public void setFacing(short facing) {
@@ -802,16 +804,19 @@ public class TileEntityRelay extends TileEntityClusterElement
         this.meta = BlockCableDirectionAdvanced.addAdvancedMeta(facing, advancedMeta);
         this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.meta, 3);
     }
+
     @Optional.Method(modid = "IC2")
     @Override
     public boolean wrenchCanRemove(EntityPlayer entityPlayer) {
         return false;
     }
+
     @Optional.Method(modid = "IC2")
     @Override
     public float getWrenchDropRate() {
         return 0;
     }
+
     @Optional.Method(modid = "IC2")
     @Override
     public ItemStack getWrenchDrop(EntityPlayer entityPlayer) {

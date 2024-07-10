@@ -55,7 +55,7 @@ public abstract class TileEntityClusterElement extends TileEntity {
     @Override
     public final void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        tagCompound.getInteger("MetaData");
+        this.meta = tagCompound.getInteger("MetaData");
         readContentFromNBT(tagCompound);
     }
 

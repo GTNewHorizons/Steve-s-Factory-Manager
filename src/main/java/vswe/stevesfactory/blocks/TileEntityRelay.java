@@ -40,7 +40,7 @@ import vswe.stevesfactory.wrappers.InventoryWrapper;
 import vswe.stevesfactory.wrappers.InventoryWrapperHorse;
 import vswe.stevesfactory.wrappers.InventoryWrapperPlayer;
 
-@Optional.Interface(iface = "ic2.api.tile.IWrenchable", modid = "ic2")
+@Optional.Interface(iface = "ic2.api.tile.IWrenchable", modid = "IC2")
 public class TileEntityRelay extends TileEntityClusterElement
         implements IInventory, ISidedInventory, IFluidHandler, ITileEntityInterface, IWrenchable {
 
@@ -785,33 +785,34 @@ public class TileEntityRelay extends TileEntityClusterElement
         return EnumSet.of(ClusterMethodRegistration.ON_BLOCK_PLACED_BY, ClusterMethodRegistration.ON_BLOCK_ACTIVATED);
     }
 
-    @Optional.Method(modid = "ic2")
+    @Optional.Method(modid = "IC2")
     @Override
     public boolean wrenchCanSetFacing(EntityPlayer entityPlayer, int i) {
         return false;
     }
-    @Optional.Method(modid = "ic2")
+    @Optional.Method(modid = "IC2")
     @Override
     public short getFacing() {
-        return (short) BlockCableDirectionAdvanced.getSideMeta(this.meta);
+        return (short) BlockCableDirectionAdvanced.getSideMeta(this.getBlockMetadata());
     }
-    @Optional.Method(modid = "ic2")
+    @Optional.Method(modid = "IC2")
     @Override
-    public void setFacing(short i) {
-        int advancedMeta = BlockCableDirectionAdvanced.getAdvancedMeta(this.meta);
-        this.meta = BlockCableDirectionAdvanced.addAdvancedMeta(i, advancedMeta);
+    public void setFacing(short facing) {
+        int advancedMeta = BlockCableDirectionAdvanced.getAdvancedMeta(this.getBlockMetadata());
+        this.meta = BlockCableDirectionAdvanced.addAdvancedMeta(facing, advancedMeta);
+        this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.meta, 3);
     }
-    @Optional.Method(modid = "ic2")
+    @Optional.Method(modid = "IC2")
     @Override
     public boolean wrenchCanRemove(EntityPlayer entityPlayer) {
         return false;
     }
-    @Optional.Method(modid = "ic2")
+    @Optional.Method(modid = "IC2")
     @Override
     public float getWrenchDropRate() {
         return 0;
     }
-    @Optional.Method(modid = "ic2")
+    @Optional.Method(modid = "IC2")
     @Override
     public ItemStack getWrenchDrop(EntityPlayer entityPlayer) {
         return null;

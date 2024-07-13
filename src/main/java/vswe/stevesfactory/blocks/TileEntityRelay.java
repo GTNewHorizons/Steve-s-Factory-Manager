@@ -25,8 +25,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ic2.api.tile.IWrenchable;
 import vswe.stevesfactory.interfaces.ContainerRelay;
 import vswe.stevesfactory.interfaces.GuiRelay;
 import vswe.stevesfactory.network.DataBitHelper;
@@ -38,8 +40,9 @@ import vswe.stevesfactory.wrappers.InventoryWrapper;
 import vswe.stevesfactory.wrappers.InventoryWrapperHorse;
 import vswe.stevesfactory.wrappers.InventoryWrapperPlayer;
 
+@Optional.Interface(iface = "ic2.api.tile.IWrenchable", modid = "IC2")
 public class TileEntityRelay extends TileEntityClusterElement
-        implements IInventory, ISidedInventory, IFluidHandler, ITileEntityInterface {
+        implements IInventory, ISidedInventory, IFluidHandler, ITileEntityInterface, IWrenchable {
 
     private static final int MAX_CHAIN_LENGTH = 512;
     private int[] cachedAllSlots;
@@ -780,5 +783,43 @@ public class TileEntityRelay extends TileEntityClusterElement
     @Override
     protected EnumSet<ClusterMethodRegistration> getRegistrations() {
         return EnumSet.of(ClusterMethodRegistration.ON_BLOCK_PLACED_BY, ClusterMethodRegistration.ON_BLOCK_ACTIVATED);
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public boolean wrenchCanSetFacing(EntityPlayer entityPlayer, int facing) {
+        return this.getFacing() != facing;
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public short getFacing() {
+        return (short) BlockCableDirectionAdvanced.getSideMeta(this.getBlockMetadata());
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public void setFacing(short facing) {
+        int advancedMeta = BlockCableDirectionAdvanced.getAdvancedMeta(this.getBlockMetadata());
+        this.meta = BlockCableDirectionAdvanced.addAdvancedMeta(facing, advancedMeta);
+        this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.meta, 3);
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public boolean wrenchCanRemove(EntityPlayer entityPlayer) {
+        return false;
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public float getWrenchDropRate() {
+        return 0;
+    }
+
+    @Optional.Method(modid = "IC2")
+    @Override
+    public ItemStack getWrenchDrop(EntityPlayer entityPlayer) {
+        return null;
     }
 }

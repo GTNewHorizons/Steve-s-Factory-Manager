@@ -10,7 +10,7 @@ public abstract class TileEntityClusterElement extends TileEntity {
 
     private ClusterRegistry registryElement;
     private boolean isPartOfCluster;
-    private int meta;
+    public int meta;
 
     protected TileEntityClusterElement() {
         registryElement = ClusterRegistry.get(this);
@@ -48,12 +48,14 @@ public abstract class TileEntityClusterElement extends TileEntity {
     @Override
     public final void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
+        tagCompound.setInteger("MetaData", this.meta);
         writeContentToNBT(tagCompound);
     }
 
     @Override
     public final void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
+        this.meta = tagCompound.getInteger("MetaData");
         readContentFromNBT(tagCompound);
     }
 

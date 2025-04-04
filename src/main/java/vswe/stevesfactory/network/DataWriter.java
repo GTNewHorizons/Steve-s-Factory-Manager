@@ -107,7 +107,7 @@ public class DataWriter {
         if (str != null) {
             byte[] bytes = str.getBytes();
             writeData(bytes.length, bits);
-            int l = str.length() & ((int) Math.pow(2, bits.getBitCount()) - 1);
+            int l = bytes.length & ((int) Math.pow(2, bits.getBitCount()) - 1);
 
             for (int i = 0; i < l; i++) {
                 writeByte(bytes[i]);

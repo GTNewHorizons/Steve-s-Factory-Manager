@@ -84,7 +84,7 @@ public class TextBoxLogic {
             deleteText(gui, 1);
         } else if (c == 22 && k == 47/* ctrl v */) {
             addText(gui, GuiScreen.getClipboardString());
-        } else if (c != 0 && Character.isDefined(c)) {
+        } else if (c != 0 && (Character.isDefined(c) && !Character.isISOControl(c))) {
             addText(gui, Character.toString(c));
         }
     }

@@ -1,6 +1,6 @@
 package vswe.stevesfactory.components;
 
-import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.client.gui.GuiScreen;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -82,7 +82,9 @@ public class TextBoxLogic {
             deleteText(gui, -1);
         } else if (k == 211) {
             deleteText(gui, 1);
-        } else if (ChatAllowedCharacters.isAllowedCharacter(c)) {
+        } else if (c == 22 && k == 47/* ctrl v */) {
+            addText(gui, GuiScreen.getClipboardString());
+        } else if (c != 0 && (Character.isDefined(c) && !Character.isISOControl(c))) {
             addText(gui, Character.toString(c));
         }
     }

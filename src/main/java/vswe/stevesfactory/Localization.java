@@ -38,6 +38,7 @@ public enum Localization {
     CAMOUFLAGE_LONG,
     SIGN_SHORT,
     SIGN_LONG,
+    COMMAND_NAME_FORMAT,
 
     CONNECTION_INPUT,
     CONNECTION_OUTPUT,

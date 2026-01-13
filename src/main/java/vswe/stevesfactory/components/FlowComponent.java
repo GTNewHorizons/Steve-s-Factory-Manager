@@ -16,6 +16,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vswe.stevesfactory.CollisionHelper;
+import vswe.stevesfactory.Localization;
+import vswe.stevesfactory.StevesFactoryManager;
 import vswe.stevesfactory.blocks.TileEntityManager;
 import vswe.stevesfactory.interfaces.ContainerManager;
 import vswe.stevesfactory.interfaces.GuiManager;
@@ -409,10 +411,7 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
         }
 
         if (!isEditing || isLarge) {
-            String name = getName();
-            if (!isLarge) {
-                name = getShortName(gui, name);
-            }
+            String name = getDisplayName(gui, !isLarge);
             gui.drawString(name, x + TEXT_X, y + TEXT_Y, 0.7F, isEditing ? 0x707020 : 0x404040);
         }
 
@@ -474,6 +473,44 @@ public class FlowComponent implements IComponentNetworkReader, Comparable<FlowCo
 
     private String cachedName;
     private String cachedShortName;
+
+    private String getDisplayName(GuiManager gui, boolean shorten) {
+        String displayName = getName();
+        if (textBox.getText() == null) {
+            if (name == null || GuiScreen.isCtrlKeyDown()) {
+                // Apply a resource-pack format to the default component name for better contrast.
+                displayName = formatDefaultName(displayName);
+            } else if (!hasColorCode(name)) {
+                // Keep custom names readable by formatting when no explicit color codes are used.
+                displayName = formatDefaultName(displayName);
+            }
+        }
+        if (shorten) {
+            displayName = getShortName(gui, displayName);
+        }
+        return displayName;
+    }
+
+    private boolean hasColorCode(String value) {
+        return value != null && value.indexOf('\u00A7') >= 0;
+    }
+
+    private String formatDefaultName(String defaultName) {
+        String format = Localization.COMMAND_NAME_FORMAT.toString();
+        // Only format when the localization key exists and uses a "%s" placeholder.
+        if (isValidFormat(format)) {
+            return format.replace("%s", defaultName);
+        }
+        return defaultName;
+    }
+
+    private boolean isValidFormat(String format) {
+        // Missing keys resolve to the key string itself; treat that as "no format".
+        if (format == null || !format.contains("%s")) {
+            return false;
+        }
+        return !format.equals("gui." + StevesFactoryManager.UNLOCALIZED_START + "CommandNameFormat");
+    }
 
     private String getShortName(GuiManager gui, String name) {
         if (!name.equals(cachedName)) {

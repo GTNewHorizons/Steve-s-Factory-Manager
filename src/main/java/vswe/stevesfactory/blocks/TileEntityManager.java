@@ -439,6 +439,7 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
 
             if (HAS_ADDONS) ADDONS_HOOKS.tickTriggers(this);
 
+            timer++;
             if (timer >= 20) {
                 timer = 0;
 
@@ -465,9 +466,6 @@ public class TileEntityManager extends TileEntity implements ITileEntityInterfac
                         }
                     }
                 }
-
-            } else {
-                timer++;
             }
         }
     }

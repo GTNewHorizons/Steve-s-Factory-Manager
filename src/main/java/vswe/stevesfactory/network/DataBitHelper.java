@@ -35,7 +35,7 @@ public enum DataBitHelper {
     GUI_BUTTON_ID(5),
 
     MENU_FLUID_ID(32),
-    MENU_LIQUID_AMOUNT(20),
+    MENU_LIQUID_AMOUNT(32),
 
     MENU_SPLIT_DATA_ID(2),
 

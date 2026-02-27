@@ -20,7 +20,7 @@ public class ComponentMenuLiquid extends ComponentMenuStuff {
     public ComponentMenuLiquid(FlowComponent parent) {
         super(parent, LiquidSetting.class);
 
-        numberTextBoxes.addTextBox(amountTextBoxBuckets = new TextBoxNumber(10, 50, 3, true) {
+        numberTextBoxes.addTextBox(amountTextBoxBuckets = new TextBoxNumber(10, 50, 5, true) {
 
             @Override
             public boolean isVisible() {

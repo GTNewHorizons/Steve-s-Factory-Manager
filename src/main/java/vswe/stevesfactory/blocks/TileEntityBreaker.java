@@ -1,5 +1,6 @@
 package vswe.stevesfactory.blocks;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -32,7 +33,8 @@ import vswe.stevesfactory.network.PacketHandler;
 public class TileEntityBreaker extends TileEntityClusterElement implements IInventory, IPacketBlock {
 
     private static final String FAKE_PLAYER_NAME = "[SFM_PLAYER]";
-    private static final UUID FAKE_PLAYER_ID = null;
+    private static final UUID FAKE_PLAYER_ID = UUID
+            .nameUUIDFromBytes(FAKE_PLAYER_NAME.getBytes(StandardCharsets.UTF_8));
     private List<ItemStack> inventory;
     private List<ItemStack> inventoryCache;
     private boolean broken;

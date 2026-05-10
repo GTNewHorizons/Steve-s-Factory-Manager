@@ -332,7 +332,6 @@ public class TileEntityBreaker extends TileEntityClusterElement implements IInve
                 if (canBreakBlock(block, x, y, z)) {
                     broken = true;
                     int meta = worldObj.getBlockMetadata(x, y, z);
-                    block.breakBlock(worldObj, x, y, z, block, meta);
                     worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + (meta << 12));
                     worldObj.setBlockToAir(x, y, z);
                 }

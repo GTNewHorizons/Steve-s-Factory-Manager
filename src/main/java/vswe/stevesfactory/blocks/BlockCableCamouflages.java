@@ -36,11 +36,11 @@ public class BlockCableCamouflages extends BlockCamouflageBase {
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        icons = new IIcon[TileEntityCamouflage.CamouflageType.values().length];
+        icons = new IIcon[TileEntityCamouflage.CamouflageType.VALUES.length];
         for (int i = 0; i < icons.length; i++) {
             icons[i] = register.registerIcon(
                     StevesFactoryManager.RESOURCE_LOCATION + ":"
-                            + TileEntityCamouflage.CamouflageType.values()[i].getIcon());
+                            + TileEntityCamouflage.CamouflageType.VALUES[i].getIcon());
         }
     }
 
@@ -58,13 +58,13 @@ public class BlockCableCamouflages extends BlockCamouflageBase {
 
     @Override
     public void getSubBlocks(Item block, CreativeTabs tabs, List list) {
-        for (int i = 0; i < TileEntityCamouflage.CamouflageType.values().length; i++) {
+        for (int i = 0; i < TileEntityCamouflage.CamouflageType.VALUES.length; i++) {
             list.add(new ItemStack(block, 1, i));
         }
     }
 
     public int getId(int meta) {
-        return meta % TileEntityCamouflage.CamouflageType.values().length;
+        return meta % TileEntityCamouflage.CamouflageType.VALUES.length;
     }
 
     @Override

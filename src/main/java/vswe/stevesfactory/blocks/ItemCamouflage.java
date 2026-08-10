@@ -17,7 +17,7 @@ public class ItemCamouflage extends ItemBlock {
     @Override
     public String getUnlocalizedName(ItemStack item) {
         return "tile." + StevesFactoryManager.UNLOCALIZED_START
-                + TileEntityCamouflage.CamouflageType.values()[ModBlocks.blockCableCamouflage
+                + TileEntityCamouflage.CamouflageType.VALUES[ModBlocks.blockCableCamouflage
                         .getId(item.getItemDamage())].getUnlocalized();
     }
 

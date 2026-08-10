@@ -103,6 +103,7 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
         INSIDE("BlockCableInsideCamouflage", "cable_camo_inside", true, false),
         SHAPE("BlockCableShapeCamouflage", "cable_camo_shape", true, true);
 
+        public static final CamouflageType[] VALUES = values();
         private String unlocalized;
         private String icon;
         private boolean useDouble;
@@ -133,7 +134,7 @@ public class TileEntityCamouflage extends TileEntityClusterElement implements IP
     }
 
     public CamouflageType getCamouflageType() {
-        return CamouflageType.values()[ModBlocks.blockCableCamouflage.getId(getBlockMetadata())];
+        return CamouflageType.VALUES[ModBlocks.blockCableCamouflage.getId(getBlockMetadata())];
     }
 
     public void setBlockBounds(BlockCamouflageBase blockCamouflageBase) {

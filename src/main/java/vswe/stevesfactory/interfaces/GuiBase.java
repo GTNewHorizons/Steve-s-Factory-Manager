@@ -467,9 +467,22 @@ public abstract class GuiBase extends GuiAntiNEI {
         GL11.glScalef(scale, scale, 1);
         GL11.glTranslatef(-guiLeft, -guiTop, 0.0F);
         GL11.glTranslatef(
-                (this.width - this.xSize * scale) / (2 * scale),
-                (this.height - this.ySize * scale) / (2 * scale),
+                getCenteringOffset(this.width, this.xSize, scale),
+                getCenteringOffset(this.height, this.ySize, scale),
                 0.0F);
+    }
+
+    /**
+     * Offset that centers the interface, rounded to whole screen pixels so texture rows don't get cut off.
+     */
+    private float getCenteringOffset(int screenSize, int interfaceSize, float scale) {
+        int pixelsPerUnit = new net.minecraft.client.gui.ScaledResolution(
+                this.mc,
+                this.mc.displayWidth,
+                this.mc.displayHeight).getScaleFactor();
+        float offsetInPixels = pixelsPerUnit * (screenSize - interfaceSize * scale) / 2;
+
+        return Math.round(offsetInPixels) / (pixelsPerUnit * scale);
     }
 
     private void stopScaling() {
@@ -501,7 +514,7 @@ public abstract class GuiBase extends GuiAntiNEI {
         float scale = getScale();
         x /= scale;
         x += guiLeft;
-        x -= (this.width - this.xSize * scale) / (2 * scale);
+        x -= getCenteringOffset(this.width, this.xSize, scale);
         return (int) x;
     }
 
@@ -509,7 +522,7 @@ public abstract class GuiBase extends GuiAntiNEI {
         float scale = getScale();
         y /= scale;
         y += guiTop;
-        y -= (this.height - this.ySize * scale) / (2 * scale);
+        y -= getCenteringOffset(this.height, this.ySize, scale);
         return (int) y;
     }
 
